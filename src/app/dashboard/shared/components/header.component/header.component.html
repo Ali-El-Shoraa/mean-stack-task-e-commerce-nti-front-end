@@ -1,0 +1,40 @@
+<!-- src/app/components/header/header.component.html -->
+
+<div class="header">
+  <h1 class="header-title">
+    <button class="menu-toggle-btn" (click)="toggleSidebar()">
+      <i class="bi bi-list"></i>
+    </button>
+    لوحة التحكم الرئيسية
+  </h1>
+
+  <div class="header-actions">
+    <div class="header-search">
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch()"
+        placeholder="ابحث عن طلبات، عملاء، منتجات..."
+      />
+      <i class="bi bi-search" (click)="onSearch()"></i>
+    </div>
+
+    <div class="header-notification">
+      <i class="bi bi-bell"></i>
+      @if (notificationCount > 0) {
+        <span class="header-notification-badge">{{ notificationCount }}</span>
+      }
+    </div>
+
+    <div class="header-user">
+      <div class="header-user-avatar">
+        <span>م</span>
+      </div>
+      <div class="header-user-info">
+        <div class="header-user-name">محمد أحمد</div>
+        <div class="header-user-role">مدير النظام</div>
+      </div>
+    </div>
+  </div>
+</div>

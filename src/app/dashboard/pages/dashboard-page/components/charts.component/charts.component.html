@@ -1,0 +1,51 @@
+<!-- src/app/components/charts/charts.component.html -->
+
+<div class="charts-container">
+  <div class="chart-box">
+    <div class="chart-header">
+      <h3 class="chart-title">مبيعات آخر 7 أيام</h3>
+      <div class="chart-actions">
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-secondary dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+          >
+            {{ selectedPeriod }}
+          </button>
+          <ul class="dropdown-menu">
+            @for (period of periods; track period) {
+              <li>
+                <a class="dropdown-item" (click)="onPeriodChange(period)">{{ period }}</a>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="chart-canvas-container">
+      <canvas
+        baseChart
+        [data]="salesChartData"
+        [options]="salesChartOptions"
+        [type]="salesChartType"
+      >
+      </canvas>
+    </div>
+  </div>
+
+  <div class="chart-box">
+    <div class="chart-header">
+      <h3 class="chart-title">توزيع المبيعات حسب الجنس</h3>
+    </div>
+    <div class="chart-canvas-container">
+      <canvas
+        baseChart
+        [data]="genderChartData"
+        [options]="genderChartOptions"
+        [type]="genderChartType"
+      >
+      </canvas>
+    </div>
+  </div>
+</div>

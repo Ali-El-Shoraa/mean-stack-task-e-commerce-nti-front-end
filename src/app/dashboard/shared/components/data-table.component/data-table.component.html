@@ -1,0 +1,219 @@
+<!-- src/app/shared/components/data-table/data-table.component.html -->
+
+<div class="table-box" [class.loading]="tableConfig.loading">
+  <!-- Header -->
+  @if (tableConfig.showHeader && (tableConfig.title || tableConfig.headerActions?.length)) {
+    <div class="table-header">
+      @if (tableConfig.title) {
+        <h3 class="table-title">{{ tableConfig.title }}</h3>
+      }
+      @if (tableConfig.headerActions?.length) {
+        <div class="table-actions">
+          @for (action of tableConfig.headerActions; track action.label) {
+            @if (action.route) {
+              <a [routerLink]="action.route" [class]="action.class || 'btn btn-primary btn-sm'">
+                @if (action.icon) {
+                  <i class="bi" [ngClass]="action.icon"></i>
+                }
+                {{ action.label }}
+              </a>
+            } @else if (action.callback) {
+              <button
+                [class]="action.class || 'btn btn-primary btn-sm'"
+                (click)="action.callback()"
+              >
+                @if (action.icon) {
+                  <i class="bi" [ngClass]="action.icon"></i>
+                }
+                {{ action.label }}
+              </button>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (tableConfig.loading) {
+    <div class="loading-overlay">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">جاري التحميل...</span>
+      </div>
+    </div>
+  }
+
+  <!-- ✅ الحل: wrapper جديد -->
+  <div class="table-scroll-wrapper">
+    <div class="table-scroll-container">
+      <table class="dashboard-table">
+        <thead>
+          <tr>
+            @for (column of columns; track column.key) {
+              <th [class.sortable]="column.sortable" (click)="onSort(column)">
+                {{ column.header }}
+                @if (column.sortable) {
+                  <i
+                    class="bi sort-icon"
+                    [ngClass]="{
+                      'bi-chevron-expand': currentSort?.column !== column.key,
+                      'bi-chevron-up':
+                        currentSort?.column === column.key && currentSort?.direction === 'asc',
+                      'bi-chevron-down':
+                        currentSort?.column === column.key && currentSort?.direction === 'desc',
+                    }"
+                  >
+                  </i>
+                }
+              </th>
+            }
+            @if (actions.length && tableConfig.showActions) {
+              <th class="actions-column">الإجراءات</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @if (data.length === 0) {
+            <tr class="empty-row">
+              <td [attr.colspan]="columns.length + (actions.length ? 1 : 0)">
+                <div class="empty-state">
+                  <i class="bi bi-inbox"></i>
+                  <p>{{ tableConfig.emptyMessage }}</p>
+                </div>
+              </td>
+            </tr>
+          } @else {
+            @for (item of displayedData; track trackByFn($index, item)) {
+              <tr>
+                @for (column of columns; track column.key) {
+                  <td>
+                    @switch (column.type) {
+                      @case ('link') {
+                        <a
+                          [routerLink]="getRouteLink(column.linkRoute!, item, column.linkParam)"
+                          class="table-link"
+                        >
+                          {{ getCellValue(item, column) }}
+                        </a>
+                      }
+                      @case ('badge') {
+                        @if (column.badgeConfig) {
+                          <span
+                            class="status-badge"
+                            [ngClass]="column.badgeConfig[getCellValue(item, column)]?.class"
+                          >
+                            {{ column.badgeConfig[getCellValue(item, column)]?.label }}
+                          </span>
+                        }
+                      }
+                      @case ('currency') {
+                        <strong>{{
+                          getCellValue(item, column) | currency: column.currencySymbol || 'USD'
+                        }}</strong>
+                      }
+                      @case ('date') {
+                        {{ getCellValue(item, column) | date: column.dateFormat || 'yyyy-MM-dd' }}
+                      }
+                      @case ('custom') {
+                        <ng-container
+                          *ngTemplateOutlet="
+                            customCellTemplate;
+                            context: { $implicit: item, column: column }
+                          "
+                        ></ng-container>
+                      }
+                      @default {
+                        {{ getCellValue(item, column) }}
+                      }
+                    }
+                  </td>
+                }
+                @if (actions.length && tableConfig.showActions) {
+                  <td class="actions-cell">
+                    @if (actionsCellTemplate) {
+                      <ng-container
+                        *ngTemplateOutlet="actionsCellTemplate; context: { $implicit: item }"
+                      ></ng-container>
+                    } @else {
+                      <div class="action-buttons">
+                        @for (action of actions; track action.label) {
+                          @if (isActionVisible(action, item)) {
+                            @if (action.route) {
+                              <a
+                                [routerLink]="getRouteLink(action.route, item, action.routeParam)"
+                                [class]="action.class || 'btn btn-outline-primary btn-sm'"
+                                [title]="action.label"
+                              >
+                                @if (action.icon) {
+                                  <i class="bi" [ngClass]="action.icon"></i>
+                                }
+                                <span>{{ action.label }}</span>
+                              </a>
+                            } @else if (action.callback) {
+                              <button
+                                [class]="action.class || 'btn btn-outline-primary btn-sm'"
+                                (click)="executeAction(action, item, $event)"
+                                [title]="action.label"
+                              >
+                                @if (action.icon) {
+                                  <i class="bi" [ngClass]="action.icon"></i>
+                                }
+                                <span>{{ action.label }}</span>
+                              </button>
+                            }
+                          }
+                        }
+                      </div>
+                    }
+                  </td>
+                }
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  @if (tableConfig.showPagination && totalPages > 1) {
+    <div class="table-pagination">
+      <div class="pagination-info">
+        عرض {{ (currentPage - 1) * tableConfig.pageSize! + 1 }} -
+        {{
+          currentPage * tableConfig.pageSize! > data.length
+            ? data.length
+            : currentPage * tableConfig.pageSize!
+        }}
+        من {{ data.length }}
+      </div>
+      <nav class="pagination-nav">
+        <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(1)">
+          <i class="bi bi-chevron-double-right"></i>
+        </button>
+        <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+        @for (page of pageNumbers; track page) {
+          <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">
+            {{ page }}
+          </button>
+        }
+        <button
+          class="page-btn"
+          [disabled]="currentPage === totalPages"
+          (click)="goToPage(currentPage + 1)"
+        >
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <button
+          class="page-btn"
+          [disabled]="currentPage === totalPages"
+          (click)="goToPage(totalPages)"
+        >
+          <i class="bi bi-chevron-double-left"></i>
+        </button>
+      </nav>
+    </div>
+  }
+</div>

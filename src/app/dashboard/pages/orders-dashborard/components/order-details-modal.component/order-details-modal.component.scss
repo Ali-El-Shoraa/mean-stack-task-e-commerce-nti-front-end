@@ -1,0 +1,253 @@
+// src/app/features/orders/components/order-details-modal/order-details-modal.component.scss
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  backdrop-filter: blur(3px);
+}
+
+.modal-container {
+  background: white;
+  border-radius: 15px;
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  background: linear-gradient(90deg, #0a192f, #1d3557);
+  color: white;
+  padding: 20px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.modal-body {
+  padding: 25px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.order-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.order-detail-item {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+}
+
+.order-detail-label {
+  font-weight: 600;
+  color: #6c757d;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+
+.order-detail-value {
+  font-weight: 700;
+  color: #1d3557;
+  font-size: 1rem;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: inline-block;
+
+  &.pending {
+    background: linear-gradient(45deg, rgba(255, 193, 7, 0.15), rgba(255, 193, 7, 0.05));
+    color: #ffc107;
+    border: 2px solid rgba(255, 193, 7, 0.2);
+  }
+
+  &.processing {
+    background: linear-gradient(45deg, rgba(13, 110, 253, 0.15), rgba(13, 110, 253, 0.05));
+    color: #0d6efd;
+    border: 2px solid rgba(13, 110, 253, 0.2);
+  }
+
+  &.completed {
+    background: linear-gradient(45deg, rgba(40, 167, 69, 0.15), rgba(40, 167, 69, 0.05));
+    color: #28a745;
+    border: 2px solid rgba(40, 167, 69, 0.2);
+  }
+
+  &.cancelled {
+    background: linear-gradient(45deg, rgba(220, 53, 69, 0.15), rgba(220, 53, 69, 0.05));
+    color: #dc3545;
+    border: 2px solid rgba(220, 53, 69, 0.2);
+  }
+
+  &.shipped {
+    background: linear-gradient(45deg, rgba(111, 66, 193, 0.15), rgba(111, 66, 193, 0.05));
+    color: #6f42c1;
+    border: 2px solid rgba(111, 66, 193, 0.2);
+  }
+}
+
+.items-title {
+  font-weight: 700;
+  color: #1d3557;
+  margin: 20px 0 15px;
+}
+
+.items-table-wrapper {
+  overflow-x: auto;
+}
+
+.order-items-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    background: #e9ecef;
+    padding: 12px 15px;
+    text-align: right;
+    font-weight: 600;
+    color: #1d3557;
+    border-bottom: 2px solid #6c757d;
+  }
+
+  td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e9ecef;
+  }
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.product-image {
+  width: 40px;
+  height: 40px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+
+.order-total {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e9ecef;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+
+  &.final {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #e9ecef;
+  }
+}
+
+.total-amount {
+  color: #e63946;
+  font-weight: 800;
+}
+
+.modal-footer {
+  padding: 20px 25px;
+  border-top: 1px solid #e9ecef;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+
+  &.btn-secondary {
+    background: #6c757d;
+    color: white;
+
+    &:hover {
+      background: #5a6268;
+    }
+  }
+
+  &.btn-primary {
+    background: linear-gradient(45deg, #e63946, #f72585);
+    color: white;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(230, 57, 70, 0.3);
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .modal-container {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .order-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

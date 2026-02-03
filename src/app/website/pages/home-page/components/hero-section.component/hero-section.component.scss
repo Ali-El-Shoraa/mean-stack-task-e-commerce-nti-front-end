@@ -1,0 +1,129 @@
+.hero-swiper-container {
+  width: 100%;
+  height: 60vh; // ارتفاع متوسط للـ Hero Section
+  max-height: 800px; // لا يزيد عن 800 بكسل
+  overflow: hidden;
+  position: relative; // لتموضع عناصر Swiper
+}
+
+swiper-container {
+  width: 100%;
+  height: 100%;
+}
+
+.hero-slide {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer; // للإشارة إلى أنه قابل للنقر
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3); // طبقة داكنة خفيفة لتحسين قراءة النص
+    transition: background 0.3s ease;
+  }
+
+  &:hover::before {
+    background: rgba(0, 0, 0, 0.45); // تزداد قتامة عند التمرير
+  }
+}
+
+.hero-content {
+  position: relative; // فوق طبقة التعتيم
+  z-index: 10;
+  padding: 20px;
+  max-width: 800px;
+
+  &.light-theme {
+    color: white;
+  }
+
+  &.dark-theme {
+    color: #333;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5); // ظل خفيف للنص الداكن
+  }
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  line-height: 1.2;
+
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+  }
+  @media (max-width: 480px) {
+    font-size: 1.8rem;
+  }
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  opacity: 0.9;
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
+  @media (max-width: 480px) {
+    font-size: 1rem;
+  }
+}
+
+.hero-button {
+  background: var(--primary-color); // استخدم لونك الأساسي
+  color: white;
+  padding: 15px 35px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    background: var(--accent-color); // لون ثانوي عند التمرير
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* تخصيص أسهم التنقل والنقاط */
+swiper-container::part(button-prev),
+swiper-container::part(button-next) {
+  color: white; // لون الأسهم
+  background-color: rgba(0, 0, 0, 0.4); // خلفية خفيفة
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+swiper-container::part(pagination-bullet) {
+  background: rgba(255, 255, 255, 0.5); // لون نقاط الترقيم
+  opacity: 1;
+
+  &.swiper-pagination-bullet-active {
+    background: var(--primary-color); // لون النقطة النشطة
+  }
+}

@@ -1,0 +1,120 @@
+/* Navigation Tabs */
+.collection-tabs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.nav-tabs {
+  border: none;
+  gap: 0.5rem;
+}
+
+.nav-tabs .nav-link {
+  padding: 0.8rem 1.8rem;
+  border: 2px solid transparent;
+  background: white;
+  color: var(--gray-dark);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 50px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-tabs .nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--primary-color);
+  border-color: var(--gray-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.nav-tabs .nav-link.active {
+  color: white;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  border-color: transparent;
+  box-shadow: var(--shadow-md);
+}
+
+.nav-tabs .nav-link.active::before {
+  width: 100%;
+}
+
+.nav-tabs .nav-link i {
+  font-size: 1.1rem;
+  transition: transform 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover i {
+  transform: scale(1.1);
+}
+
+.nav-tabs .nav-link.active i {
+  transform: rotate(15deg);
+}
+
+/* Tab Content */
+.tab-content {
+  position: relative;
+  z-index: 1;
+}
+
+.tab-pane {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 992px) {
+  .nav-tabs .nav-link {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .men-collection-section {
+    padding: 3rem 0;
+  }
+
+  .nav-tabs .nav-link {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .collection-tabs {
+    justify-content: center;
+  }
+
+  .nav-tabs .nav-link {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+}

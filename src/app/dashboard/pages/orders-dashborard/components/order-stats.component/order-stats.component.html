@@ -1,0 +1,17 @@
+<!-- src/app/features/orders/components/order-stats/order-stats.component.html -->
+
+<div class="stats-grid">
+  @for (card of statCards; track card.key) {
+    <div class="stats-card">
+      <div class="stats-card-icon" [ngClass]="card.colorClass">
+        <i class="bi" [ngClass]="card.icon"></i>
+      </div>
+      <div class="stats-card-value">{{ getStatValue(card.key) }}</div>
+      <div class="stats-card-title">{{ card.title }}</div>
+      <div class="stats-card-change" [ngClass]="card.isPositive ? 'positive' : 'negative'">
+        <i class="bi" [ngClass]="card.isPositive ? 'bi-arrow-up' : 'bi-arrow-down'"></i>
+        {{ card.change }}% عن الشهر الماضي
+      </div>
+    </div>
+  }
+</div>

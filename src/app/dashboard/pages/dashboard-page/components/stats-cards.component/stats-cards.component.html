@@ -1,0 +1,24 @@
+<!-- src/app/components/stats-cards/stats-cards.component.html -->
+
+<div class="stats-grid">
+  @for (card of statsCards; track card.title) {
+    <div class="stats-card">
+      <div class="stats-card-content">
+        <div class="stats-card-icon" [ngClass]="card.iconClass">
+          <i class="bi" [ngClass]="card.icon"></i>
+        </div>
+        <div class="stats-card-details">
+          <div class="stats-card-value">{{ card.value }}</div>
+          <div class="stats-card-title">{{ card.title }}</div>
+          <div class="stats-card-change" [ngClass]="card.changeType">
+            <i
+              class="bi"
+              [ngClass]="card.changeType === 'positive' ? 'bi-arrow-up' : 'bi-arrow-down'"
+            ></i>
+            <span>{{ card.changePercent }}% عن الشهر الماضي</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

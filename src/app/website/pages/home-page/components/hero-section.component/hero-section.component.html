@@ -1,0 +1,25 @@
+<div class="hero-swiper-container">
+  <swiper-container #swiperHeroRef init="false">
+    @for (slide of heroSlides(); track slide.id) {
+      <swiper-slide>
+        <div
+          class="hero-slide"
+          [style.background-image]="'url(' + slide.image + ')'"
+          (click)="goToLink(slide.link)"
+        >
+          <div
+            class="hero-content"
+            [ngClass]="{
+              'dark-theme': slide.theme === 'dark',
+              'light-theme': slide.theme === 'light',
+            }"
+          >
+            <h1 class="hero-title">{{ slide.title }}</h1>
+            <p class="hero-subtitle">{{ slide.subtitle }}</p>
+            <button class="hero-button">{{ slide.buttonText }}</button>
+          </div>
+        </div>
+      </swiper-slide>
+    }
+  </swiper-container>
+</div>

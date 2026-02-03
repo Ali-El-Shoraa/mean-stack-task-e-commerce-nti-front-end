@@ -1,0 +1,65 @@
+<!-- src/app/features/products/components/product-filters/product-filters.component.html -->
+
+<div class="products-filters">
+  <div class="filters-header">
+    <h3 class="filters-title">تصفية المنتجات</h3>
+    <div class="filters-actions">
+      <button class="btn btn-outline-secondary" (click)="resetFilters()">
+        <i class="bi bi-arrow-clockwise me-2"></i>إعادة تعيين
+      </button>
+      <button class="btn btn-primary" (click)="applyFilters()">
+        <i class="bi bi-funnel me-2"></i>تطبيق التصفية
+      </button>
+    </div>
+  </div>
+
+  <div class="filter-group">
+    <div class="filter-item">
+      <label class="filter-label">الفئة</label>
+      <select class="filter-select" [(ngModel)]="filters.category">
+        <option value="">جميع الفئات</option>
+        @for (option of categoryOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <label class="filter-label">الحالة</label>
+      <select class="filter-select" [(ngModel)]="filters.status">
+        <option value="">جميع الحالات</option>
+        @for (option of statusOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <label class="filter-label">المخزون</label>
+      <select class="filter-select" [(ngModel)]="filters.stockLevel">
+        <option value="">جميع المستويات</option>
+        @for (option of stockOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <label class="filter-label">نطاق السعر</label>
+      <div class="price-range-container">
+        <input
+          type="number"
+          class="filter-input"
+          [(ngModel)]="filters.priceFrom"
+          placeholder="الحد الأدنى"
+        />
+        <input
+          type="number"
+          class="filter-input"
+          [(ngModel)]="filters.priceTo"
+          placeholder="الحد الأقصى"
+        />
+      </div>
+    </div>
+  </div>
+</div>

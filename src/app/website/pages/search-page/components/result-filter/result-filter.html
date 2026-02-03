@@ -1,0 +1,51 @@
+<div class="results-section">
+  <div class="results-header">
+    <div class="results-count">
+      عرض <strong>{{ productService.products().length }}</strong> منتج من
+      <strong>{{ productService.totalProducts() }}</strong>
+    </div>
+
+    <div class="sort-options">
+      <select id="resultsSort">
+        <option value="relevance">الأكثر صلة</option>
+        <option value="price-asc">السعر: من الأقل للأعلى</option>
+        <option value="price-desc">السعر: من الأعلى للأقل</option>
+      </select>
+    </div>
+  </div>
+
+  <div
+    [class.products-grid]="productService.products().length > 0"
+    [class.grid-view]="productService.products().length > 0"
+    id="productsGrid"
+  >
+    @if (productService.isLoading()) {
+      <div class="text-center py-5 w-100">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2">جاري تحميل المنتجات...</p>
+      </div>
+    } @else {
+      @for (product of productService.products(); track product._id) {
+        <app-product-card-component [product]="product"></app-product-card-component>
+      } @empty {
+        <div class="no-results py-5 text-center w-100">
+          <div class="no-results-icon mb-3">
+            <i class="bi bi-search fs-1 text-muted"></i>
+          </div>
+          <h3 class="no-results-title">لم يتم العثور على نتائج</h3>
+          <p class="no-results-text text-muted">
+            لم نتمكن من العثور على منتجات تطابق بحثك. حاول استخدام كلمات بحث مختلفة أو قم بتعديل
+            الفلاتر.
+          </p>
+          <button class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise me-2"></i>إعادة تعيين البحث
+          </button>
+        </div>
+      }
+    }
+  </div>
+
+  @if (productService.totalProducts() > 0) {
+    <app-pagination-component></app-pagination-component>
+  }
+</div>

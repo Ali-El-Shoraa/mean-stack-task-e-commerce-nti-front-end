@@ -1,0 +1,27 @@
+<section class="men-collection-section">
+  <div class="container">
+    <div class="section-header">
+      <app-section-header-component
+        [title]="titleHeader()"
+        [desc]="descHeader()"
+      ></app-section-header-component>
+
+      <app-collection-tabs-component [activeTab]="activeTab" (tabChanged)="filterProducts($event)">
+      </app-collection-tabs-component>
+    </div>
+
+    <div class="products-swiper shadow-sm p-4 bg-white rounded">
+      @if (filteredProducts.length > 0) {
+        <swiper-container #swiperRef init="false">
+          @for (product of filteredProducts; track product.id) {
+            <swiper-slide>
+              <app-product-card-component [product]="product"></app-product-card-component>
+            </swiper-slide>
+          }
+        </swiper-container>
+      } @else {
+        <div class="text-center p-5">No products found in this category.</div>
+      }
+    </div>
+  </div>
+</section>

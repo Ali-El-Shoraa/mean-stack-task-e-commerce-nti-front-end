@@ -1,0 +1,21 @@
+// في ملف component.scss
+::ng-deep body {
+  padding-top: 30px;
+  // padding: 30px;
+}
+
+.main-content {
+  margin-right: 280px;
+  padding: 30px;
+  transition: all 0.4s ease;
+  min-height: 100vh;
+
+  @media (max-width: 1200px) {
+    margin-right: 0;
+    padding: 20px;
+  }
+
+  @media (max-width: 576px) {
+    padding: 15px;
+  }
+}

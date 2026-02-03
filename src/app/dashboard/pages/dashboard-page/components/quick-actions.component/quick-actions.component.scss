@@ -1,0 +1,98 @@
+// src/app/components/quick-actions/quick-actions.component.scss
+
+.table-box {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+
+  @media (min-width: 992px) {
+    padding: 25px;
+  }
+
+  @media (max-width: 576px) {
+    padding: 15px;
+  }
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.table-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1d3557;
+  margin: 0;
+}
+
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+
+  @media (min-width: 992px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.quick-action-btn {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), white);
+  border-radius: 15px;
+  padding: 20px;
+  text-decoration: none;
+  color: #1d3557;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    color: #e63946;
+    border-color: #e63946;
+  }
+
+  i {
+    font-size: 1.8rem;
+    background: linear-gradient(45deg, #e63946, #f72585);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  @media (max-width: 400px) {
+    padding: 15px;
+  }
+}
+
+.quick-action-text {
+  flex-grow: 1;
+}
+
+.quick-action-title {
+  font-weight: 700;
+  margin-bottom: 5px;
+  font-size: 0.95rem;
+}
+
+.quick-action-desc {
+  font-size: 0.8rem;
+  color: #6c757d;
+}

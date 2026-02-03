@@ -1,0 +1,169 @@
+<!-- Login Container -->
+<div class="login-container">
+  <div class="login-card d-md-flex">
+    <!-- Left Side -->
+    <div class="login-left col-md-6">
+      <div class="login-left-content">
+        <div class="login-logo"><i class="bi bi-shop-window"></i> FashionHub</div>
+
+        <h2 class="login-title">مرحباً بعودتك إلى FashionHub</h2>
+
+        <p class="login-subtitle">
+          سجل دخولك الآن للاستمتاع بتجربة تسوق فريدة، وعروض حصرية، وتوصيل سريع لباب منزلك.
+        </p>
+
+        <ul class="features-list">
+          <li>
+            <i class="bi bi-check-circle"></i>
+            <span>تتبع طلباتك بسهولة</span>
+          </li>
+          <li>
+            <i class="bi bi-check-circle"></i>
+            <span>خصومات حصرية للأعضاء</span>
+          </li>
+          <li>
+            <i class="bi bi-check-circle"></i>
+            <span>توصيل مجاني للطلبات فوق $100</span>
+          </li>
+          <li>
+            <i class="bi bi-check-circle"></i>
+            <span>إرجاع سهل خلال 14 يوم</span>
+          </li>
+        </ul>
+
+        <div class="mt-4">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-shield-check fs-4 me-3" style="color: var(--secondary-color)"></i>
+            <div>
+              <h6 class="mb-1">دفع آمن ومشفر</h6>
+              <small>جميع معلوماتك محمية بأعلى معايير الأمان</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side -->
+    <div class="login-right col-md-6">
+      <div class="login-right-content">
+        <h2 class="login-form-title">تسجيل الدخول</h2>
+        <p class="login-form-subtitle">أدخل بياناتك للوصول إلى حسابك</p>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()" novalidate>
+          <div *ngIf="authService.loginError()" class="alert alert-danger p-2 small">
+            {{ authService.loginError() }}
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">البريد الإلكتروني</label>
+            <div class="input-group">
+              <input
+                type="email"
+                class="form-control"
+                formControlName="email"
+                [class.is-invalid]="
+                  loginForm.get('email')?.touched && loginForm.get('email')?.invalid
+                "
+                placeholder="example@email.com"
+              />
+              <span class="input-group-icon"><i class="bi bi-envelope"></i></span>
+            </div>
+            <div class="invalid-feedback">الرجاء إدخال بريد إلكتروني صحيح</div>
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">كلمة المرور</label>
+            <div class="input-group">
+              <input
+                type="password"
+                class="form-control"
+                formControlName="password"
+                [class.is-invalid]="
+                  loginForm.get('password')?.touched && loginForm.get('password')?.invalid
+                "
+                placeholder="••••••••"
+              />
+              <span class="input-group-icon"><i class="bi bi-lock"></i></span>
+            </div>
+          </div>
+
+          <div class="remember-forgot">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                formControlName="rememberMe"
+                id="rememberMe"
+              />
+              <label class="form-check-label" for="rememberMe"> تذكرني </label>
+            </div>
+            <a href="#forgotPasswordModal" class="forgot-link" data-bs-toggle="modal"
+              >نسيت كلمة المرور؟</a
+            >
+          </div>
+
+          <!-- <button type="submit" class="btn-login" [disabled]="isLoading || loginForm.invalid">
+            <div *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></div>
+            تسجيل الدخول
+          </button> -->
+
+          <button type="submit" [disabled]="authService.isLoading()" class="btn-login">
+            <span *ngIf="authService.isLoading()" class="spinner-border spinner-border-sm"></span>
+            {{ authService.isLoading() ? 'جاري التحقق...' : 'تسجيل الدخول' }}
+          </button>
+        </form>
+
+        <div class="divider">
+          <span>أو سجل الدخول باستخدام</span>
+        </div>
+
+        <div class="social-login">
+          <button class="btn-social btn-google">
+            <i class="bi bi-google"></i>
+            Google
+          </button>
+          <button class="btn-social btn-facebook">
+            <i class="bi bi-facebook"></i>
+            Facebook
+          </button>
+        </div>
+
+        <div class="signup-link">
+          ليس لديك حساب؟
+          <a href="register.html">سجل الآن</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Forgot Password Modal -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">استعادة كلمة المرور</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-4">أدخل بريدك الإلكتروني وسنرسل لك رابطاً لاستعادة كلمة المرور.</p>
+
+        <form id="forgotPasswordForm">
+          <div class="mb-3">
+            <label class="form-label">البريد الإلكتروني</label>
+            <input type="email" class="form-control" placeholder="example@email.com" required />
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-send me-2"></i> إرسال رابط الاستعادة
+            </button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              إلغاء
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

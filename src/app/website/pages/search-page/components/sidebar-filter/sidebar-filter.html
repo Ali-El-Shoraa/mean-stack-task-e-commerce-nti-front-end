@@ -1,0 +1,153 @@
+<!-- Filters Sidebar -->
+<div class="">
+  <div class="filters-sidebar">
+    <div class="filter-section">
+      <div class="filter-title">
+        <span>الفئات</span>
+        <i class="bi bi-chevron-down"></i>
+      </div>
+      <div class="filter-content">
+        <ul class="filter-list">
+          <li class="filter-item">
+            <label class="filter-checkbox">
+              <input type="checkbox" checked />
+              <span>رجالي</span>
+              <span class="count">(128)</span>
+            </label>
+          </li>
+          <li class="filter-item">
+            <label class="filter-checkbox">
+              <input type="checkbox" />
+              <span>نسائي</span>
+              <span class="count">(186)</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">
+        <span>السعر</span>
+        <i class="bi bi-chevron-down"></i>
+      </div>
+      <div class="price-range">
+        <div class="price-inputs">
+          <input type="number" id="minPrice" value="0" min="0" max="1000" />
+          <span>إلى</span>
+          <input type="number" id="maxPrice" value="500" min="0" max="1000" />
+        </div>
+        <div class="price-slider">
+          <div class="progress" id="priceProgress"></div>
+          <input type="range" id="priceRangeMin" min="0" max="1000" value="0" />
+          <input type="range" id="priceRangeMax" min="0" max="1000" value="500" />
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">
+        <span>المقاس</span>
+        <i class="bi bi-chevron-down"></i>
+      </div>
+      <div class="filter-content">
+        <ul class="filter-list">
+          <li class="filter-item">
+            <label class="filter-checkbox">
+              <input type="checkbox" />
+              <span>Small (S)</span>
+              <span class="count">(36)</span>
+            </label>
+          </li>
+          <li class="filter-item">
+            <label class="filter-checkbox">
+              <input type="checkbox" checked />
+              <span>Medium (M)</span>
+              <span class="count">(42)</span>
+            </label>
+          </li>
+          <li class="filter-item">
+            <label class="filter-checkbox">
+              <input type="checkbox" />
+              <span>Large (L)</span>
+              <span class="count">(38)</span>
+            </label>
+          </li>
+          <li class="filter-item">
+            <label class="filter-checkbox">
+              <input type="checkbox" />
+              <span>XL</span>
+              <span class="count">(25)</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">
+        <span>التقييم</span>
+        <i class="bi bi-chevron-down"></i>
+      </div>
+      <div class="filter-content">
+        <ul class="filter-list">
+          <li class="filter-item">
+            <label class="filter-checkbox">
+              <input type="checkbox" />
+              <div class="rating-stars">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <span class="count">(128)</span>
+            </label>
+          </li>
+          <li class="filter-item">
+            <label class="filter-checkbox">
+              <input type="checkbox" />
+              <div class="rating-stars">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star"></i>
+              </div>
+              <span class="count">(86)</span>
+            </label>
+          </li>
+          <li class="filter-item">
+            <label class="filter-checkbox">
+              <input type="checkbox" />
+              <div class="rating-stars">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star"></i>
+                <i class="bi bi-star"></i>
+              </div>
+              <span class="count">(45)</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <button class="clear-filters" id="clearFiltersBtn">
+      <i class="bi bi-x-circle me-2"></i>مسح جميع الفلاتر
+    </button>
+  </div>
+
+  <!-- Recent Searches -->
+  <div class="recent-searches">
+    <h3 class="recent-title">عمليات البحث الحديثة</h3>
+    <div class="recent-tags">
+      <a href="#" class="recent-tag">جينز</a>
+      <a href="#" class="recent-tag">قمصان</a>
+      <a href="#" class="recent-tag">أحذية رياضية</a>
+      <a href="#" class="recent-tag">حقائب</a>
+      <a href="#" class="recent-tag">نظارات شمسية</a>
+    </div>
+  </div>
+</div>

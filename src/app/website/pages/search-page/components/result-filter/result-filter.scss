@@ -1,0 +1,34 @@
+/* Products Grid */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* No Results */
+.no-results {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.no-results-icon {
+  font-size: 4rem;
+  color: var(--gray-light);
+  margin-bottom: 1.5rem;
+}
+
+.no-results-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--dark-color);
+}
+
+.no-results-text {
+  color: var(--gray-dark);
+  margin-bottom: 2rem;
+  max-width: 400px;
+  margin-right: auto;
+  margin-left: auto;
+}

@@ -1,0 +1,18 @@
+<!-- src/app/components/quick-actions/quick-actions.component.html -->
+
+<div class="table-box">
+  <div class="table-header">
+    <h3 class="table-title">إجراءات سريعة</h3>
+  </div>
+  <div class="quick-actions-grid">
+    @for (action of quickActions; track action.title) {
+      <a [routerLink]="action.route" class="quick-action-btn">
+        <i class="bi" [ngClass]="action.icon"></i>
+        <div class="quick-action-text">
+          <div class="quick-action-title">{{ action.title }}</div>
+          <div class="quick-action-desc">{{ action.description }}</div>
+        </div>
+      </a>
+    }
+  </div>
+</div>

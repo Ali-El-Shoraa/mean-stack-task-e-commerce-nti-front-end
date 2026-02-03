@@ -1,0 +1,47 @@
+<!-- src/app/features/orders/components/order-filters/order-filters.component.html -->
+
+<div class="orders-filters">
+  <div class="filters-header">
+    <h3 class="filters-title">تصفية الطلبات</h3>
+    <div class="filters-actions">
+      <button class="btn btn-outline-secondary" (click)="resetFilters()">
+        <i class="bi bi-arrow-clockwise me-2"></i>إعادة تعيين
+      </button>
+      <button class="btn btn-primary" (click)="applyFilters()">
+        <i class="bi bi-funnel me-2"></i>تطبيق التصفية
+      </button>
+    </div>
+  </div>
+
+  <div class="filter-group">
+    <div class="filter-item">
+      <label class="filter-label">حالة الطلب</label>
+      <select class="filter-select" [(ngModel)]="filters.status">
+        <option value="">جميع الحالات</option>
+        @for (option of statusOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <label class="filter-label">نوع الدفع</label>
+      <select class="filter-select" [(ngModel)]="filters.paymentMethod">
+        <option value="">جميع أنواع الدفع</option>
+        @for (option of paymentOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <label class="filter-label">من تاريخ</label>
+      <input type="date" class="filter-input" [(ngModel)]="filters.dateFrom" />
+    </div>
+
+    <div class="filter-item">
+      <label class="filter-label">إلى تاريخ</label>
+      <input type="date" class="filter-input" [(ngModel)]="filters.dateTo" />
+    </div>
+  </div>
+</div>

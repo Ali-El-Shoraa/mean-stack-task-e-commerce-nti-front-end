@@ -1,0 +1,18 @@
+<app-data-table
+  [columns]="columns"
+  [data]="getRecentOrders()"
+  [actions]="actions"
+  [config]="tableConfig"
+>
+</app-data-table>
+
+<!-- <app-data-table
+  [columns]="columns"
+  [data]="products"
+  [actions]="actions"
+  [config]="{ title: 'المنتجات', showPagination: true }"
+  [pageSizeOptions]="[5, 10, 25, 50]"
+  [defaultPageSize]="10"
+  >
+  (pageChange)="onPageChange($event)"
+</app-data-table> -->

@@ -1,0 +1,61 @@
+<!-- Advanced Search -->
+<div class="advanced-search">
+  <div class="search-bar">
+    <input
+      type="text"
+      class="search-input"
+      id="searchInput"
+      placeholder="ما الذي تبحث عنه؟ جرب 'تيشيرت رجالي' أو 'فستان أنيق'"
+      value="تيشيرت رجالي"
+    />
+    <button class="search-btn" id="searchButton"><i class="bi bi-search"></i> بحث</button>
+  </div>
+
+  <div class="search-options">
+    <div class="search-option">
+      <label for="category">الفئة</label>
+      <select id="category">
+        <option value="">جميع الفئات</option>
+        <option value="men">رجالي</option>
+        <option value="women" selected>نسائي</option>
+        <option value="accessories">إكسسوارات</option>
+        <option value="shoes">أحذية</option>
+      </select>
+    </div>
+
+    <div class="search-option">
+      <label for="priceRange">نطاق السعر</label>
+      <select id="priceRange">
+        <option value="">جميع الأسعار</option>
+        <option value="0-50">حتى $50</option>
+        <option value="50-100">$50 - $100</option>
+        <option value="100-200">$100 - $200</option>
+        <option value="200+">أكثر من $200</option>
+      </select>
+    </div>
+
+    <div class="search-option">
+      <label for="sortBy">ترتيب حسب</label>
+      <select id="sortBy">
+        <option value="relevance">الأكثر صلة</option>
+        <option value="price-asc">السعر: من الأقل للأعلى</option>
+        <option value="price-desc">السعر: من الأعلى للأقل</option>
+        <option value="rating">الأعلى تقييماً</option>
+        <option value="newest">الأحدث</option>
+      </select>
+    </div>
+
+    <div class="search-option">
+      <label for="availability">التوفر</label>
+      <select id="availability">
+        <option value="">الجميع</option>
+        <option value="in-stock">متوفر في المخزون</option>
+        <option value="pre-order">طلب مسبق</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="search-stats">
+    <span>عرض <strong>24</strong> نتيجة بحث عن "<strong>تيشيرت رجالي</strong>"</span>
+  </div>
+</div>

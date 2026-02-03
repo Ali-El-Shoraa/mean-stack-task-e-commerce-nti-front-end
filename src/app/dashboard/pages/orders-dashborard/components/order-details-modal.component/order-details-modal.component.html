@@ -1,0 +1,116 @@
+<!-- src/app/features/orders/components/order-details-modal/order-details-modal.component.html -->
+
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h5 class="modal-title">تفاصيل الطلب #{{ order?.id }}</h5>
+      <button type="button" class="btn-close" (click)="onClose()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    @if (order) {
+      <div class="modal-body">
+        <div class="order-details-grid">
+          <div class="order-detail-item">
+            <div class="order-detail-label">اسم العميل</div>
+            <div class="order-detail-value">{{ order.customer.name }}</div>
+          </div>
+          <div class="order-detail-item">
+            <div class="order-detail-label">البريد الإلكتروني</div>
+            <div class="order-detail-value">{{ order.customer.email }}</div>
+          </div>
+          <div class="order-detail-item">
+            <div class="order-detail-label">رقم الهاتف</div>
+            <div class="order-detail-value">{{ order.customer.phone || 'غير متوفر' }}</div>
+          </div>
+          <div class="order-detail-item">
+            <div class="order-detail-label">تاريخ الطلب</div>
+            <div class="order-detail-value">{{ order.date | date: 'longDate' }}</div>
+          </div>
+          <div class="order-detail-item">
+            <div class="order-detail-label">حالة الطلب</div>
+            <div class="order-detail-value">
+              <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+                {{ getStatusLabel(order.status) }}
+              </span>
+            </div>
+          </div>
+          <div class="order-detail-item">
+            <div class="order-detail-label">طريقة الدفع</div>
+            <div class="order-detail-value">{{ getPaymentLabel(order.paymentMethod) }}</div>
+          </div>
+          @if (order.address) {
+            <div class="order-detail-item">
+              <div class="order-detail-label">العنوان</div>
+              <div class="order-detail-value">{{ order.address }}</div>
+            </div>
+          }
+          @if (order.trackingNumber) {
+            <div class="order-detail-item">
+              <div class="order-detail-label">رقم التتبع</div>
+              <div class="order-detail-value">{{ order.trackingNumber }}</div>
+            </div>
+          }
+        </div>
+
+        @if (order.items && order.items.length > 0) {
+          <h6 class="items-title">المنتجات المطلوبة</h6>
+          <div class="items-table-wrapper">
+            <table class="order-items-table">
+              <thead>
+                <tr>
+                  <th>المنتج</th>
+                  <th>الكمية</th>
+                  <th>السعر</th>
+                  <th>الإجمالي</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of order.items; track item.id) {
+                  <tr>
+                    <td>
+                      <div class="product-info">
+                        <div class="product-image"></div>
+                        <span>{{ item.productName }}</span>
+                      </div>
+                    </td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.price | currency: 'USD' }}</td>
+                    <td>{{ item.total | currency: 'USD' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <div class="order-total">
+            <div class="total-row">
+              <span>المجموع الجزئي:</span>
+              <span>{{ subtotal | currency: 'USD' }}</span>
+            </div>
+            <div class="total-row">
+              <span>ضريبة القيمة المضافة (15%):</span>
+              <span>{{ tax | currency: 'USD' }}</span>
+            </div>
+            <div class="total-row">
+              <span>رسوم الشحن:</span>
+              <span>{{ shipping | currency: 'USD' }}</span>
+            </div>
+            <div class="total-row final">
+              <span>المجموع الكلي:</span>
+              <span class="total-amount">{{ total | currency: 'USD' }}</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="onClose()">إغلاق</button>
+        <button type="button" class="btn btn-primary" (click)="printInvoice()">
+          <i class="bi bi-printer me-2"></i>طباعة الفاتورة
+        </button>
+      </div>
+    }
+  </div>
+</div>

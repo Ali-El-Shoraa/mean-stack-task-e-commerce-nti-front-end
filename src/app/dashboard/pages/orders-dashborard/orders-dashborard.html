@@ -1,0 +1,18 @@
+<!-- src/app/features/orders/orders.component.html -->
+
+<div class="orders-page">
+  <!-- Stats Cards -->
+  <app-order-stats></app-order-stats>
+
+  <!-- Filters -->
+  <app-order-filters></app-order-filters>
+
+  <!-- Orders Table -->
+  <app-orders-dashboard-table-component></app-orders-dashboard-table-component>
+
+  <!-- Order Details Modal -->
+  @if (showModal()) {
+    <app-order-details-modal [order]="selectedOrder()" (close)="closeModal()">
+    </app-order-details-modal>
+  }
+</div>

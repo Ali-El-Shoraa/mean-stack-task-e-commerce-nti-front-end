@@ -1,0 +1,156 @@
+/* Filters Sidebar */
+.filters-sidebar {
+  background: white;
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+  // position: sticky;
+  // top: 100px;
+}
+
+.filter-section {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--gray-light);
+}
+
+.filter-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.filter-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--dark-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.filter-content {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.filter-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.filter-item {
+  margin-bottom: 0.8rem;
+}
+
+.filter-item:last-child {
+  margin-bottom: 0;
+}
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.filter-checkbox input {
+  margin-left: 10px;
+}
+
+.filter-checkbox span {
+  color: var(--dark-color);
+}
+
+.filter-checkbox .count {
+  color: var(--gray-dark);
+  font-size: 0.9rem;
+  margin-right: auto;
+  margin-left: 10px;
+}
+
+.price-range {
+  margin-top: 1rem;
+}
+
+.price-inputs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.price-inputs input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--gray-light);
+  border-radius: 5px;
+  text-align: center;
+}
+
+.price-slider {
+  height: 5px;
+  background: var(--gray-light);
+  border-radius: 5px;
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+.price-slider .progress {
+  position: absolute;
+  height: 100%;
+  background: var(--primary-color);
+  border-radius: 5px;
+  left: 0;
+  right: 0;
+}
+
+.price-slider input {
+  position: absolute;
+  top: -5px;
+  height: 15px;
+  width: 100%;
+  background: none;
+  pointer-events: none;
+  -webkit-appearance: none;
+}
+
+.price-slider input[type='range']::-webkit-slider-thumb {
+  height: 17px;
+  width: 17px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  pointer-events: auto;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.rating-stars {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.rating-stars i {
+  color: #ffc107;
+  font-size: 0.9rem;
+}
+
+.clear-filters {
+  background: var(--light-color);
+  color: var(--dark-color);
+  border: 1px solid var(--gray-light);
+  border-radius: 8px;
+  padding: 0.8rem;
+  width: 100%;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.clear-filters:hover {
+  background: var(--gray-light);
+}

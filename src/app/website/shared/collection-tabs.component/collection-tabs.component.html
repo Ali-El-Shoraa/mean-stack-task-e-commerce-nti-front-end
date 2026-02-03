@@ -1,0 +1,49 @@
+<div class="collection-tabs">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [ngClass]="{ active: activeTab() === 'all' }"
+        (click)="onTabClick('all')"
+      >
+        <i class="bi bi-grid"></i> All Products
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [ngClass]="{ active: activeTab() === 'Shirts' }"
+        (click)="onTabClick('Shirts')"
+      >
+        <i class="bi bi-bag"></i> Shirts
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [ngClass]="{ active: activeTab() === 'Pants' }"
+        (click)="onTabClick('Pants')"
+      >
+        <i class="bi bi-tags"></i> Pants
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [ngClass]="{ active: activeTab() === 'Shoes' }"
+        (click)="onTabClick('Shoes')"
+      >
+        <i class="bi bi-stars"></i> Shoes
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [ngClass]="{ active: activeTab() === 'Accessories' }"
+        (click)="onTabClick('Accessories')"
+      >
+        <i class="bi bi-watch"></i> Accessories
+      </button>
+    </li>
+  </ul>
+</div>

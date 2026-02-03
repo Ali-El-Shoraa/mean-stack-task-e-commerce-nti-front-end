@@ -1,0 +1,19 @@
+<div class="product-card">
+  <div class="product-badge" [ngClass]="product()?.badgeClass">{{ product()?.badge }}</div>
+  <div class="product-img-container">
+    <img [src]="product()?.image" [alt]="product()?.title" class="product-img" />
+    <div class="product-actions">
+      <button class="product-action-btn"><i class="bi bi-heart"></i></button>
+      <button class="product-action-btn"><i class="bi bi-eye"></i></button>
+    </div>
+  </div>
+  <div class="product-body">
+    <span class="product-category">{{ product()?.category }}</span>
+    <h3 class="product-title">{{ product()?.title }}</h3>
+    <div class="product-price">
+      <span class="price-discount">${{ product()?.price }}</span>
+      <span class="price-old">${{ product()?.oldPrice }}</span>
+    </div>
+    <button class="btn-add-cart"><i class="bi bi-cart-plus"></i> Add to Cart</button>
+  </div>
+</div>

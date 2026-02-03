@@ -1,0 +1,20 @@
+// src/app/app.component.scss
+
+.tables-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 25px;
+  margin-bottom: 40px;
+  width: 100%;
+
+  @media (min-width: 992px) {
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+  }
+
+  // ✅ الحل: إضافة min-width: 0 للعناصر الأبناء
+  > * {
+    min-width: 0; // ✅ هذا هو المفتاح!
+    overflow: hidden; // ✅ احتياطي
+  }
+}

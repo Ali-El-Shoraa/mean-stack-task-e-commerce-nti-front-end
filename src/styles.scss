@@ -1,0 +1,57 @@
+/* You can add global styles to this file, and also import other style files */
+
+:root {
+  --primary-color: #e63946;
+  --secondary-color: #a8dadc;
+  --accent-color: #f72585;
+  --light-color: #f8f9fa;
+  --dark-color: #1d3557;
+  --success-color: #4cc9f0;
+  --gray-light: #e9ecef;
+  --gray-dark: #6c757d;
+  --men-color: #457b9d;
+  --women-color: #f4a261;
+  --ad-bg: #fff3cd;
+  --ad-border: #ffeaa7;
+  --gradient-start: #0a192f;
+  --gradient-end: #1d3557;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family:
+    'Cairo',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    sans-serif;
+  color: var(--dark-color);
+  padding-top: 80px;
+  background-color: #f9fafc;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--light-color);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gray-dark);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}

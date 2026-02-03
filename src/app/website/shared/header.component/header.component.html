@@ -1,0 +1,290 @@
+<!-- Navigation - محسّن -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/home"> <i class="bi bi-shop-window"></i> FashionHub </a>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/home" routerLinkActive="active">الرئيسية</a>
+        </li>
+
+        @if (authService.isAdmin()) {
+          <li class="nav-item">
+            <a class="nav-link text-danger fw-bold" routerLink="/dashboard">لوحة التحكم</a>
+          </li>
+        }
+
+        <li class="nav-item"><a class="nav-link" href="#men-section">ملابس رجالية</a></li>
+        <li class="nav-item"><a class="nav-link" href="#women-section">ملابس نسائية</a></li>
+      </ul>
+
+      <div class="d-flex align-items-center">
+        <div
+          class="notification-bell"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#notificationOffcanvas"
+        >
+          <i class="bi bi-bell"></i>
+          <span class="notification-count">3</span>
+        </div>
+
+        <div class="cart-icon me-3" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+          <i class="bi bi-cart3"></i>
+          <span class="cart-badge">3</span>
+        </div>
+
+        <div class="dropdown">
+          <a
+            href="#"
+            class="user-dropdown dropdown-toggle d-flex align-items-center"
+            id="userDropdown"
+            data-bs-toggle="dropdown"
+          >
+            @if (authService.isLoggedIn()) {
+              <!-- <span class="me-2 d-none d-md-inline small fw-bold">
+                {{ authService.currentUser()?.firstName }}
+              </span> -->
+              <img
+                [src]="authService.currentUser()?.avatar || 'assets/default-avatar.png'"
+                class="rounded-circle border w-100 h-100"
+                width="30"
+                height="30"
+                alt="user"
+              />
+            } @else {
+              <i class="bi bi-person-circle fs-4"></i>
+            }
+          </a>
+
+          <ul
+            class="dropdown-menu dropdown-menu-end shadow border-0"
+            aria-labelledby="userDropdown"
+          >
+            @if (authService.isLoggedIn()) {
+              <li class="px-3 py-2 border-bottom d-md-none">
+                <span class="fw-bold">{{ authService.currentUser()?.firstName }}</span>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/profile"
+                  ><i class="bi bi-person me-2"></i> حسابي</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/orders"
+                  ><i class="bi bi-bag me-2"></i> طلباتي</a
+                >
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <button class="dropdown-item text-danger" (click)="handleLogout()">
+                  <i class="bi bi-box-arrow-right me-2"></i> تسجيل الخروج
+                </button>
+              </li>
+            } @else {
+              <li>
+                <a class="dropdown-item" routerLink="/login"
+                  ><i class="bi bi-box-arrow-in-right me-2"></i> تسجيل الدخول</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/register"
+                  ><i class="bi bi-person-plus me-2"></i> إنشاء حساب جديد</a
+                >
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Cart Offcanvas Sidebar -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas">
+  <div class="offcanvas-header">
+    <div>
+      <h5 class="offcanvas-title">
+        <i class="bi bi-cart3 me-2"></i>
+        عربة التسوق
+      </h5>
+      <p class="mb-0 text-white-50">3 منتجات في العربة</p>
+    </div>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="cart-items">
+      <!-- Cart Item 1 -->
+      <div class="cart-item">
+        <img
+          src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+          alt="تيشيرت"
+          class="cart-item-img"
+        />
+        <div class="cart-item-details">
+          <h6 class="cart-item-title">تيشيرت قطني مميز</h6>
+          <div class="cart-item-price">$29.99</div>
+        </div>
+        <div class="cart-item-actions">
+          <div class="quantity-control d-flex align-items-center">
+            <button class="quantity-btn">-</button>
+            <input type="text" class="quantity-input" value="1" />
+            <button class="quantity-btn">+</button>
+          </div>
+          <button class="remove-btn">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Cart Item 2 -->
+      <div class="cart-item">
+        <img
+          src="https://images.unsplash.com/photo-1591195853828-11db59a44f6b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+          alt="جينز"
+          class="cart-item-img"
+        />
+        <div class="cart-item-details">
+          <h6 class="cart-item-title">جينز ضيق أزرق داكن</h6>
+          <div class="cart-item-price">$49.99</div>
+        </div>
+        <div class="cart-item-actions">
+          <div class="quantity-control d-flex align-items-center">
+            <button class="quantity-btn">-</button>
+            <input type="text" class="quantity-input" value="1" />
+            <button class="quantity-btn">+</button>
+          </div>
+          <button class="remove-btn">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Cart Item 3 -->
+      <div class="cart-item">
+        <img
+          src="https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+          alt="حذاء"
+          class="cart-item-img"
+        />
+        <div class="cart-item-details">
+          <h6 class="cart-item-title">حذاء رياضي عصري</h6>
+          <div class="cart-item-price">$74.99</div>
+        </div>
+        <div class="cart-item-actions">
+          <div class="quantity-control d-flex align-items-center">
+            <button class="quantity-btn">-</button>
+            <input type="text" class="quantity-input" value="1" />
+            <button class="quantity-btn">+</button>
+          </div>
+          <button class="remove-btn">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-summary">
+      <div class="summary-row">
+        <span>المجموع الفرعي</span>
+        <span>$154.97</span>
+      </div>
+      <div class="summary-row">
+        <span>رسوم الشحن</span>
+        <span>$10.00</span>
+      </div>
+      <div class="summary-row">
+        <span>الخصم</span>
+        <span class="text-success">-$25.00</span>
+      </div>
+      <div class="summary-row total">
+        <span>المجموع النهائي</span>
+        <span>$139.97</span>
+      </div>
+      <button class="btn-checkout">
+        <i class="bi bi-lock-fill"></i>
+        إتمام عملية الشراء
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Notification Offcanvas Sidebar -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="notificationOffcanvas">
+  <div class="offcanvas-header">
+    <div>
+      <h5 class="offcanvas-title">
+        <i class="bi bi-bell me-2"></i>
+        الإشعارات
+      </h5>
+      <p class="mb-0 text-white-50">لديك 3 إشعارات جديدة</p>
+    </div>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="notification-header">
+      <div class="notification-tabs">
+        <button class="notification-tab active">الكل</button>
+        <button class="notification-tab">غير المقروء</button>
+        <button class="notification-tab">مهم</button>
+      </div>
+      <button class="btn btn-sm btn-outline-primary">تحديد الكل كمقروء</button>
+    </div>
+
+    <div class="notifications-list">
+      <!-- Notification 1 -->
+      <div class="notification-item unread">
+        <div class="notification-icon order">
+          <i class="bi bi-bag-check"></i>
+        </div>
+        <div class="notification-content">
+          <h6 class="notification-title">تم شحن طلبك!</h6>
+          <p class="notification-text">تم شحن طلبك رقم #12345 وسيصل خلال 2-3 أيام عمل</p>
+          <div class="notification-time">
+            <span class="notification-dot"></span>
+            منذ 2 ساعة
+          </div>
+        </div>
+      </div>
+
+      <!-- Notification 2 -->
+      <div class="notification-item">
+        <div class="notification-icon offer">
+          <i class="bi bi-tag"></i>
+        </div>
+        <div class="notification-content">
+          <h6 class="notification-title">عرض خاص!</h6>
+          <p class="notification-text">خصم 30% على جميع المنتجات الرجالية لمدة 24 ساعة فقط</p>
+          <div class="notification-time">منذ 5 ساعات</div>
+        </div>
+      </div>
+
+      <!-- Notification 3 -->
+      <div class="notification-item unread">
+        <div class="notification-icon system">
+          <i class="bi bi-info-circle"></i>
+        </div>
+        <div class="notification-content">
+          <h6 class="notification-title">تم إضافة منتج جديد</h6>
+          <p class="notification-text">تم إضافة مجموعة جديدة من الفساتين النسائية إلى المتجر</p>
+          <div class="notification-time">
+            <span class="notification-dot"></span>
+            منذ يوم
+          </div>
+        </div>
+      </div>
+
+      <!-- Notification 4 -->
+      <div class="notification-item">
+        <div class="notification-icon order">
+          <i class="bi bi-star"></i>
+        </div>
+        <div class="notification-content">
+          <h6 class="notification-title">قيم منتجاتك</h6>
+          <p class="notification-text">شاركنا بتجربتك وقيم المنتجات التي اشتريتها مؤخراً</p>
+          <div class="notification-time">منذ 3 أيام</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

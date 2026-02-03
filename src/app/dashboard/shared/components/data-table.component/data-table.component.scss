@@ -1,0 +1,348 @@
+// src/app/shared/components/data-table/data-table.component.scss
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.table-box {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  width: 100%;
+  position: relative;
+
+  @media (min-width: 992px) {
+    padding: 25px;
+  }
+
+  @media (max-width: 576px) {
+    padding: 15px;
+  }
+
+  &.loading {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: 20px;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.table-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1d3557;
+  margin: 0;
+  flex: 1;
+  min-width: 200px;
+}
+
+.table-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  a,
+  button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+}
+
+.table-scroll-wrapper {
+  width: 100%;
+  border-radius: 15px;
+  background: white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.table-scroll-container {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #e63946, #f72585);
+    border-radius: 10px;
+
+    &:hover {
+      background: linear-gradient(45deg, #f72585, #e63946);
+    }
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: #e63946 #f1f1f1;
+}
+
+// ✅ الجدول يأخذ فقط المساحة المطلوبة
+.dashboard-table {
+  width: 100%; // ✅ يملأ المساحة المتاحة
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: auto; // ✅ الأعمدة حسب المحتوى
+
+  thead {
+    background: linear-gradient(90deg, #0a192f, #1d3557);
+  }
+
+  th {
+    padding: 15px 20px;
+    text-align: right;
+    font-weight: 700;
+    color: white;
+    font-size: 0.9rem;
+    border: none;
+    white-space: nowrap;
+    user-select: none;
+    // ❌ أزلنا min-width
+
+    &:first-child {
+      border-top-right-radius: 15px;
+    }
+
+    &:last-child {
+      border-top-left-radius: 15px;
+    }
+
+    &.sortable {
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .sort-icon {
+      margin-right: 8px;
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 576px) {
+      padding: 12px 15px;
+      font-size: 0.85rem;
+    }
+  }
+
+  td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e9ecef;
+    font-weight: 500;
+    color: #1d3557;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    vertical-align: middle;
+    // ❌ أزلنا min-width
+
+    @media (max-width: 576px) {
+      padding: 12px 15px;
+      font-size: 0.85rem;
+    }
+  }
+
+  tbody tr:hover td {
+    background: rgba(230, 57, 70, 0.03);
+  }
+}
+
+.table-link {
+  color: #1d3557;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #e63946;
+    text-decoration: underline;
+  }
+}
+
+.actions-column {
+  text-align: center;
+}
+
+.actions-cell {
+  text-align: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: nowrap;
+
+  a,
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    text-decoration: none;
+
+    i {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.empty-row td {
+  padding: 60px 20px !important;
+  text-align: center;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  color: #6c757d;
+
+  i {
+    font-size: 3rem;
+    opacity: 0.5;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+  }
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: inline-block;
+  text-align: center;
+
+  &.completed,
+  &.success,
+  &.active {
+    background: linear-gradient(45deg, rgba(40, 167, 69, 0.15), rgba(40, 167, 69, 0.05));
+    color: #28a745;
+    border: 2px solid rgba(40, 167, 69, 0.2);
+  }
+
+  &.pending,
+  &.warning {
+    background: linear-gradient(45deg, rgba(255, 193, 7, 0.15), rgba(255, 193, 7, 0.05));
+    color: #ffc107;
+    border: 2px solid rgba(255, 193, 7, 0.2);
+  }
+
+  &.processing,
+  &.info {
+    background: linear-gradient(45deg, rgba(13, 110, 253, 0.15), rgba(13, 110, 253, 0.05));
+    color: #0d6efd;
+    border: 2px solid rgba(13, 110, 253, 0.2);
+  }
+
+  &.cancelled,
+  &.error,
+  &.inactive {
+    background: linear-gradient(45deg, rgba(220, 53, 69, 0.15), rgba(220, 53, 69, 0.05));
+    color: #dc3545;
+    border: 2px solid rgba(220, 53, 69, 0.2);
+  }
+}
+
+.table-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e9ecef;
+  flex-wrap: wrap;
+  gap: 15px;
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+  }
+}
+
+.pagination-info {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.pagination-nav {
+  display: flex;
+  gap: 5px;
+}
+
+.page-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #e9ecef;
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #1d3557;
+
+  &:hover:not(:disabled) {
+    border-color: #e63946;
+    color: #e63946;
+  }
+
+  &.active {
+    background: linear-gradient(45deg, #e63946, #f72585);
+    color: white;
+    border-color: transparent;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  i {
+    font-size: 0.8rem;
+  }
+}
