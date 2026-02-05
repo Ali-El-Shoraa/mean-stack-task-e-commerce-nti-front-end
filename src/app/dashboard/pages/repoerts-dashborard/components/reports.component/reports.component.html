@@ -1,0 +1,203 @@
+<!-- src/app/features/reports/reports.component.html -->
+
+<!-- Reports Stats -->
+<div class="stats-grid">
+  <div class="stats-card">
+    <div class="stats-card-icon revenue">
+      <i class="bi bi-currency-dollar"></i>
+    </div>
+    <div class="stats-card-value">{{ stats.totalRevenue }}</div>
+    <div class="stats-card-title">إجمالي الإيرادات</div>
+    <div class="stats-card-change positive">
+      <i class="bi bi-arrow-up"></i> {{ stats.revenueChange }}% عن الشهر الماضي
+    </div>
+  </div>
+
+  <div class="stats-card">
+    <div class="stats-card-icon orders">
+      <i class="bi bi-cart-check"></i>
+    </div>
+    <div class="stats-card-value">{{ stats.totalOrders }}</div>
+    <div class="stats-card-title">إجمالي الطلبات</div>
+    <div class="stats-card-change positive">
+      <i class="bi bi-arrow-up"></i> {{ stats.ordersChange }}% عن الشهر الماضي
+    </div>
+  </div>
+
+  <div class="stats-card">
+    <div class="stats-card-icon customers">
+      <i class="bi bi-people-fill"></i>
+    </div>
+    <div class="stats-card-value">{{ stats.newCustomers }}</div>
+    <div class="stats-card-title">عملاء جدد</div>
+    <div class="stats-card-change positive">
+      <i class="bi bi-arrow-up"></i> {{ stats.customersChange }}% عن الشهر الماضي
+    </div>
+  </div>
+
+  <div class="stats-card">
+    <div class="stats-card-icon products">
+      <i class="bi bi-box-seam"></i>
+    </div>
+    <div class="stats-card-value">{{ stats.avgOrder }}</div>
+    <div class="stats-card-title">متوسط قيمة الطلب</div>
+    <div class="stats-card-change positive">
+      <i class="bi bi-arrow-up"></i> {{ stats.avgOrderChange }}% عن الشهر الماضي
+    </div>
+  </div>
+</div>
+
+<!-- Reports Filters -->
+<div class="reports-filters">
+  <div class="filters-header">
+    <h3 class="filters-title">تصفية التقارير</h3>
+    <div class="filters-actions">
+      <button class="btn btn-outline-secondary" (click)="resetFilters()">
+        <i class="bi bi-arrow-clockwise me-2"></i>إعادة تعيين
+      </button>
+      <button class="btn btn-primary" (click)="applyFilters()">
+        <i class="bi bi-funnel me-2"></i>تطبيق التصفية
+      </button>
+    </div>
+  </div>
+
+  <div class="filter-group">
+    <div class="filter-item">
+      <label class="filter-label">نوع التقرير</label>
+      <select class="filter-select" [(ngModel)]="filters.reportType">
+        @for (type of reportTypes; track type.value) {
+          <option [value]="type.value">{{ type.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <label class="filter-label">الفترة الزمنية</label>
+      <select class="filter-select" [(ngModel)]="filters.timePeriod">
+        @for (period of timePeriods; track period.value) {
+          <option [value]="period.value">{{ period.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <label class="filter-label">التاريخ من - إلى</label>
+      <div class="date-range-container">
+        <input
+          type="date"
+          class="filter-input"
+          [(ngModel)]="filters.dateFrom"
+          placeholder="من تاريخ"
+        />
+        <input
+          type="date"
+          class="filter-input"
+          [(ngModel)]="filters.dateTo"
+          placeholder="إلى تاريخ"
+        />
+      </div>
+    </div>
+
+    <div class="filter-item">
+      <label class="filter-label">التصنيف</label>
+      <select class="filter-select" [(ngModel)]="filters.category">
+        @for (cat of categories; track cat.value) {
+          <option [value]="cat.value">{{ cat.label }}</option>
+        }
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- Charts Section -->
+<div class="charts-container">
+  <!-- Revenue Chart -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <h3 class="chart-title">الإيرادات الشهرية</h3>
+      <div class="chart-actions">
+        <button class="action-btn download" (click)="downloadChart('revenueChart')">
+          <i class="bi bi-download"></i>
+        </button>
+        <button class="action-btn print" (click)="printChart('revenueChart')">
+          <i class="bi bi-printer"></i>
+        </button>
+      </div>
+    </div>
+    <div class="chart-wrapper">
+      <canvas id="revenueChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Orders Chart -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <h3 class="chart-title">الطلبات اليومية</h3>
+      <div class="chart-actions">
+        <button class="action-btn download" (click)="downloadChart('ordersChart')">
+          <i class="bi bi-download"></i>
+        </button>
+        <button class="action-btn print" (click)="printChart('ordersChart')">
+          <i class="bi bi-printer"></i>
+        </button>
+      </div>
+    </div>
+    <div class="chart-wrapper">
+      <canvas id="ordersChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Top Products Chart -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <h3 class="chart-title">أفضل المنتجات مبيعاً</h3>
+      <div class="chart-actions">
+        <button class="action-btn download" (click)="downloadChart('productsChart')">
+          <i class="bi bi-download"></i>
+        </button>
+        <button class="action-btn print" (click)="printChart('productsChart')">
+          <i class="bi bi-printer"></i>
+        </button>
+      </div>
+    </div>
+    <div class="chart-wrapper">
+      <canvas id="productsChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Customer Growth Chart -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <h3 class="chart-title">نمو العملاء</h3>
+      <div class="chart-actions">
+        <button class="action-btn download" (click)="downloadChart('customersChart')">
+          <i class="bi bi-download"></i>
+        </button>
+        <button class="action-btn print" (click)="printChart('customersChart')">
+          <i class="bi bi-printer"></i>
+        </button>
+      </div>
+    </div>
+    <div class="chart-wrapper">
+      <canvas id="customersChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Reports Table (using shared DataTable component) -->
+<app-data-table
+  [columns]="tableColumns"
+  [data]="reports"
+  [actions]="tableActions"
+  [config]="tableConfig"
+  trackBy="id"
+  (sortChange)="onSortChange($event)"
+>
+  <!-- Custom Cell Template for Report Name -->
+  <ng-template #customCell let-item let-column="column">
+    @if (column.key === 'name') {
+      <div style="font-weight: 600">{{ item.name }}</div>
+      <small class="text-muted">{{ item.description }}</small>
+    }
+  </ng-template>
+</app-data-table>

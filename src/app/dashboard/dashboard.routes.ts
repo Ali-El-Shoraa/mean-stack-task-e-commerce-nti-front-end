@@ -3,6 +3,11 @@ import { RootLayout } from './layouts/root-layout/root-layout';
 import { DashboardPage } from './pages/dashboard-page/dashboard-page';
 import { OrdersDashborard } from './pages/orders-dashborard/orders-dashborard';
 import { ProductsDashborard } from './pages/products-dashborard/products-dashborard';
+import { ClientsDashborard } from './pages/clients-dashborard/clients-dashborard';
+import { RepoertsDashborard } from './pages/repoerts-dashborard/repoerts-dashborard';
+import { OffersDashborard } from './pages/offers-dashborard/offers-dashborard';
+import { ReviewsDashborard } from './pages/reviews-dashborard/reviews-dashborard';
+import { SettingsDashborard } from './pages/settings-dashborard/settings-dashborard';
 
 export const routesDashboard: Routes = [
   {
@@ -25,6 +30,26 @@ export const routesDashboard: Routes = [
       {
         path: 'products',
         component: ProductsDashborard,
+      },
+      {
+        path: 'customers',
+        component: ClientsDashborard,
+      },
+      {
+        path: 'reports',
+        component: RepoertsDashborard,
+      },
+      {
+        path: 'offers',
+        component: OffersDashborard,
+      },
+      {
+        path: 'reviews',
+        component: ReviewsDashborard,
+      },
+      {
+        path: 'settings',
+        component: SettingsDashborard,
       },
     ],
   },

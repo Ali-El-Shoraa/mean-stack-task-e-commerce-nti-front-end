@@ -1,0 +1,414 @@
+<!-- src/app/pages/customers/customers.component.html -->
+
+<!-- Customers Stats -->
+<div class="stats-grid">
+  <div class="stats-card">
+    <div class="stats-card-icon total">
+      <i class="bi bi-people-fill"></i>
+    </div>
+    <div class="stats-card-value">{{ stats.total | number }}</div>
+    <div class="stats-card-title">إجمالي العملاء</div>
+    <div
+      class="stats-card-change"
+      [class.positive]="stats.totalChange > 0"
+      [class.negative]="stats.totalChange < 0"
+    >
+      <i class="bi" [ngClass]="stats.totalChange > 0 ? 'bi-arrow-up' : 'bi-arrow-down'"></i>
+      {{ stats.totalChange | abs }}% عن الشهر الماضي
+    </div>
+  </div>
+
+  <div class="stats-card">
+    <div class="stats-card-icon active">
+      <i class="bi bi-check-circle"></i>
+    </div>
+    <div class="stats-card-value">{{ stats.active | number }}</div>
+    <div class="stats-card-title">عملاء نشطين</div>
+    <div
+      class="stats-card-change"
+      [class.positive]="stats.activeChange > 0"
+      [class.negative]="stats.activeChange < 0"
+    >
+      <i class="bi" [ngClass]="stats.activeChange > 0 ? 'bi-arrow-up' : 'bi-arrow-down'"></i>
+      {{ stats.activeChange | abs }}% عن الشهر الماضي
+    </div>
+  </div>
+
+  <div class="stats-card">
+    <div class="stats-card-icon new">
+      <i class="bi bi-person-plus"></i>
+    </div>
+    <div class="stats-card-value">{{ stats.new | number }}</div>
+    <div class="stats-card-title">عملاء جدد</div>
+    <div
+      class="stats-card-change"
+      [class.positive]="stats.newChange > 0"
+      [class.negative]="stats.newChange < 0"
+    >
+      <i class="bi" [ngClass]="stats.newChange > 0 ? 'bi-arrow-up' : 'bi-arrow-down'"></i>
+      {{ stats.newChange | abs }}% عن الشهر الماضي
+    </div>
+  </div>
+
+  <div class="stats-card">
+    <div class="stats-card-icon inactive">
+      <i class="bi bi-person-x"></i>
+    </div>
+    <div class="stats-card-value">{{ stats.inactive | number }}</div>
+    <div class="stats-card-title">عملاء غير نشطين</div>
+    <div
+      class="stats-card-change"
+      [class.positive]="stats.inactiveChange > 0"
+      [class.negative]="stats.inactiveChange < 0"
+    >
+      <i class="bi" [ngClass]="stats.inactiveChange > 0 ? 'bi-arrow-up' : 'bi-arrow-down'"></i>
+      {{ stats.inactiveChange | abs }}% عن الشهر الماضي
+    </div>
+  </div>
+</div>
+
+<!-- Customers Filters -->
+<div class="customers-filters">
+  <div class="filters-header">
+    <h3 class="filters-title">تصفية العملاء</h3>
+    <div class="filters-actions">
+      <button class="btn btn-outline-secondary" (click)="resetFilters()">
+        <i class="bi bi-arrow-clockwise me-2"></i>إعادة تعيين
+      </button>
+      <button class="btn btn-primary" (click)="applyFilters()">
+        <i class="bi bi-funnel me-2"></i>تطبيق التصفية
+      </button>
+    </div>
+  </div>
+
+  <div class="filter-group">
+    <div class="filter-item">
+      <label class="filter-label">حالة العميل</label>
+      <select class="filter-select" [(ngModel)]="filters.status">
+        <option value="">جميع الحالات</option>
+        <option value="active">نشط</option>
+        <option value="inactive">غير نشط</option>
+        <option value="pending">معلق</option>
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <label class="filter-label">عدد الطلبات</label>
+      <select class="filter-select" [(ngModel)]="filters.orders">
+        <option value="">جميع المستويات</option>
+        <option value="high">عالية (5+)</option>
+        <option value="medium">متوسطة (2-5)</option>
+        <option value="low">منخفضة (1)</option>
+        <option value="none">لا يوجد طلبات</option>
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <label class="filter-label">تاريخ التسجيل</label>
+      <div class="date-range-container">
+        <input
+          type="date"
+          class="filter-input"
+          [(ngModel)]="filters.dateFrom"
+          placeholder="من تاريخ"
+        />
+        <input
+          type="date"
+          class="filter-input"
+          [(ngModel)]="filters.dateTo"
+          placeholder="إلى تاريخ"
+        />
+      </div>
+    </div>
+
+    <div class="filter-item">
+      <label class="filter-label">إجمالي المشتريات</label>
+      <div class="date-range-container">
+        <input
+          type="number"
+          class="filter-input"
+          [(ngModel)]="filters.purchasesFrom"
+          placeholder="الحد الأدنى"
+        />
+        <input
+          type="number"
+          class="filter-input"
+          [(ngModel)]="filters.purchasesTo"
+          placeholder="الحد الأقصى"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- View Toggle -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">جميع العملاء</h4>
+  <div class="view-toggle">
+    <button
+      class="view-toggle-btn"
+      [class.active]="viewMode === 'table'"
+      (click)="setViewMode('table')"
+    >
+      <i class="bi bi-list"></i> جدول
+    </button>
+    <button
+      class="view-toggle-btn"
+      [class.active]="viewMode === 'grid'"
+      (click)="setViewMode('grid')"
+    >
+      <i class="bi bi-grid-3x3-gap"></i> شبكة
+    </button>
+  </div>
+</div>
+
+<!-- Table View -->
+@if (viewMode === 'table') {
+  <app-data-table
+    [columns]="columns"
+    [data]="filteredCustomers"
+    [actions]="actions"
+    [config]="tableConfig"
+    (sortChange)="onSortChange($event)"
+  >
+    <!-- Custom Cell Template -->
+    <ng-template #customCell let-item let-column="column">
+      @switch (column.key) {
+        @case ('customerInfo') {
+          <div class="d-flex align-items-center">
+            <div class="customer-avatar me-3">{{ item.firstName.charAt(0) }}</div>
+            <div>
+              <div style="font-weight: 600">{{ item.firstName }} {{ item.lastName }}</div>
+              <small class="text-muted">ID: CUST-{{ item.id | number: '3.0-0' }}</small>
+            </div>
+          </div>
+        }
+        @case ('contactInfo') {
+          <div>
+            <div style="font-weight: 500">{{ item.email }}</div>
+            <small class="text-muted">{{ item.phone }}</small>
+          </div>
+        }
+        @case ('orders') {
+          <span class="orders-badge" [ngClass]="getOrdersLevel(item.orders)">
+            {{ getOrdersText(item.orders) }}
+          </span>
+        }
+      }
+    </ng-template>
+  </app-data-table>
+}
+
+<!-- Grid View -->
+@if (viewMode === 'grid') {
+  <div class="customers-grid">
+    @for (customer of filteredCustomers; track customer.id) {
+      <div class="customer-card">
+        <div class="customer-card-header">
+          <div class="customer-card-avatar">{{ customer.firstName.charAt(0) }}</div>
+          <div class="customer-card-info">
+            <div class="customer-card-name">{{ customer.firstName }} {{ customer.lastName }}</div>
+            <div class="customer-card-email">{{ customer.email }}</div>
+          </div>
+        </div>
+        <div class="customer-card-body">
+          <div class="customer-card-details">
+            <div class="customer-card-detail">
+              <span class="customer-card-label">الهاتف</span>
+              <span class="customer-card-value">{{ customer.phone }}</span>
+            </div>
+            <div class="customer-card-detail">
+              <span class="customer-card-label">المدينة</span>
+              <span class="customer-card-value">{{ customer.city }}</span>
+            </div>
+            <div class="customer-card-detail">
+              <span class="customer-card-label">تاريخ التسجيل</span>
+              <span class="customer-card-value">{{
+                customer.joinDate | date: 'dd MMMM yyyy'
+              }}</span>
+            </div>
+            <div class="customer-card-detail">
+              <span class="customer-card-label">عدد الطلبات</span>
+              <span class="customer-card-value">{{ getOrdersText(customer.orders) }}</span>
+            </div>
+            <div class="customer-card-detail">
+              <span class="customer-card-label">إجمالي المشتريات</span>
+              <span class="customer-card-value">{{ customer.totalSpent | currency: 'USD' }}</span>
+            </div>
+            <div class="customer-card-detail">
+              <span class="customer-card-label">الحالة</span>
+              <span class="status-badge" [ngClass]="customer.status">
+                @switch (customer.status) {
+                  @case ('active') {
+                    نشط
+                  }
+                  @case ('inactive') {
+                    غير نشط
+                  }
+                  @case ('pending') {
+                    معلق
+                  }
+                }
+              </span>
+            </div>
+          </div>
+          <div class="customer-card-actions">
+            <button class="action-btn view" (click)="viewCustomer(customer)">
+              <i class="bi bi-eye"></i>عرض
+            </button>
+            <button class="action-btn message" (click)="messageCustomer(customer)">
+              <i class="bi bi-envelope"></i>رسالة
+            </button>
+            <button class="action-btn edit" (click)="editCustomer(customer)">
+              <i class="bi bi-pencil"></i>تعديل
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+<!-- Add Customer Modal -->
+@if (showAddModal) {
+  <div class="modal-backdrop fade show" (click)="closeAddCustomerModal()"></div>
+  <div class="modal fade show" style="display: block" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">إضافة عميل جديد</h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            (click)="closeAddCustomerModal()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">الاسم الأول</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="newCustomer.firstName"
+                  name="firstName"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">اسم العائلة</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="newCustomer.lastName"
+                  name="lastName"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">البريد الإلكتروني</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  [(ngModel)]="newCustomer.email"
+                  name="email"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">رقم الهاتف</label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  [(ngModel)]="newCustomer.phone"
+                  name="phone"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                <label class="form-label">العنوان</label>
+                <textarea
+                  class="form-control"
+                  [(ngModel)]="newCustomer.address"
+                  name="address"
+                  rows="2"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">المدينة</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="newCustomer.city"
+                  name="city"
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">الدولة</label>
+                <select class="form-select" [(ngModel)]="newCustomer.country" name="country">
+                  <option value="">اختر الدولة</option>
+                  <option value="sa">السعودية</option>
+                  <option value="ae">الإمارات</option>
+                  <option value="kw">الكويت</option>
+                  <option value="qa">قطر</option>
+                  <option value="bh">البحرين</option>
+                  <option value="om">عمان</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">كلمة المرور</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  [(ngModel)]="newCustomer.password"
+                  name="password"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">تأكيد كلمة المرور</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  [(ngModel)]="newCustomer.confirmPassword"
+                  name="confirmPassword"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">ملاحظات</label>
+              <textarea
+                class="form-control"
+                [(ngModel)]="newCustomer.notes"
+                name="notes"
+                rows="3"
+                placeholder="أي ملاحظات إضافية عن العميل..."
+              ></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeAddCustomerModal()">
+            إلغاء
+          </button>
+          <button type="button" class="btn btn-primary" (click)="saveCustomer()">حفظ العميل</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

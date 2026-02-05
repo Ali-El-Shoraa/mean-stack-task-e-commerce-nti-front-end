@@ -2,7 +2,7 @@ import { Component, effect, inject } from '@angular/core';
 import { ProductCardComponent } from '../../../../shared/product-card.component/product-card.component';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../../../../../shared/components/pagination.component/pagination.component';
-import { ProductService } from '../../../../../core/services/product.service';
+import { ProductsService } from '../../../../../core/services/products.service';
 
 @Component({
   selector: 'app-result-filter',
@@ -11,5 +11,5 @@ import { ProductService } from '../../../../../core/services/product.service';
   styleUrl: './result-filter.scss',
 })
 export class ResultFilter {
-  productService = inject(ProductService);
+  productService = inject(ProductsService);
 }

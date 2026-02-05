@@ -1,11 +1,11 @@
-// src/app/features/products/models/product.model.ts
+// src/app/core/models/product.model.ts
 
 export type ProductStatus = 'active' | 'inactive' | 'out-of-stock';
 export type ProductCategory = 'men' | 'women' | 'kids' | 'accessories';
 export type StockLevel = 'high' | 'medium' | 'low' | 'out';
 
 export interface Product {
-  id: number;
+  _id: number;
   name: string;
   code: string;
   category: ProductCategory;
@@ -14,17 +14,20 @@ export interface Product {
   status: ProductStatus;
   description?: string;
   image?: string;
-  createdAt?: string;
-  updatedAt?: string;
 }
 
-export interface ProductStats {
-  total: number;
-  active: number;
-  outOfStock: number;
-  lowStock: number;
+export interface ProductTwo {
+  _id: string;
+  name: string;
+  code: string;
+  category: string;
+  price: number;
+  stock: number;
+  status: string;
+  description?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
-
 export interface ProductFilters {
   category: ProductCategory | '';
   status: ProductStatus | '';
@@ -34,12 +37,14 @@ export interface ProductFilters {
   searchTerm: string;
 }
 
-export interface StatusConfig {
-  label: string;
-  class: string;
+export interface ProductStats {
+  total: number;
+  active: number;
+  outOfStock: number;
+  lowStock: number;
 }
 
-export const STATUS_CONFIG: Record<ProductStatus, StatusConfig> = {
+export const STATUS_CONFIG: Record<ProductStatus, { label: string; class: string }> = {
   active: { label: 'نشط', class: 'active' },
   inactive: { label: 'غير نشط', class: 'inactive' },
   'out-of-stock': { label: 'غير متوفر', class: 'out-of-stock' },

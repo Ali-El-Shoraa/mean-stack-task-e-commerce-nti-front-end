@@ -1,0 +1,15 @@
+// @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+
+.main-content {
+  margin-right: var(--sidebar-width);
+  padding: 30px;
+  transition: all 0.4s ease;
+  min-height: 100vh;
+}
+
+@media (max-width: 1200px) {
+  .main-content {
+    margin-right: 0;
+    padding: 20px;
+  }
+}

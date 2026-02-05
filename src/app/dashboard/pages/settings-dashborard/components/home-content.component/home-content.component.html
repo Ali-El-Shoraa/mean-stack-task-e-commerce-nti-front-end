@@ -1,0 +1,730 @@
+<!-- src/app/features/content-management/components/home-content/home-content.component.html -->
+
+<div class="content-container">
+  <!-- Content Sidebar -->
+  <div class="content-sidebar">
+    <ul class="content-nav">
+      @for (section of sections; track section.id) {
+        <li class="content-nav-item">
+          <a
+            href="javascript:void(0)"
+            class="content-nav-link"
+            [class.active]="activeSection() === section.id"
+            (click)="setActiveSection(section.id)"
+          >
+            <i class="bi" [ngClass]="section.icon"></i>
+            <span>{{ section.label }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <!-- Content Sections -->
+  <div class="content-sections">
+    <!-- Site Settings Section -->
+    @if (activeSection() === 'site-settings') {
+      <div class="content-section">
+        <h2 class="content-section-title">إعدادات الموقع</h2>
+        <form>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">اسم الموقع</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="siteSettings().siteName"
+                  (ngModelChange)="updateSiteSettings('siteName', $event)"
+                  placeholder="أدخل اسم الموقع"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">شعار الموقع</label>
+                <div class="image-upload">
+                  <input
+                    type="file"
+                    class="image-upload-input"
+                    id="siteLogo"
+                    accept="image/*"
+                    (change)="onLogoUpload($event)"
+                  />
+                  <label class="image-upload-label" for="siteLogo">
+                    <div>
+                      <i class="bi bi-cloud-arrow-up fs-1 text-muted"></i>
+                      <p class="mt-2 mb-1">اضغط لرفع الشعار</p>
+                      <small class="text-muted">الحجم المقترح: 200x60px</small>
+                    </div>
+                  </label>
+                  @if (siteSettings().logo) {
+                    <img
+                      [src]="siteSettings().logo"
+                      alt="شعار الموقع"
+                      class="image-preview d-block"
+                    />
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">الايكون (Favicon)</label>
+                <div class="image-upload">
+                  <input type="file" class="image-upload-input" id="siteFavicon" accept="image/*" />
+                  <label class="image-upload-label" for="siteFavicon">
+                    <div>
+                      <i class="bi bi-image fs-1 text-muted"></i>
+                      <p class="mt-2 mb-1">اضغط لرفع الأيقونة</p>
+                      <small class="text-muted">الحجم: 32x32 أو 64x64px</small>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">اللون الأساسي</label>
+                <input
+                  type="color"
+                  class="form-control"
+                  [ngModel]="siteSettings().primaryColor"
+                  (ngModelChange)="updateSiteSettings('primaryColor', $event)"
+                  style="height: 50px"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">وصف الموقع</label>
+            <textarea
+              class="form-control"
+              rows="3"
+              [ngModel]="siteSettings().siteDescription"
+              (ngModelChange)="updateSiteSettings('siteDescription', $event)"
+              placeholder="أدخل وصف مختصر للموقع"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">كلمات التواصل</label>
+            <div class="row">
+              <div class="col-md-6">
+                <input
+                  type="text"
+                  class="form-control mb-2"
+                  [ngModel]="siteSettings().phone"
+                  (ngModelChange)="updateSiteSettings('phone', $event)"
+                  placeholder="رقم الهاتف"
+                />
+              </div>
+              <div class="col-md-6">
+                <input
+                  type="email"
+                  class="form-control mb-2"
+                  [ngModel]="siteSettings().email"
+                  (ngModelChange)="updateSiteSettings('email', $event)"
+                  placeholder="البريد الإلكتروني"
+                />
+              </div>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              [ngModel]="siteSettings().address"
+              (ngModelChange)="updateSiteSettings('address', $event)"
+              placeholder="العنوان"
+            />
+          </div>
+
+          <div class="form-switch">
+            <input
+              class="form-check-input form-switch-input"
+              type="checkbox"
+              id="siteMaintenance"
+              [ngModel]="siteSettings().maintenanceMode"
+              (ngModelChange)="updateSiteSettings('maintenanceMode', $event)"
+            />
+            <label class="form-switch-label" for="siteMaintenance">وضع الصيانة</label>
+            <span class="form-text ms-2"
+              >عند تفعيله، سيتم إغلاق الموقع للزوار وعرض صفحة الصيانة</span
+            >
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Hero Section -->
+    @if (activeSection() === 'hero-section') {
+      <div class="content-section">
+        <h2 class="content-section-title">القسم الرئيسي</h2>
+        <form>
+          <div class="form-group">
+            <label class="form-label">صورة الخلفية</label>
+            <div class="image-upload">
+              <input type="file" class="image-upload-input" id="heroImage" accept="image/*" />
+              <label class="image-upload-label" for="heroImage">
+                <div>
+                  <i class="bi bi-cloud-arrow-up fs-1 text-muted"></i>
+                  <p class="mt-2 mb-1">اضغط لرفع الصورة</p>
+                  <small class="text-muted">الحجم المقترح: 1920x600px</small>
+                </div>
+              </label>
+              @if (heroSection().image) {
+                <img
+                  [src]="heroSection().image"
+                  alt="صورة القسم الرئيسي"
+                  class="image-preview w-100 d-block"
+                />
+              }
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">العنوان الرئيسي</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="heroSection().title"
+                  (ngModelChange)="updateHeroSection('title', $event)"
+                  placeholder="أدخل العنوان الرئيسي"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">اللون</label>
+                <select
+                  class="form-select"
+                  [ngModel]="heroSection().textColor"
+                  (ngModelChange)="updateHeroSection('textColor', $event)"
+                >
+                  <option value="light">فاتح</option>
+                  <option value="dark">داكن</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">الوصف</label>
+            <textarea
+              class="form-control"
+              rows="3"
+              [ngModel]="heroSection().description"
+              (ngModelChange)="updateHeroSection('description', $event)"
+              placeholder="أدخل وصف القسم الرئيسي"
+            ></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">نص الزر الأول</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="heroSection().button1Text"
+                  (ngModelChange)="updateHeroSection('button1Text', $event)"
+                  placeholder="نص الزر"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">رابط الزر الأول</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="heroSection().button1Link"
+                  (ngModelChange)="updateHeroSection('button1Link', $event)"
+                  placeholder="/products"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-switch">
+            <input
+              class="form-check-input form-switch-input"
+              type="checkbox"
+              id="heroEnabled"
+              [ngModel]="heroSection().enabled"
+              (ngModelChange)="updateHeroSection('enabled', $event)"
+            />
+            <label class="form-switch-label" for="heroEnabled">تفعيل القسم الرئيسي</label>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Offers Section -->
+    @if (activeSection() === 'offers') {
+      <div class="content-section">
+        <h2 class="content-section-title">العروض والخصومات</h2>
+        <form>
+          <div class="form-group">
+            <label class="form-label">كود الخصم الرئيسي</label>
+            <div class="row">
+              <div class="col-md-6">
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="offer().code"
+                  (ngModelChange)="updateOffer('code', $event)"
+                  placeholder="أدخل كود الخصم"
+                />
+              </div>
+              <div class="col-md-6">
+                <input
+                  type="number"
+                  class="form-control"
+                  [ngModel]="offer().discount"
+                  (ngModelChange)="updateOffer('discount', $event)"
+                  placeholder="نسبة الخصم"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">وصف العرض</label>
+            <textarea
+              class="form-control"
+              rows="2"
+              [ngModel]="offer().description"
+              (ngModelChange)="updateOffer('description', $event)"
+              placeholder="أدخل وصف العرض"
+            ></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">تاريخ البداية</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [ngModel]="offer().startDate"
+                  (ngModelChange)="updateOffer('startDate', $event)"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">تاريخ النهاية</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [ngModel]="offer().endDate"
+                  (ngModelChange)="updateOffer('endDate', $event)"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">شروط الاستخدام</label>
+            <div class="row">
+              <div class="col-md-6">
+                <input
+                  type="number"
+                  class="form-control mb-2"
+                  [ngModel]="offer().minAmount"
+                  (ngModelChange)="updateOffer('minAmount', $event)"
+                  placeholder="الحد الأدنى للطلب"
+                />
+              </div>
+              <div class="col-md-6">
+                <input
+                  type="number"
+                  class="form-control mb-2"
+                  [ngModel]="offer().maxUses"
+                  (ngModelChange)="updateOffer('maxUses', $event)"
+                  placeholder="الحد الأقصى للاستخدامات"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-switch">
+            <input
+              class="form-check-input form-switch-input"
+              type="checkbox"
+              id="offerActive"
+              [ngModel]="offer().active"
+              (ngModelChange)="updateOffer('active', $event)"
+            />
+            <label class="form-switch-label" for="offerActive">تفعيل العرض</label>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Banners Section -->
+    @if (activeSection() === 'banners') {
+      <div class="content-section">
+        <h2 class="content-section-title">إدارة البانرات الإعلانية</h2>
+
+        @for (banner of banners(); track banner.id) {
+          <div class="banner-card">
+            <h5>بانر رئيسي {{ banner.id }}</h5>
+            <div
+              class="banner-preview"
+              [style.background]="'linear-gradient(135deg, #e63946, #f72585)'"
+            >
+              {{ banner.text || 'معاينة البانر' }}
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">صورة البانر</label>
+              <div class="image-upload">
+                <input
+                  type="file"
+                  class="image-upload-input"
+                  [id]="'banner' + banner.id + 'Image'"
+                  accept="image/*"
+                />
+                <label class="image-upload-label" [for]="'banner' + banner.id + 'Image'">
+                  <div>
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    <p class="mt-2 mb-1">تغيير الصورة</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">النص</label>
+              <input
+                type="text"
+                class="form-control"
+                [ngModel]="banner.text"
+                (ngModelChange)="updateBanner(banner.id, 'text', $event)"
+                placeholder="أدخل نص البانر"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">الرابط</label>
+              <input
+                type="text"
+                class="form-control"
+                [ngModel]="banner.link"
+                (ngModelChange)="updateBanner(banner.id, 'link', $event)"
+                placeholder="أدخل رابط البانر"
+              />
+            </div>
+
+            <div class="banner-position">
+              <div
+                class="position-option"
+                [class.active]="banner.position === 'top'"
+                (click)="updateBanner(banner.id, 'position', 'top')"
+              >
+                أعلى
+              </div>
+              <div
+                class="position-option"
+                [class.active]="banner.position === 'middle'"
+                (click)="updateBanner(banner.id, 'position', 'middle')"
+              >
+                وسط
+              </div>
+              <div
+                class="position-option"
+                [class.active]="banner.position === 'bottom'"
+                (click)="updateBanner(banner.id, 'position', 'bottom')"
+              >
+                أسفل
+              </div>
+            </div>
+
+            <div class="form-switch">
+              <input
+                class="form-check-input form-switch-input"
+                type="checkbox"
+                [id]="'banner' + banner.id + 'Active'"
+                [ngModel]="banner.active"
+                (ngModelChange)="updateBanner(banner.id, 'active', $event)"
+              />
+              <label class="form-switch-label" [for]="'banner' + banner.id + 'Active'"
+                >تفعيل البانر</label
+              >
+            </div>
+          </div>
+        }
+
+        <button class="btn btn-outline-primary w-100 mt-3" (click)="addBanner()">
+          <i class="bi bi-plus-circle me-2"></i>إضافة بانر جديد
+        </button>
+      </div>
+    }
+
+    <!-- Ads Section -->
+    @if (activeSection() === 'ads') {
+      <div class="content-section">
+        <h2 class="content-section-title">إدارة إعلانات جوجل</h2>
+
+        <div class="ad-slots">
+          @for (slot of adSlots(); track slot.id) {
+            <div class="ad-slot" [class.active]="slot.active">
+              <h5>{{ slot.name }}</h5>
+              <p>موقع: {{ slot.location }} - حجم: {{ slot.size }}</p>
+              <div class="form-switch">
+                <input
+                  class="form-check-input form-switch-input"
+                  type="checkbox"
+                  [id]="'ad' + slot.id + 'Active'"
+                  [ngModel]="slot.active"
+                  (ngModelChange)="updateAdSlot(slot.id, 'active', $event)"
+                />
+                <label class="form-switch-label" [for]="'ad' + slot.id + 'Active'"
+                  >تفعيل الإعلان</label
+                >
+              </div>
+              <textarea
+                class="ad-code mt-3"
+                [ngModel]="slot.code"
+                (ngModelChange)="updateAdSlot(slot.id, 'code', $event)"
+                placeholder="أدخل كود الإعلان"
+              ></textarea>
+            </div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">إعدادات إضافية</label>
+          <div class="form-switch">
+            <input
+              class="form-check-input form-switch-input"
+              type="checkbox"
+              id="adsAutoRefresh"
+              [ngModel]="adsAutoRefresh()"
+              (ngModelChange)="adsAutoRefresh.set($event)"
+            />
+            <label class="form-switch-label" for="adsAutoRefresh">تحديث الإعلانات تلقائياً</label>
+          </div>
+          <div class="form-switch">
+            <input
+              class="form-check-input form-switch-input"
+              type="checkbox"
+              id="adsFrequencyCapping"
+              [ngModel]="adsFrequencyCapping()"
+              (ngModelChange)="adsFrequencyCapping.set($event)"
+            />
+            <label class="form-switch-label" for="adsFrequencyCapping"
+              >تحديد تردد عرض الإعلانات</label
+            >
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Meta SEO Section -->
+    @if (activeSection() === 'meta-seo') {
+      <div class="content-section">
+        <h2 class="content-section-title">Meta Tags & SEO</h2>
+
+        <div class="seo-preview">
+          <div class="seo-preview-title">{{ seoSettings().pageTitle }}</div>
+          <div class="seo-preview-url">{{ seoSettings().canonicalUrl }}</div>
+          <div class="seo-preview-description">{{ seoSettings().pageDescription }}</div>
+        </div>
+
+        <form>
+          <div class="form-group">
+            <label class="form-label">عنوان الصفحة (Title)</label>
+            <input
+              type="text"
+              class="form-control"
+              [ngModel]="seoSettings().pageTitle"
+              (ngModelChange)="updateSeoSettings('pageTitle', $event)"
+              placeholder="أدخل عنوان الصفحة"
+              maxlength="60"
+            />
+            <span class="form-text">{{ getTitleRemaining() }} حرف متبقي</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">وصف الصفحة (Meta Description)</label>
+            <textarea
+              class="form-control"
+              rows="3"
+              [ngModel]="seoSettings().pageDescription"
+              (ngModelChange)="updateSeoSettings('pageDescription', $event)"
+              placeholder="أدخل وصف الصفحة"
+              maxlength="160"
+            ></textarea>
+            <span class="form-text">{{ getDescriptionRemaining() }} حرف متبقي</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">كلمات المفتاحية (Keywords)</label>
+            <div class="input-group mb-2">
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="newKeyword"
+                placeholder="أدخل كلمة مفتاحية"
+                (keyup.enter)="addKeyword()"
+              />
+              <button class="btn btn-primary" type="button" (click)="addKeyword()">إضافة</button>
+            </div>
+
+            <div class="keywords-container">
+              @for (keyword of seoSettings().keywords; track keyword) {
+                <div class="keyword-tag">
+                  {{ keyword }}
+                  <span class="delete" (click)="removeKeyword(keyword)">&times;</span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">روابط المتابعة (Canonical URL)</label>
+            <input
+              type="text"
+              class="form-control"
+              [ngModel]="seoSettings().canonicalUrl"
+              (ngModelChange)="updateSeoSettings('canonicalUrl', $event)"
+              placeholder="أدخل رابط الصفحة الأساسي"
+            />
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">صورة المشاركة (OG Image)</label>
+                <div class="image-upload">
+                  <input type="file" class="image-upload-input" id="ogImage" accept="image/*" />
+                  <label class="image-upload-label" for="ogImage">
+                    <div>
+                      <i class="bi bi-image"></i>
+                      <p class="mt-2 mb-1">رفع صورة</p>
+                      <small class="text-muted">1200x630px</small>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">نوع المحتوى (OG Type)</label>
+                <select
+                  class="form-select"
+                  [ngModel]="seoSettings().ogType"
+                  (ngModelChange)="updateSeoSettings('ogType', $event)"
+                >
+                  <option value="website">موقع ويب</option>
+                  <option value="article">مقال</option>
+                  <option value="product">منتج</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-switch">
+            <input
+              class="form-check-input form-switch-input"
+              type="checkbox"
+              id="enableSitemap"
+              [ngModel]="seoSettings().enableSitemap"
+              (ngModelChange)="updateSeoSettings('enableSitemap', $event)"
+            />
+            <label class="form-switch-label" for="enableSitemap">إنشاء خريطة الموقع تلقائياً</label>
+          </div>
+
+          <div class="form-switch">
+            <input
+              class="form-check-input form-switch-input"
+              type="checkbox"
+              id="enableRobotsTxt"
+              [ngModel]="seoSettings().enableRobotsTxt"
+              (ngModelChange)="updateSeoSettings('enableRobotsTxt', $event)"
+            />
+            <label class="form-switch-label" for="enableRobotsTxt">إنشاء ملف robots.txt</label>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- FAQ Section -->
+    @if (activeSection() === 'faq') {
+      <div class="content-section">
+        <h2 class="content-section-title">الأسئلة الشائعة</h2>
+
+        @for (faq of faqItems(); track faq.id) {
+          <div class="faq-item">
+            <div class="faq-header" (click)="toggleFaq(faq.id)">
+              <h6 class="faq-question">{{ faq.question || 'سؤال جديد' }}</h6>
+              <i
+                class="bi"
+                [ngClass]="expandedFaq() === faq.id ? 'bi-chevron-up' : 'bi-chevron-down'"
+              ></i>
+            </div>
+            @if (expandedFaq() === faq.id) {
+              <div class="faq-body active">
+                <div class="form-group">
+                  <label class="form-label">السؤال</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [ngModel]="faq.question"
+                    (ngModelChange)="updateFaq(faq.id, 'question', $event)"
+                    placeholder="أدخل السؤال"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">الإجابة</label>
+                  <textarea
+                    class="form-control"
+                    rows="3"
+                    [ngModel]="faq.answer"
+                    (ngModelChange)="updateFaq(faq.id, 'answer', $event)"
+                    placeholder="أدخل الإجابة"
+                  ></textarea>
+                </div>
+                <button class="btn btn-danger btn-sm" (click)="deleteFaq(faq.id)">
+                  <i class="bi bi-trash me-1"></i>حذف
+                </button>
+              </div>
+            }
+          </div>
+        }
+
+        <button class="btn btn-primary w-100 mt-4" (click)="addFaq()">
+          <i class="bi bi-plus-circle me-2"></i>إضافة سؤال جديد
+        </button>
+
+        <div class="form-group mt-4">
+          <label class="form-label">ترتيب الأسئلة</label>
+          <select class="form-select" [ngModel]="faqOrder()" (ngModelChange)="faqOrder.set($event)">
+            <option value="manual">يدوي</option>
+            <option value="alphabetical">أبجدي</option>
+            <option value="popularity">حسب الشهرة</option>
+          </select>
+        </div>
+
+        <div class="form-switch">
+          <input
+            class="form-check-input form-switch-input"
+            type="checkbox"
+            id="faqSearch"
+            [ngModel]="faqSearchEnabled()"
+            (ngModelChange)="faqSearchEnabled.set($event)"
+          />
+          <label class="form-switch-label" for="faqSearch">تفعيل البحث في الأسئلة الشائعة</label>
+        </div>
+      </div>
+    }
+  </div>
+</div>

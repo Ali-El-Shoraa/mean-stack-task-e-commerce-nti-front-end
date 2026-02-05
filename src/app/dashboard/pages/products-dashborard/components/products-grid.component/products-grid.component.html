@@ -1,1 +1,37 @@
-<p>products-grid.component works!</p>
+<div class="products-grid">
+  @for (product of products(); track product._id) {
+    <div class="product-card">
+      <div class="product-card-image">
+        <i class="bi" [ngClass]="getCategoryConfig(product.category).icon"></i>
+      </div>
+      <div class="product-card-body">
+        <h5 class="product-card-title">{{ product.name }}</h5>
+        <div class="product-card-price">{{ product.price | currency: 'USD' }}</div>
+        <div class="product-card-meta">
+          <span class="category-badge" [ngClass]="product.category">
+            {{ getCategoryConfig(product.category).label }}
+          </span>
+          <span class="stock-badge" [ngClass]="getStockLevel(product.stock)">
+            {{ product.stock }} قطعة
+          </span>
+        </div>
+        <div class="mb-2">
+          <span class="status-badge" [ngClass]="product.status">
+            {{ getStatusConfig(product.status).label }}
+          </span>
+        </div>
+        <div class="product-card-actions">
+          <button class="action-btn preview" (click)="viewProduct.emit(product)">
+            <i class="bi bi-eye"></i>عرض
+          </button>
+          <button class="action-btn edit" (click)="editProduct.emit(product)">
+            <i class="bi bi-pencil"></i>تعديل
+          </button>
+          <button class="action-btn inventory" (click)="manageStock.emit(product)">
+            <i class="bi bi-box-arrow-in-down"></i>مخزون
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,42 @@
+<!-- src/app/features/content-management/content-management.component.html -->
+
+<!-- Header Actions -->
+<div class="header-actions-bar">
+  <button class="btn btn-outline-primary" (click)="preview()">
+    <i class="bi bi-eye me-2"></i>معاينة
+  </button>
+  <button class="btn btn-primary" (click)="publish()">
+    <i class="bi bi-cloud-arrow-up me-2"></i>نشر التغييرات
+  </button>
+</div>
+
+<!-- Main Tabs -->
+<div class="page-tabs">
+  <ul class="nav nav-tabs">
+    @for (tab of tabs; track tab.id) {
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [class.active]="activeTab() === tab.id"
+          href="javascript:void(0)"
+          (click)="setActiveTab(tab.id)"
+        >
+          {{ tab.label }}
+        </a>
+      </li>
+    }
+  </ul>
+</div>
+
+<!-- Tab Contents -->
+@switch (activeTab()) {
+  @case ('home') {
+    <app-home-content />
+  }
+  @case ('contact') {
+    <app-contact-content />
+  }
+  @case ('about') {
+    <app-about-content />
+  }
+}

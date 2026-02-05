@@ -1,0 +1,373 @@
+<!-- src/app/features/offers/offers.component.html -->
+
+<!-- Offers Stats -->
+<div class="stats-grid">
+  <div class="stats-card">
+    <div class="stats-card-icon active">
+      <i class="bi bi-lightning-charge"></i>
+    </div>
+    <div class="stats-card-value">{{ stats.activeOffers }}</div>
+    <div class="stats-card-title">عروض نشطة</div>
+    <div class="stats-card-change positive">
+      <i class="bi bi-arrow-up"></i> {{ stats.activeChange }}% عن الشهر الماضي
+    </div>
+  </div>
+
+  <div class="stats-card">
+    <div class="stats-card-icon scheduled">
+      <i class="bi bi-clock-history"></i>
+    </div>
+    <div class="stats-card-value">{{ stats.scheduledOffers }}</div>
+    <div class="stats-card-title">عروض مجدولة</div>
+    <div class="stats-card-change positive">
+      <i class="bi bi-arrow-up"></i> {{ stats.scheduledChange }}% عن الشهر الماضي
+    </div>
+  </div>
+
+  <div class="stats-card">
+    <div class="stats-card-icon expired">
+      <i class="bi bi-calendar-x"></i>
+    </div>
+    <div class="stats-card-value">{{ stats.expiredOffers }}</div>
+    <div class="stats-card-title">عروض منتهية</div>
+    <div class="stats-card-change negative">
+      <i class="bi bi-arrow-down"></i> {{ stats.expiredChange | abs }}% عن الشهر الماضي
+    </div>
+  </div>
+
+  <div class="stats-card">
+    <div class="stats-card-icon revenue">
+      <i class="bi bi-currency-dollar"></i>
+    </div>
+    <div class="stats-card-value">{{ stats.revenueFromOffers }}</div>
+    <div class="stats-card-title">إيرادات من العروض</div>
+    <div class="stats-card-change positive">
+      <i class="bi bi-arrow-up"></i> {{ stats.revenueChange }}% عن الشهر الماضي
+    </div>
+  </div>
+</div>
+
+<!-- Offers Filters -->
+<div class="offers-filters">
+  <div class="filters-header">
+    <h3 class="filters-title">تصفية العروض</h3>
+    <div class="filters-actions">
+      <button class="btn btn-outline-secondary" (click)="resetFilters()">
+        <i class="bi bi-arrow-clockwise me-2"></i>إعادة تعيين
+      </button>
+      <button class="btn btn-primary" (click)="applyFilters()">
+        <i class="bi bi-funnel me-2"></i>تطبيق التصفية
+      </button>
+    </div>
+  </div>
+
+  <div class="filter-group">
+    <div class="filter-item">
+      <label class="filter-label">حالة العرض</label>
+      <select class="filter-select" [(ngModel)]="filters.status">
+        @for (option of statusOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <label class="filter-label">نوع الخصم</label>
+      <select class="filter-select" [(ngModel)]="filters.discountType">
+        @for (type of discountTypes; track type.value) {
+          <option [value]="type.value">{{ type.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <label class="filter-label">الفترة الزمنية</label>
+      <div class="date-range-container">
+        <input
+          type="date"
+          class="filter-input"
+          [(ngModel)]="filters.dateFrom"
+          placeholder="من تاريخ"
+        />
+        <input
+          type="date"
+          class="filter-input"
+          [(ngModel)]="filters.dateTo"
+          placeholder="إلى تاريخ"
+        />
+      </div>
+    </div>
+
+    <div class="filter-item">
+      <label class="filter-label">التصنيف</label>
+      <select class="filter-select" [(ngModel)]="filters.category">
+        @for (cat of categories; track cat.value) {
+          <option [value]="cat.value">{{ cat.label }}</option>
+        }
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- View Toggle -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">جميع العروض</h4>
+  <div class="view-toggle">
+    <button
+      class="view-toggle-btn"
+      [class.active]="viewMode === 'table'"
+      (click)="setViewMode('table')"
+    >
+      <i class="bi bi-list"></i> جدول
+    </button>
+    <button
+      class="view-toggle-btn"
+      [class.active]="viewMode === 'grid'"
+      (click)="setViewMode('grid')"
+    >
+      <i class="bi bi-grid-3x3-gap"></i> شبكة
+    </button>
+  </div>
+</div>
+
+<!-- Table View -->
+@if (viewMode === 'table') {
+  <app-data-table
+    [columns]="tableColumns"
+    [data]="offers"
+    [actions]="tableActions"
+    [config]="tableConfig"
+    trackBy="id"
+    (sortChange)="onSortChange($event)"
+  >
+    <!-- Custom Cell Template -->
+    <ng-template #customCell let-item let-column="column">
+      @switch (column.key) {
+        @case ('name') {
+          <div class="d-flex align-items-center">
+            <img [src]="item.image" [alt]="item.name" class="offer-image me-3" />
+            <div>
+              <div style="font-weight: 600">{{ item.name }}</div>
+              <small class="text-muted">كود: {{ item.code }}</small>
+            </div>
+          </div>
+        }
+        @case ('description') {
+          <div>
+            <div style="font-weight: 500">{{ item.description }}</div>
+            <small class="text-muted">
+              @if (item.minOrder > 0) {
+                الحد الأدنى: ${{ item.minOrder }}
+              } @else {
+                لا يوجد حد أدنى
+              }
+            </small>
+          </div>
+        }
+        @case ('period') {
+          <div>
+            <div>{{ item.period }}</div>
+            <small class="text-muted">{{ item.remaining }}</small>
+          </div>
+        }
+        @case ('discountText') {
+          <span class="discount-badge">{{ item.discountText }}</span>
+        }
+        @case ('usageText') {
+          <div>
+            <div style="font-weight: 600">{{ item.usageText }}</div>
+            <small class="text-muted">استخدام</small>
+          </div>
+        }
+      }
+    </ng-template>
+  </app-data-table>
+}
+
+<!-- Grid View -->
+@if (viewMode === 'grid') {
+  <div class="offers-grid">
+    @for (offer of offers; track offer.id) {
+      <div class="offer-card">
+        <div class="offer-card-header">
+          <img [src]="offer.image" [alt]="offer.name" class="offer-card-image" />
+          <div class="offer-card-badge">{{ offer.discountText }}</div>
+        </div>
+        <div class="offer-card-body">
+          <div class="offer-card-title">
+            <span>{{ offer.name }}</span>
+            <span class="status-badge" [ngClass]="'status-' + offer.status">{{
+              offer.statusText
+            }}</span>
+          </div>
+          <div class="offer-card-description">{{ offer.description }}</div>
+          <div class="offer-card-details">
+            <div class="offer-card-detail">
+              <span class="offer-card-label">الكود</span>
+              <span class="offer-card-value">{{ offer.code }}</span>
+            </div>
+            <div class="offer-card-detail">
+              <span class="offer-card-label">الاستخدام</span>
+              <span class="offer-card-value">{{ offer.usageText }}</span>
+            </div>
+            <div class="offer-card-detail">
+              <span class="offer-card-label">الفترة</span>
+              <span class="offer-card-value">{{ offer.period }}</span>
+            </div>
+            <div class="offer-card-detail">
+              <span class="offer-card-label">المتبقي</span>
+              <span class="offer-card-value">{{ offer.remaining }}</span>
+            </div>
+          </div>
+          <div class="offer-card-actions">
+            <button class="action-btn edit" (click)="editOffer(offer)">
+              <i class="bi bi-pencil"></i>تعديل
+            </button>
+            <button class="action-btn copy" (click)="copyOffer(offer)">
+              <i class="bi bi-copy"></i>نسخ
+            </button>
+            <button class="action-btn view" (click)="viewOffer(offer)">
+              <i class="bi bi-eye"></i>عرض
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+<!-- Add Offer Modal -->
+@if (showAddModal) {
+  <div class="modal-backdrop fade show"></div>
+  <div class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">إضافة عرض جديد</h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            (click)="closeAddModal()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">اسم العرض</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="newOffer.name"
+                  name="name"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">كود الخصم</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="newOffer.code"
+                  name="code"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">نوع الخصم</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="newOffer.discountType"
+                  name="discountType"
+                  required
+                >
+                  <option value="">اختر نوع الخصم</option>
+                  @for (type of discountTypes; track type.value) {
+                    @if (type.value) {
+                      <option [value]="type.value">{{ type.label }}</option>
+                    }
+                  }
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">قيمة الخصم</label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="newOffer.discountValue"
+                    name="discountValue"
+                    required
+                  />
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">تاريخ البداية</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="newOffer.startDate"
+                  name="startDate"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">تاريخ النهاية</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="newOffer.endDate"
+                  name="endDate"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">الحد الأقصى للاستخدام</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="newOffer.maxUses"
+                  name="maxUses"
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">الحد الأدنى للطلب</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="newOffer.minOrder"
+                  name="minOrder"
+                />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">وصف العرض</label>
+              <textarea
+                class="form-control"
+                rows="3"
+                [(ngModel)]="newOffer.description"
+                name="description"
+                placeholder="وصف تفصيلي للعرض..."
+              ></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeAddModal()">إلغاء</button>
+          <button type="button" class="btn btn-primary" (click)="saveOffer()">حفظ العرض</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

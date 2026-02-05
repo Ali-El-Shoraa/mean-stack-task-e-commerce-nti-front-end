@@ -37,6 +37,11 @@ export class ProductsService {
   currentPage = this.currentPageSignal.asReadonly();
   pageSize = this.pageSizeSignal.asReadonly();
   viewMode = this.viewModeSignal.asReadonly();
+  totalProducts = computed(() => {
+    return this.filteredProducts().length;
+  });
+
+  isLoading = this.loadingSignal.asReadonly();
 
   // Computed values
   filteredProducts = computed(() => {
@@ -112,24 +117,24 @@ export class ProductsService {
   }
 
   addProduct(product: Omit<Product, 'id'>): void {
-    const newId = Math.max(...this.productsSignal().map((p) => p.id)) + 1;
+    const newId = Math.max(...this.productsSignal().map((p) => p._id)) + 1;
     this.productsSignal.update((products) => [...products, { ...product, id: newId }]);
   }
 
   updateProduct(id: number, updates: Partial<Product>): void {
     this.productsSignal.update((products) =>
-      products.map((p) => (p.id === id ? { ...p, ...updates } : p)),
+      products.map((p) => (p._id === id ? { ...p, ...updates } : p)),
     );
   }
 
   deleteProduct(id: number): void {
-    this.productsSignal.update((products) => products.filter((p) => p.id !== id));
+    this.productsSignal.update((products) => products.filter((p) => p._id !== id));
   }
 
   updateStock(id: number, newStock: number): void {
     this.productsSignal.update((products) =>
       products.map((p) => {
-        if (p.id === id) {
+        if (p._id === id) {
           const status: ProductStatus =
             newStock === 0 ? 'out-of-stock' : p.status === 'out-of-stock' ? 'active' : p.status;
           return { ...p, stock: newStock, status };
@@ -140,7 +145,7 @@ export class ProductsService {
   }
 
   getProductById(id: number): Product | undefined {
-    return this.productsSignal().find((p) => p.id === id);
+    return this.productsSignal().find((p) => p._id === id);
   }
 
   getStockLevel(stock: number): StockLevel {
@@ -162,7 +167,7 @@ export class ProductsService {
   private getMockProducts(): Product[] {
     return [
       {
-        id: 1,
+        _id: 1,
         name: 'تيشيرت قطني مميز',
         code: 'TSH-001',
         category: 'men',
@@ -172,7 +177,7 @@ export class ProductsService {
         description: 'تيشيرت قطني عالي الجودة',
       },
       {
-        id: 2,
+        _id: 2,
         name: 'جينز ضيق أزرق',
         code: 'JNS-002',
         category: 'women',
@@ -182,7 +187,7 @@ export class ProductsService {
         description: 'جينز ضيق أزرق من الدنيم',
       },
       {
-        id: 3,
+        _id: 3,
         name: 'هودي رجالي شتوي',
         code: 'HOD-003',
         category: 'men',
@@ -192,7 +197,7 @@ export class ProductsService {
         description: 'هودي شتوي دافئ',
       },
       {
-        id: 4,
+        _id: 4,
         name: 'فستان صيفي مزهر',
         code: 'DRS-004',
         category: 'women',
@@ -202,7 +207,7 @@ export class ProductsService {
         description: 'فستان صيفي خفيف',
       },
       {
-        id: 5,
+        _id: 5,
         name: 'تيشيرت أطفال قطني',
         code: 'KTS-005',
         category: 'kids',
@@ -212,7 +217,7 @@ export class ProductsService {
         description: 'تيشيرت قطني للأطفال',
       },
       {
-        id: 6,
+        _id: 6,
         name: 'ساعة يدوية أنيقة',
         code: 'WCH-006',
         category: 'accessories',
@@ -222,7 +227,7 @@ export class ProductsService {
         description: 'ساعة يدوية كلاسيكية',
       },
       {
-        id: 7,
+        _id: 7,
         name: 'حقيبة كتف جلدية',
         code: 'BAG-007',
         category: 'accessories',
@@ -232,7 +237,7 @@ export class ProductsService {
         description: 'حقيبة كتف جلدية',
       },
       {
-        id: 8,
+        _id: 8,
         name: 'نظارات شمسية كلاسيكية',
         code: 'SNG-008',
         category: 'accessories',
@@ -242,7 +247,7 @@ export class ProductsService {
         description: 'نظارات شمسية',
       },
       {
-        id: 9,
+        _id: 9,
         name: 'قميص رسمي أبيض',
         code: 'SHT-009',
         category: 'men',
@@ -252,7 +257,7 @@ export class ProductsService {
         description: 'قميص رسمي',
       },
       {
-        id: 10,
+        _id: 10,
         name: 'بلوزة حريرية',
         code: 'BLZ-010',
         category: 'women',
@@ -262,7 +267,7 @@ export class ProductsService {
         description: 'بلوزة حريرية أنيقة',
       },
       {
-        id: 11,
+        _id: 11,
         name: 'شورت رياضي',
         code: 'SHR-011',
         category: 'men',
@@ -272,7 +277,7 @@ export class ProductsService {
         description: 'شورت رياضي مريح',
       },
       {
-        id: 12,
+        _id: 12,
         name: 'تنورة قصيرة',
         code: 'SKT-012',
         category: 'women',
@@ -282,7 +287,7 @@ export class ProductsService {
         description: 'تنورة قصيرة عصرية',
       },
       {
-        id: 13,
+        _id: 13,
         name: 'بيجامة أطفال',
         code: 'PJM-013',
         category: 'kids',
@@ -292,7 +297,7 @@ export class ProductsService {
         description: 'بيجامة مريحة للأطفال',
       },
       {
-        id: 14,
+        _id: 14,
         name: 'حزام جلدي',
         code: 'BLT-014',
         category: 'accessories',
@@ -302,7 +307,7 @@ export class ProductsService {
         description: 'حزام جلدي فاخر',
       },
       {
-        id: 15,
+        _id: 15,
         name: 'جاكيت جينز',
         code: 'JKT-015',
         category: 'men',
@@ -312,7 +317,7 @@ export class ProductsService {
         description: 'جاكيت جينز كلاسيكي',
       },
       {
-        id: 16,
+        _id: 16,
         name: 'فستان سهرة',
         code: 'EVD-016',
         category: 'women',
@@ -322,7 +327,7 @@ export class ProductsService {
         description: 'فستان سهرة فاخر',
       },
       {
-        id: 17,
+        _id: 17,
         name: 'بنطلون أطفال',
         code: 'KPT-017',
         category: 'kids',
@@ -332,7 +337,7 @@ export class ProductsService {
         description: 'بنطلون مريح للأطفال',
       },
       {
-        id: 18,
+        _id: 18,
         name: 'قبعة صوفية',
         code: 'HAT-018',
         category: 'accessories',
@@ -342,7 +347,7 @@ export class ProductsService {
         description: 'قبعة صوفية دافئة',
       },
       {
-        id: 19,
+        _id: 19,
         name: 'معطف شتوي',
         code: 'COT-019',
         category: 'men',
@@ -352,7 +357,7 @@ export class ProductsService {
         description: 'معطف شتوي فاخر',
       },
       {
-        id: 20,
+        _id: 20,
         name: 'كارديجان نسائي',
         code: 'CRD-020',
         category: 'women',
@@ -362,7 +367,7 @@ export class ProductsService {
         description: 'كارديجان صوفي',
       },
       {
-        id: 21,
+        _id: 21,
         name: 'جوارب أطفال (6 قطع)',
         code: 'SCK-021',
         category: 'kids',
@@ -372,7 +377,7 @@ export class ProductsService {
         description: 'طقم جوارب للأطفال',
       },
       {
-        id: 22,
+        _id: 22,
         name: 'محفظة جلدية',
         code: 'WLT-022',
         category: 'accessories',
@@ -382,7 +387,7 @@ export class ProductsService {
         description: 'محفظة جلدية أنيقة',
       },
       {
-        id: 23,
+        _id: 23,
         name: 'بولو رجالي',
         code: 'POL-023',
         category: 'men',
@@ -392,7 +397,7 @@ export class ProductsService {
         description: 'تيشيرت بولو كلاسيكي',
       },
       {
-        id: 24,
+        _id: 24,
         name: 'بنطلون واسع',
         code: 'WPT-024',
         category: 'women',

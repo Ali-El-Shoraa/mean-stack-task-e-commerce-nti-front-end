@@ -9,23 +9,23 @@
       }
       @if (tableConfig.headerActions?.length) {
         <div class="table-actions">
-          @for (action of tableConfig.headerActions; track action.label) {
-            @if (action.route) {
-              <a [routerLink]="action.route" [class]="action.class || 'btn btn-primary btn-sm'">
-                @if (action.icon) {
-                  <i class="bi" [ngClass]="action.icon"></i>
+          @for (action of tableConfig.headerActions; track action?.label) {
+            @if (action?.route) {
+              <a [routerLink]="action?.route" [class]="action?.class || 'btn btn-primary btn-sm'">
+                @if (action?.icon) {
+                  <i class="bi" [ngClass]="action?.icon"></i>
                 }
-                {{ action.label }}
+                {{ action?.label }}
               </a>
-            } @else if (action.callback) {
+            } @else if (action?.callback) {
               <button
-                [class]="action.class || 'btn btn-primary btn-sm'"
-                (click)="action.callback()"
+                [class]="action?.class || 'btn btn-primary btn-sm'"
+                (click)="action?.callback()"
               >
-                @if (action.icon) {
-                  <i class="bi" [ngClass]="action.icon"></i>
+                @if (action?.icon) {
+                  <i class="bi" [ngClass]="action?.icon"></i>
                 }
-                {{ action.label }}
+                {{ action?.label }}
               </button>
             }
           }
@@ -136,29 +136,29 @@
                       ></ng-container>
                     } @else {
                       <div class="action-buttons">
-                        @for (action of actions; track action.label) {
+                        @for (action of actions; track action?.label) {
                           @if (isActionVisible(action, item)) {
-                            @if (action.route) {
+                            @if (action?.route) {
                               <a
-                                [routerLink]="getRouteLink(action.route, item, action.routeParam)"
-                                [class]="action.class || 'btn btn-outline-primary btn-sm'"
-                                [title]="action.label"
+                                [routerLink]="getRouteLink(action.route!, item, action?.routeParam)"
+                                [class]="action?.class || 'btn btn-outline-primary btn-sm'"
+                                [title]="action?.label"
                               >
-                                @if (action.icon) {
-                                  <i class="bi" [ngClass]="action.icon"></i>
+                                @if (action?.icon) {
+                                  <i class="bi" [ngClass]="action?.icon"></i>
                                 }
-                                <span>{{ action.label }}</span>
+                                <span>{{ action?.label }}</span>
                               </a>
-                            } @else if (action.callback) {
+                            } @else if (action?.callback) {
                               <button
-                                [class]="action.class || 'btn btn-outline-primary btn-sm'"
+                                [class]="action?.class || 'btn btn-outline-primary btn-sm'"
                                 (click)="executeAction(action, item, $event)"
-                                [title]="action.label"
+                                [title]="action?.label"
                               >
-                                @if (action.icon) {
-                                  <i class="bi" [ngClass]="action.icon"></i>
+                                @if (action?.icon) {
+                                  <i class="bi" [ngClass]="action?.icon"></i>
                                 }
-                                <span>{{ action.label }}</span>
+                                <span>{{ action?.label }}</span>
                               </button>
                             }
                           }

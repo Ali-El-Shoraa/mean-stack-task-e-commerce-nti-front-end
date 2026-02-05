@@ -1,0 +1,783 @@
+<!-- src/app/features/content-management/components/about-content/about-content.component.html -->
+
+<div class="content-container">
+  <!-- Content Sidebar -->
+  <div class="content-sidebar">
+    <ul class="content-nav">
+      @for (section of sections; track section.id) {
+        <li class="content-nav-item">
+          <a
+            href="javascript:void(0)"
+            class="content-nav-link"
+            [class.active]="activeSection() === section.id"
+            (click)="setActiveSection(section.id)"
+          >
+            <i class="bi" [ngClass]="section.icon"></i>
+            <span>{{ section.label }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <!-- Content Sections -->
+  <div class="content-sections">
+    <!-- About Header Section -->
+    @if (activeSection() === 'about-header') {
+      <div class="content-section">
+        <h2 class="content-section-title">رأس صفحة من نحن</h2>
+
+        <div
+          class="header-preview"
+          [style.backgroundImage]="'url(' + aboutHeader().backgroundImage + ')'"
+        >
+          <div class="header-preview-overlay">
+            <h3>{{ aboutHeader().title }}</h3>
+            <p>{{ aboutHeader().description }}</p>
+          </div>
+        </div>
+
+        <form>
+          <div class="form-group">
+            <label class="form-label">صورة الخلفية</label>
+            <div class="image-upload">
+              <input
+                type="file"
+                class="image-upload-input"
+                id="aboutHeaderImage"
+                accept="image/*"
+                (change)="onHeaderImageUpload($event)"
+              />
+              <label class="image-upload-label" for="aboutHeaderImage">
+                <div>
+                  <i class="bi bi-cloud-arrow-up fs-1 text-muted"></i>
+                  <p class="mt-2 mb-1">اضغط لرفع الصورة</p>
+                  <small class="text-muted">الحجم المقترح: 1920x400px</small>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">عنوان الصفحة</label>
+            <input
+              type="text"
+              class="form-control"
+              [ngModel]="aboutHeader().title"
+              (ngModelChange)="updateAboutHeader('title', $event)"
+              placeholder="أدخل عنوان الصفحة"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">الوصف</label>
+            <textarea
+              class="form-control"
+              rows="3"
+              [ngModel]="aboutHeader().description"
+              (ngModelChange)="updateAboutHeader('description', $event)"
+              placeholder="أدخل وصف مختصر للصفحة"
+            ></textarea>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Our Story Section -->
+    @if (activeSection() === 'our-story') {
+      <div class="content-section">
+        <h2 class="content-section-title">قصتنا</h2>
+
+        <div class="story-preview">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <img [src]="ourStory().image" alt="قصتنا" class="story-image" />
+            </div>
+            <div class="col-md-6">
+              <h4>{{ ourStory().title }}</h4>
+              <p class="text-muted">{{ ourStory().description }}</p>
+            </div>
+          </div>
+        </div>
+
+        <form>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">العنوان</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="ourStory().title"
+                  (ngModelChange)="updateOurStory('title', $event)"
+                  placeholder="أدخل العنوان"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">العنوان الفرعي</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="ourStory().description"
+                  (ngModelChange)="updateOurStory('description', $event)"
+                  placeholder="أدخل العنوان الفرعي"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">الفقرة الأولى</label>
+            <textarea
+              class="form-control"
+              rows="4"
+              [ngModel]="ourStory().text1"
+              (ngModelChange)="updateOurStory('text1', $event)"
+              placeholder="أدخل الفقرة الأولى من القصة"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">الفقرة الثانية</label>
+            <textarea
+              class="form-control"
+              rows="4"
+              [ngModel]="ourStory().text2"
+              (ngModelChange)="updateOurStory('text2', $event)"
+              placeholder="أدخل الفقرة الثانية من القصة"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">صورة القصة</label>
+            <div class="image-upload">
+              <input
+                type="file"
+                class="image-upload-input"
+                id="storyImage"
+                accept="image/*"
+                (change)="onStoryImageUpload($event)"
+              />
+              <label class="image-upload-label" for="storyImage">
+                <div>
+                  <i class="bi bi-cloud-arrow-up fs-1 text-muted"></i>
+                  <p class="mt-2 mb-1">اضغط لرفع الصورة</p>
+                  <small class="text-muted">الحجم المقترح: 600x400px</small>
+                </div>
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Mission & Vision Section -->
+    @if (activeSection() === 'mission-vision') {
+      <div class="content-section">
+        <h2 class="content-section-title">الرؤية والرسالة</h2>
+
+        <div class="mv-preview">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mv-card mission">
+                <i class="bi" [ngClass]="missionVision().missionIcon"></i>
+                <h5>{{ missionVision().missionTitle }}</h5>
+                <p>{{ missionVision().missionText }}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mv-card vision">
+                <i class="bi" [ngClass]="missionVision().visionIcon"></i>
+                <h5>{{ missionVision().visionTitle }}</h5>
+                <p>{{ missionVision().visionText }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form>
+          <!-- Mission -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h5 class="mb-0">الرسالة</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label class="form-label">عنوان الرسالة</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [ngModel]="missionVision().missionTitle"
+                      (ngModelChange)="updateMissionVision('missionTitle', $event)"
+                      placeholder="رسالتنا"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label">الأيقونة</label>
+                    <select
+                      class="form-select"
+                      [ngModel]="missionVision().missionIcon"
+                      (ngModelChange)="updateMissionVision('missionIcon', $event)"
+                    >
+                      @for (icon of iconOptions; track icon) {
+                        <option [value]="icon">{{ icon }}</option>
+                      }
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">نص الرسالة</label>
+                <textarea
+                  class="form-control"
+                  rows="4"
+                  [ngModel]="missionVision().missionText"
+                  (ngModelChange)="updateMissionVision('missionText', $event)"
+                  placeholder="أدخل نص الرسالة"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vision -->
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">الرؤية</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label class="form-label">عنوان الرؤية</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [ngModel]="missionVision().visionTitle"
+                      (ngModelChange)="updateMissionVision('visionTitle', $event)"
+                      placeholder="رؤيتنا"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label">الأيقونة</label>
+                    <select
+                      class="form-select"
+                      [ngModel]="missionVision().visionIcon"
+                      (ngModelChange)="updateMissionVision('visionIcon', $event)"
+                    >
+                      @for (icon of iconOptions; track icon) {
+                        <option [value]="icon">{{ icon }}</option>
+                      }
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">نص الرؤية</label>
+                <textarea
+                  class="form-control"
+                  rows="4"
+                  [ngModel]="missionVision().visionText"
+                  (ngModelChange)="updateMissionVision('visionText', $event)"
+                  placeholder="أدخل نص الرؤية"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Our Values Section -->
+    @if (activeSection() === 'our-values') {
+      <div class="content-section">
+        <h2 class="content-section-title">قيمنا</h2>
+
+        <div class="section-settings mb-4">
+          <div class="row align-items-center">
+            <div class="col-md-4">
+              <label class="form-label">طريقة العرض</label>
+              <select
+                class="form-select"
+                [ngModel]="valuesLayout()"
+                (ngModelChange)="valuesLayout.set($event)"
+              >
+                <option value="grid">شبكة</option>
+                <option value="list">قائمة</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <div class="form-switch mt-4">
+                <input
+                  class="form-check-input form-switch-input"
+                  type="checkbox"
+                  id="showValuesIcons"
+                  [ngModel]="showValuesIcons()"
+                  (ngModelChange)="showValuesIcons.set($event)"
+                />
+                <label class="form-switch-label" for="showValuesIcons">عرض الأيقونات</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        @for (value of ourValues(); track value.id) {
+          <div class="value-item-editor">
+            <div class="value-header">
+              <div class="value-icon-preview">
+                <i class="bi" [ngClass]="value.icon"></i>
+              </div>
+              <span class="value-title-preview">{{ value.title || 'قيمة جديدة' }}</span>
+              <button class="btn btn-sm btn-danger" (click)="deleteValue(value.id)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label">الأيقونة</label>
+                  <select
+                    class="form-select"
+                    [ngModel]="value.icon"
+                    (ngModelChange)="updateValue(value.id, 'icon', $event)"
+                  >
+                    @for (icon of iconOptions; track icon) {
+                      <option [value]="icon">{{ icon }}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label class="form-label">العنوان</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [ngModel]="value.title"
+                    (ngModelChange)="updateValue(value.id, 'title', $event)"
+                    placeholder="أدخل عنوان القيمة"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">الوصف</label>
+              <textarea
+                class="form-control"
+                rows="2"
+                [ngModel]="value.description"
+                (ngModelChange)="updateValue(value.id, 'description', $event)"
+                placeholder="أدخل وصف القيمة"
+              ></textarea>
+            </div>
+          </div>
+        }
+
+        <button class="btn btn-primary w-100" (click)="addValue()">
+          <i class="bi bi-plus-circle me-2"></i>إضافة قيمة جديدة
+        </button>
+      </div>
+    }
+
+    <!-- Our Team Section -->
+    @if (activeSection() === 'our-team') {
+      <div class="content-section">
+        <h2 class="content-section-title">فريقنا</h2>
+
+        <div class="section-settings mb-4">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">عنوان القسم</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="teamSectionTitle()"
+                  (ngModelChange)="teamSectionTitle.set($event)"
+                  placeholder="فريقنا"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">وصف القسم</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="teamSectionDescription()"
+                  (ngModelChange)="teamSectionDescription.set($event)"
+                  placeholder="وصف مختصر للفريق"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <label class="form-label">طريقة العرض</label>
+              <select
+                class="form-select"
+                [ngModel]="teamLayout()"
+                (ngModelChange)="teamLayout.set($event)"
+              >
+                <option value="grid">شبكة</option>
+                <option value="carousel">سلايدر</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <div class="form-switch mt-4">
+                <input
+                  class="form-check-input form-switch-input"
+                  type="checkbox"
+                  id="showTeamSocial"
+                  [ngModel]="showTeamSocial()"
+                  (ngModelChange)="showTeamSocial.set($event)"
+                />
+                <label class="form-switch-label" for="showTeamSocial">عرض روابط التواصل</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-members-list">
+          @for (member of teamMembers(); track member.id) {
+            <div class="team-member-editor">
+              <div class="member-header">
+                <img [src]="member.image" [alt]="member.name" class="member-avatar" />
+                <div class="member-info">
+                  <h6>{{ member.name || 'عضو جديد' }}</h6>
+                  <small>{{ member.position }}</small>
+                </div>
+                <button class="btn btn-sm btn-danger" (click)="deleteTeamMember(member.id)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label">الاسم</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [ngModel]="member.name"
+                      (ngModelChange)="updateTeamMember(member.id, 'name', $event)"
+                      placeholder="أدخل اسم العضو"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label">المنصب</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [ngModel]="member.position"
+                      (ngModelChange)="updateTeamMember(member.id, 'position', $event)"
+                      placeholder="أدخل منصب العضو"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">نبذة مختصرة</label>
+                <textarea
+                  class="form-control"
+                  rows="2"
+                  [ngModel]="member.bio"
+                  (ngModelChange)="updateTeamMember(member.id, 'bio', $event)"
+                  placeholder="أدخل نبذة عن العضو"
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">صورة العضو</label>
+                <div class="image-upload-sm">
+                  <input
+                    type="file"
+                    class="image-upload-input"
+                    [id]="'memberImage' + member.id"
+                    accept="image/*"
+                    (change)="onTeamMemberImageUpload($event, member.id)"
+                  />
+                  <label class="btn btn-outline-primary btn-sm" [for]="'memberImage' + member.id">
+                    <i class="bi bi-camera me-1"></i>تغيير الصورة
+                  </label>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <button class="btn btn-primary w-100" (click)="addTeamMember()">
+          <i class="bi bi-plus-circle me-2"></i>إضافة عضو جديد
+        </button>
+      </div>
+    }
+
+    <!-- Statistics Section -->
+    @if (activeSection() === 'our-stats') {
+      <div class="content-section">
+        <h2 class="content-section-title">الإحصائيات</h2>
+
+        <div class="stats-preview" [style.backgroundColor]="statsBackgroundColor()">
+          <div class="stats-grid">
+            @for (stat of stats(); track stat.id) {
+              <div class="stat-item-preview">
+                <i class="bi" [ngClass]="stat.icon"></i>
+                <span class="stat-value">{{ stat.value }}{{ stat.suffix }}</span>
+                <span class="stat-label">{{ stat.label }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="section-settings mb-4">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label">عنوان القسم</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="statsSectionTitle()"
+                  (ngModelChange)="statsSectionTitle.set($event)"
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label">لون الخلفية</label>
+                <input
+                  type="color"
+                  class="form-control"
+                  [ngModel]="statsBackgroundColor()"
+                  (ngModelChange)="statsBackgroundColor.set($event)"
+                  style="height: 45px"
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-switch mt-4">
+                <input
+                  class="form-check-input form-switch-input"
+                  type="checkbox"
+                  id="showStatsAnimation"
+                  [ngModel]="showStatsAnimation()"
+                  (ngModelChange)="showStatsAnimation.set($event)"
+                />
+                <label class="form-switch-label" for="showStatsAnimation">تفعيل الأنيميشن</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        @for (stat of stats(); track stat.id) {
+          <div class="stat-editor">
+            <div class="row align-items-center">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label class="form-label">الأيقونة</label>
+                  <select
+                    class="form-select"
+                    [ngModel]="stat.icon"
+                    (ngModelChange)="updateStat(stat.id, 'icon', $event)"
+                  >
+                    @for (icon of iconOptions; track icon) {
+                      <option [value]="icon">{{ icon }}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label class="form-label">القيمة</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [ngModel]="stat.value"
+                    (ngModelChange)="updateStat(stat.id, 'value', $event)"
+                  />
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label class="form-label">اللاحقة</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [ngModel]="stat.suffix"
+                    (ngModelChange)="updateStat(stat.id, 'suffix', $event)"
+                    placeholder="ألف+"
+                  />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label">العنوان</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [ngModel]="stat.label"
+                    (ngModelChange)="updateStat(stat.id, 'label', $event)"
+                  />
+                </div>
+              </div>
+              <div class="col-md-2">
+                <button class="btn btn-sm btn-danger mt-4" (click)="deleteStat(stat.id)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+
+        <button class="btn btn-primary w-100" (click)="addStat()">
+          <i class="bi bi-plus-circle me-2"></i>إضافة إحصائية جديدة
+        </button>
+      </div>
+    }
+
+    <!-- Timeline Section -->
+    @if (activeSection() === 'timeline') {
+      <div class="content-section">
+        <h2 class="content-section-title">مسيرتنا عبر الزمن</h2>
+
+        <div class="section-settings mb-4">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label">عنوان القسم</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="timelineSectionTitle()"
+                  (ngModelChange)="timelineSectionTitle.set($event)"
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label">الوصف</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="timelineSectionDescription()"
+                  (ngModelChange)="timelineSectionDescription.set($event)"
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label">طريقة العرض</label>
+                <select
+                  class="form-select"
+                  [ngModel]="timelineLayout()"
+                  (ngModelChange)="timelineLayout.set($event)"
+                >
+                  <option value="vertical">عمودي</option>
+                  <option value="horizontal">أفقي</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-preview">
+          @for (item of timeline(); track item.id; let i = $index) {
+            <div class="timeline-item-preview">
+              <div class="timeline-year">{{ item.year }}</div>
+              <div class="timeline-content">
+                <h6>{{ item.title }}</h6>
+                <p>{{ item.description }}</p>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="timeline-editors">
+          @for (item of timeline(); track item.id; let i = $index) {
+            <div class="timeline-editor">
+              <div class="timeline-editor-header">
+                <span class="timeline-number">{{ i + 1 }}</span>
+                <span class="timeline-year-badge">{{ item.year || 'سنة' }}</span>
+                <div class="timeline-actions">
+                  <button
+                    class="btn btn-sm btn-outline-secondary"
+                    [disabled]="i === 0"
+                    (click)="moveTimelineItem(item.id, 'up')"
+                  >
+                    <i class="bi bi-arrow-up"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline-secondary"
+                    [disabled]="i === timeline().length - 1"
+                    (click)="moveTimelineItem(item.id, 'down')"
+                  >
+                    <i class="bi bi-arrow-down"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" (click)="deleteTimelineItem(item.id)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <label class="form-label">السنة</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [ngModel]="item.year"
+                      (ngModelChange)="updateTimelineItem(item.id, 'year', $event)"
+                      placeholder="2024"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label">العنوان</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [ngModel]="item.title"
+                      (ngModelChange)="updateTimelineItem(item.id, 'title', $event)"
+                      placeholder="عنوان الحدث"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label">الوصف</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [ngModel]="item.description"
+                      (ngModelChange)="updateTimelineItem(item.id, 'description', $event)"
+                      placeholder="وصف الحدث"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <button class="btn btn-primary w-100" (click)="addTimelineItem()">
+          <i class="bi bi-plus-circle me-2"></i>إضافة محطة جديدة
+        </button>
+      </div>
+    }
+  </div>
+</div>

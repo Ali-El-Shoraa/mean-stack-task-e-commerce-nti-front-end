@@ -1,1 +1,39 @@
-<p>products-dashborard works!</p>
+<app-product-stats></app-product-stats>
+<app-product-filters></app-product-filters>
+
+<!-- View Toggle -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">جميع المنتجات</h4>
+  <div class="view-toggle">
+    <button
+      class="view-toggle-btn"
+      [class.active]="viewMode() === 'table'"
+      (click)="viewMode.set('table')"
+    >
+      <i class="bi bi-list"></i> جدول
+    </button>
+    <button
+      class="view-toggle-btn"
+      [class.active]="viewMode() === 'grid'"
+      (click)="viewMode.set('grid')"
+    >
+      <i class="bi bi-grid-3x3-gap"></i> شبكة
+    </button>
+  </div>
+</div>
+
+@if (viewMode() === 'table') {
+  <app-products-table
+    (viewProduct)="onViewProduct($event)"
+    (editProduct)="onEditProduct($event)"
+    (manageStock)="onManageStock($event)"
+    (addProduct)="onAddProduct()"
+    (exportProducts)="onExportProducts()"
+  />
+} @else {
+  <app-products-grid
+    (viewProduct)="onViewProduct($event)"
+    (editProduct)="onEditProduct($event)"
+    (manageStock)="onManageStock($event)"
+  />
+}

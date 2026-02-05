@@ -1,8 +1,9 @@
-import { Component, inject, input, effect, signal } from '@angular/core';
-import { ProductService } from '../../../core/services/product.service';
+import { Component, inject, input, effect } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HeaderFilter } from './components/header-filter/header-filter';
 import { ResultFilter } from './components/result-filter/result-filter';
+import { ProductsService } from '../../../core/services/products.service';
+import { ProductCategory } from '../../../core/models/product.model';
 
 @Component({
   selector: 'app-search-page',
@@ -11,29 +12,26 @@ import { ResultFilter } from './components/result-filter/result-filter';
   templateUrl: './search-page.html',
 })
 export class SearchPage {
-  protected productService = inject(ProductService);
+  protected productService = inject(ProductsService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  // أنجولار ستقوم بتعبئة هذه الـ Inputs تلقائياً من الـ URL Query Params
   search = input<string>();
   category = input<string>();
-  gender = input<string>();
   page = input<number>();
 
   constructor() {
-    // الـ effect يعمل تلقائياً كلما تغيرت قيمة أي Input (أي كلما تغير الـ URL)
     effect(
       () => {
-        const filters = {
-          search: this.search(),
-          category: this.category(),
-          gender: this.gender(),
-          page: this.page() || 1,
-        };
+        this.productService.updateFilters({
+          searchTerm: this.search() || '',
+          category: (this.category() as ProductCategory) || '',
+        });
 
-        // نرسل الطلب للسيرفر
-        this.productService.getProducts(filters).subscribe();
+        const page = this.page();
+        if (page && page > 0) {
+          this.productService.setPage(page);
+        }
       },
       { allowSignalWrites: true },
     );

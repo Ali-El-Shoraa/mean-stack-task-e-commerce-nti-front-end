@@ -1,0 +1,367 @@
+<!-- src/app/features/reviews/reviews.component.html -->
+
+<!-- Reviews Stats -->
+<div class="stats-grid">
+  <div class="stats-card">
+    <div class="stats-card-icon total">
+      <i class="bi bi-chat-left-text"></i>
+    </div>
+    <div class="stats-card-value">{{ stats().totalReviews | number }}</div>
+    <div class="stats-card-title">إجمالي المراجعات</div>
+    <div class="stats-card-change positive"><i class="bi bi-arrow-up"></i> 18% عن الشهر الماضي</div>
+  </div>
+
+  <div class="stats-card">
+    <div class="stats-card-icon average">
+      <i class="bi bi-star"></i>
+    </div>
+    <div class="stats-card-value">{{ stats().averageRating }}</div>
+    <div class="stats-card-title">متوسط التقييم</div>
+    <div class="stats-card-change positive"><i class="bi bi-arrow-up"></i> 0.2 عن الشهر الماضي</div>
+  </div>
+
+  <div class="stats-card">
+    <div class="stats-card-icon new">
+      <i class="bi bi-clock-history"></i>
+    </div>
+    <div class="stats-card-value">{{ stats().pendingReviews }}</div>
+    <div class="stats-card-title">مراجعات جديدة</div>
+    <div class="stats-card-change negative">
+      <i class="bi bi-arrow-down"></i> 5% عن الشهر الماضي
+    </div>
+  </div>
+
+  <div class="stats-card">
+    <div class="stats-card-icon negative">
+      <i class="bi bi-exclamation-triangle"></i>
+    </div>
+    <div class="stats-card-value">{{ stats().negativeReviews }}</div>
+    <div class="stats-card-title">مراجعات سلبية (1-2 نجمة)</div>
+    <div class="stats-card-change positive"><i class="bi bi-arrow-up"></i> 12% عن الشهر الماضي</div>
+  </div>
+</div>
+
+<!-- Reviews Filters -->
+<div class="reviews-filters">
+  <div class="filters-header">
+    <h3 class="filters-title">تصفية المراجعات</h3>
+    <div class="filters-actions">
+      <button class="btn btn-outline-secondary" (click)="resetFilters()">
+        <i class="bi bi-arrow-clockwise me-2"></i>إعادة تعيين
+      </button>
+      <button class="btn btn-primary" (click)="applyFilters()">
+        <i class="bi bi-funnel me-2"></i>تطبيق التصفية
+      </button>
+    </div>
+  </div>
+  <div class="filter-group">
+    <div class="filter-item">
+      <label class="filter-label">التقييم</label>
+      <select
+        class="filter-select"
+        [ngModel]="filters().rating"
+        (ngModelChange)="updateFilter('rating', $event)"
+      >
+        <option value="">جميع التقييمات</option>
+        <option value="5">5 نجوم</option>
+        <option value="4">4 نجوم</option>
+        <option value="3">3 نجوم</option>
+        <option value="2">2 نجوم</option>
+        <option value="1">1 نجمة</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label class="filter-label">حالة المراجعة</label>
+      <select
+        class="filter-select"
+        [ngModel]="filters().status"
+        (ngModelChange)="updateFilter('status', $event)"
+      >
+        <option value="">جميع الحالات</option>
+        <option value="published">منشور</option>
+        <option value="pending">قيد المراجعة</option>
+        <option value="hidden">مخفي</option>
+        <option value="rejected">مرفوض</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label class="filter-label">التاريخ</label>
+      <div class="date-range-container">
+        <input
+          type="date"
+          class="filter-input"
+          [ngModel]="filters().dateFrom"
+          (ngModelChange)="updateFilter('dateFrom', $event)"
+          placeholder="من تاريخ"
+        />
+        <input
+          type="date"
+          class="filter-input"
+          [ngModel]="filters().dateTo"
+          (ngModelChange)="updateFilter('dateTo', $event)"
+          placeholder="إلى تاريخ"
+        />
+      </div>
+    </div>
+    <div class="filter-item">
+      <label class="filter-label">البحث</label>
+      <input
+        type="text"
+        class="filter-input"
+        [ngModel]="filters().search"
+        (ngModelChange)="updateFilter('search', $event)"
+        placeholder="ابحث في المراجعات..."
+      />
+    </div>
+  </div>
+</div>
+
+<!-- View Toggle -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">جميع المراجعات</h4>
+  <div class="view-toggle">
+    <button
+      class="view-toggle-btn"
+      [class.active]="viewMode() === 'table'"
+      (click)="setViewMode('table')"
+    >
+      <i class="bi bi-list"></i> جدول
+    </button>
+    <button
+      class="view-toggle-btn"
+      [class.active]="viewMode() === 'grid'"
+      (click)="setViewMode('grid')"
+    >
+      <i class="bi bi-grid-3x3-gap"></i> شبكة
+    </button>
+  </div>
+</div>
+
+<!-- Table View -->
+@if (viewMode() === 'table') {
+  <app-data-table
+    [columns]="columns"
+    [data]="filteredReviews()"
+    [actions]="actions"
+    [config]="tableConfig"
+    (sortChange)="onSortChange($event)"
+  >
+    <!-- Custom Cell Template -->
+    <ng-template #customCell let-item let-column="column">
+      @switch (column.key) {
+        @case ('customerName') {
+          <div class="d-flex align-items-center">
+            <div class="review-card-avatar me-3">{{ item.customerInitial }}</div>
+            <div>
+              <div class="fw-semibold">{{ item.customerName }}</div>
+              <div class="review-text">{{ item.reviewText }}</div>
+            </div>
+          </div>
+        }
+        @case ('product.name') {
+          <div class="d-flex align-items-center">
+            <img [src]="item.product.image" [alt]="item.product.name" class="review-image me-3" />
+            <div>
+              <div class="fw-medium">{{ item.product.name }}</div>
+              <small class="text-muted">رقم المنتج: {{ item.product.code }}</small>
+            </div>
+          </div>
+        }
+        @case ('rating') {
+          <div>
+            <div class="rating-stars">
+              @for (star of getStars(item.rating); track $index) {
+                <i
+                  class="bi star"
+                  [class.bi-star-fill]="star.filled"
+                  [class.bi-star]="!star.filled"
+                  [class.filled]="star.filled"
+                  [class.empty]="!star.filled"
+                ></i>
+              }
+            </div>
+            <span class="rating-badge" [ngClass]="getRatingClass(item.rating)"
+              >{{ item.rating }}.0</span
+            >
+          </div>
+        }
+      }
+    </ng-template>
+  </app-data-table>
+}
+
+<!-- Grid View -->
+@if (viewMode() === 'grid') {
+  <div class="reviews-grid">
+    @for (review of filteredReviews(); track review.id) {
+      <div class="review-card">
+        <div class="review-card-header">
+          <div class="review-card-user">
+            <div class="review-card-avatar">{{ review.customerInitial }}</div>
+            <div class="review-card-user-info">
+              <div class="review-card-user-name">{{ review.customerName }}</div>
+              <div class="review-card-date">{{ review.date | date: 'dd MMMM yyyy' }}</div>
+            </div>
+          </div>
+          <div class="review-card-rating">
+            <div class="rating-stars">
+              @for (star of getStars(review.rating); track $index) {
+                <i
+                  class="bi star"
+                  [class.bi-star-fill]="star.filled"
+                  [class.bi-star]="!star.filled"
+                  [class.filled]="star.filled"
+                  [class.empty]="!star.filled"
+                ></i>
+              }
+            </div>
+            <span class="rating-badge" [ngClass]="getRatingClass(review.rating)"
+              >{{ review.rating }}.0</span
+            >
+          </div>
+        </div>
+        <div class="review-card-body">
+          <div class="review-card-product">
+            <img
+              [src]="review.product.image"
+              [alt]="review.product.name"
+              class="review-card-product-image"
+            />
+            <div class="review-card-product-info">
+              <div class="review-card-product-name">{{ review.product.name }}</div>
+              <div class="review-card-product-category">
+                {{ review.product.category }} • {{ review.product.code }}
+              </div>
+            </div>
+          </div>
+          <div class="review-card-text">{{ review.reviewText }}</div>
+          @if (review.reply) {
+            <div class="review-card-reply">
+              <div class="review-card-reply-header">
+                <div class="review-card-reply-title">رد {{ review.reply.author }}</div>
+                <div class="review-card-reply-date">
+                  {{ review.reply.date | date: 'dd MMMM yyyy' }}
+                </div>
+              </div>
+              <div class="review-card-reply-text">{{ review.reply.text }}</div>
+            </div>
+          }
+        </div>
+        <div class="review-card-footer">
+          <span class="status-badge" [ngClass]="review.status">
+            {{
+              review.status === 'published'
+                ? 'منشور'
+                : review.status === 'pending'
+                  ? 'قيد المراجعة'
+                  : review.status === 'hidden'
+                    ? 'مخفي'
+                    : 'مرفوض'
+            }}
+          </span>
+          <div class="review-card-actions">
+            <button class="action-btn view" (click)="viewReview(review)">
+              <i class="bi bi-eye"></i>
+            </button>
+            <button class="action-btn reply" (click)="openReplyModal(review)">
+              <i class="bi bi-reply"></i>
+            </button>
+            @if (review.status === 'pending') {
+              <button class="action-btn approve" (click)="approveReview(review)">
+                <i class="bi bi-check"></i>
+              </button>
+              <button class="action-btn reject" (click)="rejectReview(review)">
+                <i class="bi bi-x"></i>
+              </button>
+            }
+            @if (review.status !== 'pending') {
+              <button class="action-btn delete" (click)="deleteReview(review)">
+                <i class="bi bi-trash"></i>
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+<!-- Reply Modal -->
+@if (showReplyModal()) {
+  <div class="modal-backdrop" (click)="closeReplyModal()"></div>
+  <div class="modal show d-block" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">الرد على المراجعة</h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            (click)="closeReplyModal()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          @if (selectedReview(); as review) {
+            <div class="mb-4">
+              <h6>المراجعة الأصلية:</h6>
+              <div class="card p-3">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="review-card-avatar me-3">{{ review.customerInitial }}</div>
+                  <div>
+                    <div class="fw-semibold">{{ review.customerName }}</div>
+                    <div class="rating-stars">
+                      @for (star of getStars(review.rating); track $index) {
+                        <i
+                          class="bi star"
+                          [class.bi-star-fill]="star.filled"
+                          [class.bi-star]="!star.filled"
+                          [class.filled]="star.filled"
+                          [class.empty]="!star.filled"
+                        ></i>
+                      }
+                    </div>
+                  </div>
+                </div>
+                <p class="mb-0">{{ review.reviewText }}</p>
+              </div>
+            </div>
+          }
+
+          <div class="mb-3">
+            <label class="form-label">الرد</label>
+            <textarea
+              class="form-control"
+              rows="5"
+              [(ngModel)]="replyText"
+              placeholder="اكتب ردك هنا..."
+            ></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">توقيع الرد</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="replySignature"
+              placeholder="مثال: فريق خدمة العملاء - FashionHub"
+            />
+          </div>
+
+          <div class="form-check mb-3">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="publishImmediately"
+              [(ngModel)]="publishImmediately"
+            />
+            <label class="form-check-label" for="publishImmediately"> نشر الرد فوراً </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeReplyModal()">إلغاء</button>
+          <button type="button" class="btn btn-primary" (click)="sendReply()">إرسال الرد</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

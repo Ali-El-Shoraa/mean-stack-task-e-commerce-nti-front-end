@@ -1,0 +1,650 @@
+<!-- src/app/features/content-management/components/contact-content/contact-content.component.html -->
+
+<div class="content-container">
+  <!-- Content Sidebar -->
+  <div class="content-sidebar">
+    <ul class="content-nav">
+      @for (section of sections; track section.id) {
+        <li class="content-nav-item">
+          <a
+            href="javascript:void(0)"
+            class="content-nav-link"
+            [class.active]="activeSection() === section.id"
+            (click)="setActiveSection(section.id)"
+          >
+            <i class="bi" [ngClass]="section.icon"></i>
+            <span>{{ section.label }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <!-- Content Sections -->
+  <div class="content-sections">
+    <!-- Contact Info Section -->
+    @if (activeSection() === 'contact-info') {
+      <div class="content-section">
+        <h2 class="content-section-title">معلومات الاتصال الأساسية</h2>
+
+        <div class="info-preview">
+          <div class="info-preview-header">
+            <h4>{{ contactInfo().title }}</h4>
+            <p>{{ contactInfo().description }}</p>
+          </div>
+        </div>
+
+        <form>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">عنوان الصفحة</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="contactInfo().title"
+                  (ngModelChange)="updateContactInfo('title', $event)"
+                  placeholder="اتصل بنا"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">وصف الصفحة</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="contactInfo().description"
+                  (ngModelChange)="updateContactInfo('description', $event)"
+                  placeholder="نحن هنا لمساعدتك!"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">العنوان الكامل</label>
+            <textarea
+              class="form-control"
+              rows="2"
+              [ngModel]="contactInfo().fullAddress"
+              (ngModelChange)="updateContactInfo('fullAddress', $event)"
+              placeholder="أدخل العنوان الكامل"
+            ></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">
+                  <i class="bi bi-telephone me-2"></i>رقم الهاتف الرئيسي
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="contactInfo().mainPhone"
+                  (ngModelChange)="updateContactInfo('mainPhone', $event)"
+                  placeholder="920001234"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label"> <i class="bi bi-whatsapp me-2"></i>رقم الواتساب </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="contactInfo().whatsappNumber"
+                  (ngModelChange)="updateContactInfo('whatsappNumber', $event)"
+                  placeholder="+966 55 123 4567"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">
+                  <i class="bi bi-envelope me-2"></i>البريد الإلكتروني
+                </label>
+                <input
+                  type="email"
+                  class="form-control"
+                  [ngModel]="contactInfo().email"
+                  (ngModelChange)="updateContactInfo('email', $event)"
+                  placeholder="info@example.com"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label"> <i class="bi bi-clock me-2"></i>ساعات العمل </label>
+                <textarea
+                  class="form-control"
+                  rows="3"
+                  [ngModel]="contactInfo().workingHours"
+                  (ngModelChange)="updateContactInfo('workingHours', $event)"
+                  placeholder="الأحد - الخميس: 9 صباحاً - 10 مساءً"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Contact Form Section -->
+    @if (activeSection() === 'contact-form') {
+      <div class="content-section">
+        <h2 class="content-section-title">إعدادات نموذج الاتصال</h2>
+
+        <div class="form-preview">
+          <h5>{{ formSectionTitle() }}</h5>
+          <p class="text-muted">{{ formSectionDescription() }}</p>
+          <div class="preview-form-fields">
+            <div class="preview-field">
+              <label>الاسم الكامل</label>
+              <div class="preview-input"></div>
+            </div>
+            <div class="preview-field">
+              <label>البريد الإلكتروني</label>
+              <div class="preview-input"></div>
+            </div>
+            <div class="preview-field">
+              <label>الموضوع</label>
+              <div class="preview-select"></div>
+            </div>
+            <div class="preview-field">
+              <label>الرسالة</label>
+              <div class="preview-textarea"></div>
+            </div>
+          </div>
+        </div>
+
+        <form>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">عنوان القسم</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="formSectionTitle()"
+                  (ngModelChange)="formSectionTitle.set($event)"
+                  placeholder="أرسل لنا رسالة"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">وصف القسم</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="formSectionDescription()"
+                  (ngModelChange)="formSectionDescription.set($event)"
+                  placeholder="املأ النموذج أدناه..."
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">خيارات الموضوع</label>
+            <div class="subject-options">
+              @for (option of subjectOptions(); track $index; let i = $index) {
+                <div class="subject-option-item">
+                  <input
+                    type="text"
+                    class="form-control"
+                    [ngModel]="option"
+                    (ngModelChange)="updateSubjectOption(i, $event)"
+                    placeholder="أدخل خيار الموضوع"
+                  />
+                  <button
+                    class="btn btn-sm btn-danger"
+                    (click)="removeSubjectOption(i)"
+                    [disabled]="subjectOptions().length <= 1"
+                  >
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              }
+              <button class="btn btn-outline-primary btn-sm" (click)="addSubjectOption()">
+                <i class="bi bi-plus me-1"></i>إضافة خيار
+              </button>
+            </div>
+          </div>
+
+          <div class="form-switches">
+            <div class="form-switch">
+              <input
+                class="form-check-input form-switch-input"
+                type="checkbox"
+                id="enableNewsletter"
+                [ngModel]="enableNewsletter()"
+                (ngModelChange)="enableNewsletter.set($event)"
+              />
+              <label class="form-switch-label" for="enableNewsletter">
+                إضافة خيار الاشتراك في النشرة البريدية
+              </label>
+            </div>
+
+            <div class="form-switch">
+              <input
+                class="form-check-input form-switch-input"
+                type="checkbox"
+                id="enableValidation"
+                [ngModel]="enableValidation()"
+                (ngModelChange)="enableValidation.set($event)"
+              />
+              <label class="form-switch-label" for="enableValidation">
+                تفعيل التحقق من صحة البيانات
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Contact Cards Section -->
+    @if (activeSection() === 'contact-cards') {
+      <div class="content-section">
+        <h2 class="content-section-title">بطاقات الاتصال</h2>
+
+        <div class="contact-cards-preview">
+          @for (card of contactCards(); track card.id) {
+            <div class="contact-card-preview" [class.inactive]="!card.active">
+              <div class="card-icon-preview">
+                <i class="bi" [ngClass]="card.icon"></i>
+              </div>
+              <h6>{{ card.title }}</h6>
+              <p>{{ card.description }}</p>
+            </div>
+          }
+        </div>
+
+        <div class="contact-cards-editors">
+          @for (card of contactCards(); track card.id) {
+            <div class="contact-card-editor">
+              <div class="card-editor-header">
+                <div class="card-icon-badge">
+                  <i class="bi" [ngClass]="card.icon"></i>
+                </div>
+                <h5>{{ card.title }}</h5>
+                <div class="form-switch ms-auto">
+                  <input
+                    class="form-check-input form-switch-input"
+                    type="checkbox"
+                    [id]="'cardActive' + card.id"
+                    [ngModel]="card.active"
+                    (ngModelChange)="updateContactCard(card.id, 'active', $event)"
+                  />
+                  <label class="form-switch-label" [for]="'cardActive' + card.id">مفعّل</label>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label">الأيقونة</label>
+                    <select
+                      class="form-select"
+                      [ngModel]="card.icon"
+                      (ngModelChange)="updateContactCard(card.id, 'icon', $event)"
+                    >
+                      <option value="bi-telephone">هاتف</option>
+                      <option value="bi-envelope">بريد</option>
+                      <option value="bi-geo-alt">موقع</option>
+                      <option value="bi-whatsapp">واتساب</option>
+                      <option value="bi-chat-dots">دردشة</option>
+                      <option value="bi-headset">دعم</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label class="form-label">عنوان البطاقة</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [ngModel]="card.title"
+                      (ngModelChange)="updateContactCard(card.id, 'title', $event)"
+                      placeholder="أدخل عنوان البطاقة"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">الوصف</label>
+                <textarea
+                  class="form-control"
+                  rows="2"
+                  [ngModel]="card.description"
+                  (ngModelChange)="updateContactCard(card.id, 'description', $event)"
+                  placeholder="أدخل وصف البطاقة"
+                ></textarea>
+              </div>
+
+              <div class="card-items-editor">
+                <label class="form-label">معلومات البطاقة</label>
+                @for (item of card.items; track $index; let i = $index) {
+                  <div class="card-item-row">
+                    <input
+                      type="text"
+                      class="form-control"
+                      [ngModel]="item.label"
+                      placeholder="العنوان"
+                      disabled
+                    />
+                    <input
+                      type="text"
+                      class="form-control"
+                      [ngModel]="item.value"
+                      placeholder="القيمة"
+                      disabled
+                    />
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Map Section -->
+    @if (activeSection() === 'map-section') {
+      <div class="content-section">
+        <h2 class="content-section-title">الخريطة والموقع</h2>
+
+        <div class="map-preview">
+          @if (mapSettings().showMap) {
+            <div class="map-placeholder">
+              <i class="bi bi-geo-alt-fill"></i>
+              <h5>{{ mapSettings().locationTitle }}</h5>
+              <p>{{ mapSettings().locationDescription }}</p>
+              <small>الإحداثيات: {{ mapSettings().latitude }}, {{ mapSettings().longitude }}</small>
+            </div>
+          } @else {
+            <div class="map-disabled">
+              <i class="bi bi-map"></i>
+              <p>الخريطة معطلة</p>
+            </div>
+          }
+        </div>
+
+        <form>
+          <div class="form-group">
+            <label class="form-label">عنوان قسم الخريطة</label>
+            <input
+              type="text"
+              class="form-control"
+              [ngModel]="mapSettings().title"
+              (ngModelChange)="updateMapSettings('title', $event)"
+              placeholder="موقعنا على الخريطة"
+            />
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">اسم الموقع</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="mapSettings().locationTitle"
+                  (ngModelChange)="updateMapSettings('locationTitle', $event)"
+                  placeholder="اسم المتجر أو الفرع"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">وصف الموقع</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="mapSettings().locationDescription"
+                  (ngModelChange)="updateMapSettings('locationDescription', $event)"
+                  placeholder="العنوان المختصر"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">
+                  <i class="bi bi-geo me-2"></i>خط العرض (Latitude)
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="mapSettings().latitude"
+                  (ngModelChange)="updateMapSettings('latitude', $event)"
+                  placeholder="24.7136"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">
+                  <i class="bi bi-geo me-2"></i>خط الطول (Longitude)
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="mapSettings().longitude"
+                  (ngModelChange)="updateMapSettings('longitude', $event)"
+                  placeholder="46.6753"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="coordinates-help">
+            <i class="bi bi-info-circle me-2"></i>
+            يمكنك الحصول على الإحداثيات من
+            <a href="https://www.google.com/maps" target="_blank">خرائط جوجل</a>
+            بالنقر بزر الماوس الأيمن على الموقع المطلوب
+          </div>
+
+          <div class="form-switches mt-4">
+            <div class="form-switch">
+              <input
+                class="form-check-input form-switch-input"
+                type="checkbox"
+                id="showMap"
+                [ngModel]="mapSettings().showMap"
+                (ngModelChange)="updateMapSettings('showMap', $event)"
+              />
+              <label class="form-switch-label" for="showMap">عرض الخريطة في الصفحة</label>
+            </div>
+
+            <div class="form-switch">
+              <input
+                class="form-check-input form-switch-input"
+                type="checkbox"
+                id="enableDirections"
+                [ngModel]="mapSettings().enableDirections"
+                (ngModelChange)="updateMapSettings('enableDirections', $event)"
+              />
+              <label class="form-switch-label" for="enableDirections">
+                تفعيل زر "احصل على الاتجاهات"
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Social Media Section -->
+    @if (activeSection() === 'social-media') {
+      <div class="content-section">
+        <h2 class="content-section-title">وسائل التواصل الاجتماعي</h2>
+
+        <div class="social-preview">
+          @for (social of socialMedia(); track social.platform) {
+            <a
+              [href]="social.url"
+              class="social-preview-item"
+              [style.background]="social.color"
+              target="_blank"
+            >
+              <i class="bi" [ngClass]="social.icon"></i>
+            </a>
+          }
+        </div>
+
+        <div class="form-switch mb-4">
+          <input
+            class="form-check-input form-switch-input"
+            type="checkbox"
+            id="showSocialMedia"
+            [ngModel]="showSocialMedia()"
+            (ngModelChange)="showSocialMedia.set($event)"
+          />
+          <label class="form-switch-label" for="showSocialMedia">
+            عرض أيقونات التواصل الاجتماعي في صفحة اتصل بنا
+          </label>
+        </div>
+
+        <div class="social-media-editors">
+          @for (social of socialMedia(); track social.platform; let i = $index) {
+            <div class="social-media-editor">
+              <div class="social-editor-header">
+                <div class="social-icon-badge" [style.background]="social.color">
+                  <i class="bi" [ngClass]="social.icon"></i>
+                </div>
+                <h6>{{ social.platform }}</h6>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">رابط الحساب</label>
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <i class="bi bi-link-45deg"></i>
+                  </span>
+                  <input
+                    type="url"
+                    class="form-control"
+                    [ngModel]="social.url"
+                    (ngModelChange)="updateSocialMedia(i, 'url', $event)"
+                    placeholder="https://..."
+                  />
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- FAQ Preview Section -->
+    @if (activeSection() === 'faq-preview') {
+      <div class="content-section">
+        <h2 class="content-section-title">عرض الأسئلة الشائعة</h2>
+
+        <div class="faq-section-preview">
+          <h5>{{ faqSectionTitle() }}</h5>
+          <p class="text-muted">{{ faqSectionDescription() }}</p>
+
+          <div class="faq-preview-grid">
+            @for (faq of faqPreviewItems.slice(0, faqCount()); track faq.question) {
+              <div class="faq-preview-item">
+                <h6>
+                  <i class="bi bi-question-circle me-2"></i>
+                  {{ faq.question }}
+                </h6>
+                <p>{{ faq.answer }}</p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <form>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">عنوان القسم</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="faqSectionTitle()"
+                  (ngModelChange)="faqSectionTitle.set($event)"
+                  placeholder="أسئلة متكررة"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">وصف القسم</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngModel]="faqSectionDescription()"
+                  (ngModelChange)="faqSectionDescription.set($event)"
+                  placeholder="ربما تجد إجابة لسؤالك..."
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">عدد الأسئلة المعروضة</label>
+            <select
+              class="form-select"
+              style="max-width: 200px"
+              [ngModel]="faqCount()"
+              (ngModelChange)="faqCount.set($event)"
+            >
+              <option [value]="2">2 أسئلة</option>
+              <option [value]="3">3 أسئلة</option>
+              <option [value]="4">4 أسئلة</option>
+              <option [value]="6">6 أسئلة</option>
+              <option [value]="8">8 أسئلة</option>
+            </select>
+          </div>
+
+          <div class="form-switches">
+            <div class="form-switch">
+              <input
+                class="form-check-input form-switch-input"
+                type="checkbox"
+                id="showFaqPreview"
+                [ngModel]="showFaqPreview()"
+                (ngModelChange)="showFaqPreview.set($event)"
+              />
+              <label class="form-switch-label" for="showFaqPreview">
+                عرض قسم الأسئلة الشائعة في صفحة اتصل بنا
+              </label>
+            </div>
+
+            <div class="form-switch">
+              <input
+                class="form-check-input form-switch-input"
+                type="checkbox"
+                id="enableFaqLink"
+                [ngModel]="enableFaqLink()"
+                (ngModelChange)="enableFaqLink.set($event)"
+              />
+              <label class="form-switch-label" for="enableFaqLink">
+                إضافة رابط "عرض جميع الأسئلة"
+              </label>
+            </div>
+          </div>
+
+          <div class="faq-management-note">
+            <i class="bi bi-info-circle me-2"></i>
+            لإدارة الأسئلة الشائعة، انتقل إلى
+            <strong>الصفحة الرئيسية > الأسئلة الشائعة</strong>
+          </div>
+        </form>
+      </div>
+    }
+  </div>
+</div>

@@ -2,17 +2,40 @@
 
 export interface TableColumn {
   key: string;
-  header: string;
-  type?: 'text' | 'badge' | 'currency' | 'date' | 'actions' | 'custom' | 'link';
+  // type?: 'text' | 'badge' | 'currency' | 'date' | 'actions' | 'custom' | 'link';
   width?: string;
   sortable?: boolean;
   badgeConfig?: BadgeConfig;
   currencySymbol?: string;
   dateFormat?: string;
-  // للروابط
+  customTemplate?: string;
+  currencyCode?: string;
+  header: string;
+  type?:
+    | 'text'
+    | 'number'
+    | 'date'
+    | 'currency'
+    | 'custom'
+    | 'badge'
+    | 'image'
+    | 'actions'
+    | 'link';
+  align?: 'start' | 'center' | 'end';
   linkRoute?: string; // مسار الرابط مثل '/orders'
   linkParam?: string; // المفتاح الذي سيستخدم كـ parameter مثل 'id'
 }
+
+// export interface TableColumn {
+//   key: string;
+//   header: string;
+//   sortable?: boolean;
+//   type?: 'text' | 'number' | 'date' | 'currency' | 'custom' | 'badge' | 'image';
+//   width?: string;
+//   align?: 'start' | 'center' | 'end';
+//   customTemplate?: string;
+//   currencyCode?: string;
+// }
 
 export interface BadgeConfig {
   [key: string]: {
@@ -37,6 +60,7 @@ export interface TableConfig {
   showActions?: boolean;
   headerActions?: HeaderAction[];
   emptyMessage?: string;
+  emptyIcon?: string; // ✅ جديد
   loading?: boolean;
   minWidth?: string;
   pageSize?: number; // عدد العناصر في الصفحة (افتراضي 10)
