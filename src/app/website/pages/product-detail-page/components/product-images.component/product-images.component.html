@@ -1,0 +1,49 @@
+<!-- product-images.component.html -->
+
+<div class="product-images">
+  <!-- Main Image -->
+  <div
+    class="main-image-container"
+    (mouseenter)="onMouseEnter()"
+    (mouseleave)="onMouseLeave()"
+    (mousemove)="onMouseMove($event)"
+  >
+    <img
+      [src]="selectedImage() || images?.main"
+      [alt]="productName"
+      class="main-image"
+      [class.zoomed]="isZoomed()"
+    />
+
+    <!-- Zoom Lens -->
+    @if (isZoomed()) {
+      <div
+        class="zoom-overlay"
+        [style.background-image]="'url(' + selectedImage() + ')'"
+        [style.background-position]="zoomPosition().x + '% ' + zoomPosition().y + '%'"
+      ></div>
+    }
+
+    <!-- Badges -->
+    <div class="image-badges">
+      <span class="badge-zoom">
+        <i class="bi bi-zoom-in"></i>
+      </span>
+    </div>
+  </div>
+
+  <!-- Thumbnails -->
+  @if (allImages.length > 1) {
+    <div class="thumbnails-container">
+      @for (img of allImages; track img; let i = $index) {
+        <button
+          class="thumbnail-btn"
+          [class.active]="selectedImage() === img"
+          (click)="selectImage(img)"
+        >
+          <img [src]="img" [alt]="productName + ' - صورة ' + (i + 1)" />
+        </button>
+      }
+    </div>
+  }
+</div>

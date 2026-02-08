@@ -1,203 +1,125 @@
-// src/app/features/orders/services/orders.service.ts
+// src/app/core/services/orders.service.ts
+import { Injectable, computed, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { Order, OrderFilters } from '../models/order.model';
+import { ApiResponse } from '../models/interfaces.model';
+import { environment } from '../../../environments/environment.development';
 
-import { Injectable, signal, computed } from '@angular/core';
-import { Order, OrderStats, OrderFilters, OrderStatus, STATUS_CONFIG } from '../models/order.model';
+const DEFAULT_FILTERS: OrderFilters = {
+  status: '',
+  paymentMethod: '',
+  dateFrom: '',
+  dateTo: '',
+  searchTerm: '',
+};
 
-@Injectable({
-  providedIn: 'root',
-})
-export class OrdersService {
-  // Signals
-  private ordersSignal = signal<Order[]>(this.getMockOrders());
-  private filtersSignal = signal<OrderFilters>({
-    status: '',
-    paymentMethod: '',
-    dateFrom: '',
-    dateTo: '',
-    searchTerm: '',
-  });
-  private loadingSignal = signal<boolean>(false);
-  private currentPageSignal = signal<number>(1);
-  private pageSizeSignal = signal<number>(8);
+@Injectable({ providedIn: 'root' })
+export class OrderService {
+  private apiUrl = `${environment.apiUrl}/order`;
 
-  // Public signals
-  orders = this.ordersSignal.asReadonly();
-  filters = this.filtersSignal.asReadonly();
-  loading = this.loadingSignal.asReadonly();
-  currentPage = this.currentPageSignal.asReadonly();
-  pageSize = this.pageSizeSignal.asReadonly();
+  // ✅ Orders Subjects
+  private allOrdersSubject = new BehaviorSubject<Order[]>([]);
 
-  // Computed values
-  filteredOrders = computed(() => {
-    const orders = this.ordersSignal();
-    const filters = this.filtersSignal();
+  // ✅ Filters
+  private filtersSubject = new BehaviorSubject<OrderFilters>(DEFAULT_FILTERS);
+  public filters$ = this.filtersSubject.asObservable();
 
-    return orders.filter((order) => {
-      // Status filter
-      if (filters.status && order.status !== filters.status) return false;
+  // ✅ Orders after filters
+  public orders$ = combineLatest([this.allOrdersSubject, this.filtersSubject]).pipe(
+    map(([orders, filters]) => this.applyFilters(orders, filters)),
+  );
 
-      // Payment method filter
-      if (filters.paymentMethod && order.paymentMethod !== filters.paymentMethod) return false;
+  // ✅ STATS - إضافة جديدة باستخدام Signals (Angular 18+)
+  private ordersSignal = signal<Order[]>([]);
 
-      // Date filters
-      if (filters.dateFrom && new Date(order.date) < new Date(filters.dateFrom)) return false;
-      if (filters.dateTo && new Date(order.date) > new Date(filters.dateTo)) return false;
-
-      // Search term
-      if (filters.searchTerm) {
-        const searchLower = filters.searchTerm.toLowerCase();
-        return (
-          order.id.toLowerCase().includes(searchLower) ||
-          order.customer.name.toLowerCase().includes(searchLower) ||
-          order.customer.email.toLowerCase().includes(searchLower)
-        );
-      }
-
-      return true;
-    });
-  });
-
-  paginatedOrders = computed(() => {
-    const filtered = this.filteredOrders();
-    const page = this.currentPageSignal();
-    const size = this.pageSizeSignal();
-    const start = (page - 1) * size;
-    return filtered.slice(start, start + size);
-  });
-
-  totalPages = computed(() => {
-    return Math.ceil(this.filteredOrders().length / this.pageSizeSignal());
-  });
-
-  stats = computed<OrderStats>(() => {
+  // حساب الإحصائيات تلقائياً عند تغيير الطلبات
+  public stats = computed(() => {
     const orders = this.ordersSignal();
     return {
+      total: orders.length,
       pending: orders.filter((o) => o.status === 'pending').length,
       processing: orders.filter((o) => o.status === 'processing').length,
       completed: orders.filter((o) => o.status === 'completed').length,
-      cancelled: orders.filter((o) => o.status === 'cancelled').length,
       shipped: orders.filter((o) => o.status === 'shipped').length,
+      cancelled: orders.filter((o) => o.status === 'cancelled').length,
+      totalAmount: orders.reduce((sum, order) => sum + order.totalAmount, 0),
     };
   });
 
-  // Methods
-  updateFilters(filters: Partial<OrderFilters>): void {
-    this.filtersSignal.update((current) => ({ ...current, ...filters }));
-    this.currentPageSignal.set(1);
-  }
-
-  resetFilters(): void {
-    this.filtersSignal.set({
-      status: '',
-      paymentMethod: '',
-      dateFrom: '',
-      dateTo: '',
-      searchTerm: '',
+  constructor(private http: HttpClient) {
+    // تحديث Signal عند تغيير allOrders
+    this.allOrdersSubject.subscribe((orders) => {
+      this.ordersSignal.set(orders);
     });
-    this.currentPageSignal.set(1);
   }
 
-  setPage(page: number): void {
-    this.currentPageSignal.set(page);
-  }
-
-  changeOrderStatus(orderId: string, newStatus: OrderStatus): void {
-    this.ordersSignal.update((orders) =>
-      orders.map((order) => (order.id === orderId ? { ...order, status: newStatus } : order)),
+  // ========== API ==========
+  loadOrders(): Observable<Order[]> {
+    return this.http.get<ApiResponse<Order[]>>(this.apiUrl).pipe(
+      map((res) => res.data),
+      tap((orders) => this.allOrdersSubject.next(orders)),
     );
   }
 
-  deleteOrder(orderId: string): void {
-    this.ordersSignal.update((orders) => orders.filter((o) => o.id !== orderId));
+  checkout(): Observable<Order> {
+    return this.http.post<ApiResponse<Order>>(this.apiUrl, {}).pipe(map((res) => res.data));
   }
 
-  getOrderById(orderId: string): Order | undefined {
-    return this.ordersSignal().find((o) => o.id === orderId);
+  createCODPayment(orderId: string, addressId: string): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/profile/payment/cod`, { orderId, addressId });
   }
 
-  getStatusConfig(status: OrderStatus): (typeof STATUS_CONFIG)[OrderStatus] {
-    return STATUS_CONFIG[status];
+  // ========== Filters ==========
+  updateFilters(filters: OrderFilters): void {
+    this.filtersSubject.next({ ...filters });
   }
 
-  // Mock data
-  private getMockOrders(): Order[] {
+  resetFilters(): void {
+    this.filtersSubject.next({ ...DEFAULT_FILTERS });
+  }
+
+  // ========== Mock Data للتجربة ==========
+  getMockRecentOrders(): Order[] {
+    // استخدم الكود اللي عملناه قبل كده
     return [
-      {
-        id: 'ORD-7842',
-        customer: {
-          id: 1,
-          name: 'أحمد محمد',
-          email: 'ahmed@example.com',
-          phone: '+966 50 123 4567',
-        },
-        date: '2023-12-15',
-        amount: 245.99,
-        paymentMethod: 'credit',
-        status: 'completed',
-        address: 'شارع الملك فهد، الرياض، السعودية',
-        trackingNumber: 'TRK-789456123',
-        items: [
-          { id: 1, productName: 'تيشيرت قطني مميز', quantity: 2, price: 29.99, total: 59.98 },
-          { id: 2, productName: 'جينز ضيق أزرق', quantity: 1, price: 49.99, total: 49.99 },
-          { id: 3, productName: 'هودي رجالي شتوي', quantity: 1, price: 44.99, total: 44.99 },
-        ],
-      },
-      {
-        id: 'ORD-7841',
-        customer: { id: 2, name: 'سارة علي', email: 'sara@example.com' },
-        date: '2023-12-14',
-        amount: 189.5,
-        paymentMethod: 'cash',
-        status: 'processing',
-      },
-      {
-        id: 'ORD-7840',
-        customer: { id: 3, name: 'خالد حسن', email: 'khalid@example.com' },
-        date: '2023-12-14',
-        amount: 320.75,
-        paymentMethod: 'bank',
-        status: 'shipped',
-      },
-      {
-        id: 'ORD-7839',
-        customer: { id: 4, name: 'فاطمة عبدالله', email: 'fatima@example.com' },
-        date: '2023-12-13',
-        amount: 150.0,
-        paymentMethod: 'credit',
-        status: 'pending',
-      },
-      {
-        id: 'ORD-7838',
-        customer: { id: 5, name: 'عمر كمال', email: 'omar@example.com' },
-        date: '2023-12-12',
-        amount: 425.3,
-        paymentMethod: 'cash',
-        status: 'cancelled',
-      },
-      {
-        id: 'ORD-7837',
-        customer: { id: 6, name: 'نورة سالم', email: 'nora@example.com' },
-        date: '2023-12-11',
-        amount: 89.99,
-        paymentMethod: 'credit',
-        status: 'completed',
-      },
-      {
-        id: 'ORD-7836',
-        customer: { id: 7, name: 'مريم خالد', email: 'mariam@example.com' },
-        date: '2023-12-10',
-        amount: 275.5,
-        paymentMethod: 'bank',
-        status: 'shipped',
-      },
-      {
-        id: 'ORD-7835',
-        customer: { id: 8, name: 'يوسف أحمد', email: 'yousef@example.com' },
-        date: '2023-12-09',
-        amount: 199.99,
-        paymentMethod: 'cash',
-        status: 'pending',
-      },
+      /* بيانات الطلبات الكاملة */
     ];
+  }
+
+  // ========== Private ==========
+  private applyFilters(orders: Order[], filters: OrderFilters): Order[] {
+    let result = [...orders];
+
+    if (filters.status) {
+      result = result.filter((o) => o.status === filters.status);
+    }
+
+    if (filters.paymentMethod) {
+      result = result.filter((o) => o.paymentMethod === filters.paymentMethod);
+    }
+
+    if (filters.dateFrom) {
+      const from = new Date(filters.dateFrom).getTime();
+      result = result.filter((o) => new Date(o.createdAt).getTime() >= from);
+    }
+
+    if (filters.dateTo) {
+      const to = new Date(filters.dateTo).getTime();
+      result = result.filter((o) => new Date(o.createdAt).getTime() <= to);
+    }
+
+    if (filters.searchTerm) {
+      const term = filters.searchTerm.toLowerCase();
+      result = result.filter(
+        (o) =>
+          o.id.toLowerCase().includes(term) ||
+          o.customer.name.toLowerCase().includes(term) ||
+          o.customer.email.toLowerCase().includes(term),
+      );
+    }
+
+    return result;
   }
 }

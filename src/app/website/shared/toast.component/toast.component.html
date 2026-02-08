@@ -1,0 +1,19 @@
+<div class="toast-container position-fixed bottom-0 start-0 p-3" style="z-index: 1050">
+  @for (toast of toastService.toasts$ | async; track toast.id) {
+    <div class="toast show" role="alert">
+      <div
+        class="toast-header"
+        [style.background]="toast.type === 'error' ? '#dc3545' : '#e63946'"
+        style="color: white"
+      >
+        <strong class="me-auto">FashionHub</strong>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          (click)="toastService.remove(toast.id)"
+        ></button>
+      </div>
+      <div class="toast-body bg-white text-dark">{{ toast.message }}</div>
+    </div>
+  }
+</div>

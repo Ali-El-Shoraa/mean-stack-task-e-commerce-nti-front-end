@@ -1,0 +1,368 @@
+/* ============================================
+   notifications.component.css
+   ============================================ */
+
+/* === ترويسة المحتوى === */
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--gray-light);
+}
+
+.content-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--dark-color);
+  position: relative;
+}
+
+.content-title::after {
+  content: '';
+  position: absolute;
+  bottom: -17px;
+  right: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+/* === زر تحديد الكل كمقروء === */
+.edit-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.25);
+}
+
+.edit-btn:hover {
+  background: #c1121f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(230, 57, 70, 0.35);
+}
+
+.edit-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(230, 57, 70, 0.2);
+}
+
+.edit-btn i {
+  font-size: 1.1rem;
+  transition: transform 0.3s ease;
+}
+
+.edit-btn:hover i {
+  transform: scale(1.15);
+}
+
+/* === حركة ظهور التبويب === */
+.tab-pane {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === قائمة الإشعارات === */
+.list-group {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--gray-light);
+}
+
+/* === عنصر الإشعار === */
+.list-group-item {
+  padding: 20px 24px;
+  border: none;
+  border-bottom: 1px solid var(--gray-light);
+  background: white;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.list-group-item::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--primary-color);
+  border-radius: 0 4px 4px 0;
+  transition: all 0.3s ease;
+}
+
+.list-group-item:last-child {
+  border-bottom: none;
+}
+
+.list-group-item:hover {
+  background: rgba(230, 57, 70, 0.02);
+  padding-right: 30px;
+}
+
+/* === إشعار غير مقروء === */
+.list-group-item:not(.list-group-item-light) {
+  background: linear-gradient(to left, rgba(230, 57, 70, 0.03), white);
+}
+
+.list-group-item:not(.list-group-item-light) h6 {
+  color: var(--dark-color);
+}
+
+/* === إشعار مقروء === */
+.list-group-item.list-group-item-light {
+  background: var(--light-color);
+  opacity: 0.8;
+}
+
+.list-group-item.list-group-item-light::before {
+  background: var(--gray-dark);
+  opacity: 0.3;
+}
+
+.list-group-item.list-group-item-light h6 {
+  color: var(--gray-dark);
+  font-weight: 500;
+}
+
+.list-group-item.list-group-item-light:hover {
+  opacity: 1;
+}
+
+/* === عنوان الإشعار === */
+.list-group-item h6 {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--dark-color);
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+/* === الوقت === */
+.list-group-item .d-flex small {
+  font-size: 0.82rem;
+  color: var(--gray-dark);
+  white-space: nowrap;
+  margin-right: 15px;
+}
+
+/* === نص الإشعار === */
+.list-group-item p {
+  font-size: 0.92rem;
+  color: var(--dark-color);
+  margin-bottom: 6px;
+  line-height: 1.6;
+}
+
+/* === تفاصيل إضافية === */
+.list-group-item > small {
+  font-size: 0.82rem;
+  color: var(--gray-dark);
+}
+
+/* ========================================
+   إعدادات الإشعارات
+   ======================================== */
+.settings-group {
+  margin-top: 40px;
+  margin-bottom: 30px;
+}
+
+.settings-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--dark-color);
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--gray-light);
+  position: relative;
+}
+
+.settings-title::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  right: 0;
+  width: 50px;
+  height: 2px;
+  background: var(--primary-color);
+  border-radius: 2px;
+}
+
+/* === مفتاح التبديل (البطاقة) === */
+.form-check.form-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  padding: 16px 20px;
+  margin-bottom: 0 !important;
+  background: white;
+  border: 1px solid var(--gray-light);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.form-check.form-switch + .form-check.form-switch {
+  margin-top: 10px;
+}
+
+.form-check.form-switch:hover {
+  background: var(--light-color);
+  border-color: var(--secondary-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* === الليبل === */
+.form-check-label {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--dark-color);
+  cursor: pointer;
+  user-select: none;
+  flex: 1;
+  padding-left: 15px;
+}
+
+/* === زر التبديل === */
+.form-check-input {
+  width: 48px;
+  height: 26px;
+  border: 2px solid var(--gray-light);
+  border-radius: 20px;
+  background-color: var(--gray-light);
+  background-image: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.form-check-input::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.form-check-input:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.form-check-input:checked::before {
+  right: calc(100% - 22px);
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.12);
+  outline: none;
+}
+
+.form-check-input:hover {
+  border-color: var(--secondary-color);
+}
+
+.form-check-input:checked:hover {
+  background-color: #c1121f;
+  border-color: #c1121f;
+}
+
+/* === الاستجابة (Responsive) === */
+@media (max-width: 768px) {
+  .content-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .content-title {
+    font-size: 1.4rem;
+  }
+
+  .edit-btn {
+    align-self: flex-end;
+  }
+
+  .list-group-item {
+    padding: 16px 18px;
+  }
+
+  .list-group-item h6 {
+    font-size: 0.92rem;
+  }
+  .list-group-item p {
+    font-size: 0.87rem;
+  }
+
+  .form-check.form-switch {
+    padding: 14px 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .edit-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .list-group-item .d-flex {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .list-group-item .d-flex small {
+    margin-right: 0;
+  }
+
+  .form-check-label {
+    font-size: 0.88rem;
+  }
+
+  .form-check-input {
+    width: 42px;
+    height: 22px;
+  }
+
+  .form-check-input::before {
+    width: 14px;
+    height: 14px;
+  }
+
+  .form-check-input:checked::before {
+    right: calc(100% - 18px);
+  }
+}

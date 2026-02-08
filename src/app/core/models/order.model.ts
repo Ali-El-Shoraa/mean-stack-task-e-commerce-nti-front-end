@@ -31,6 +31,10 @@ export interface Order {
   address?: string;
   trackingNumber?: string;
   notes?: string;
+  totalAmount: number;
+  customerName: string;
+  createdAt: string;
+  orderNumber: string;
 }
 
 export interface OrderStats {

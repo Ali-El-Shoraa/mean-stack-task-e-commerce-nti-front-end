@@ -1,0 +1,145 @@
+<!-- product-info.component.html -->
+
+<div class="product-info">
+  <!-- Category & Gender -->
+  <div class="product-meta">
+    <span class="category-badge">{{ product.category.name }}</span>
+    <span class="gender-badge">{{ product.gender === 'men' ? 'رجالي' : 'نسائي' }}</span>
+  </div>
+
+  <!-- Product Name -->
+  <h1 class="product-title">{{ product.name }}</h1>
+
+  <!-- Rating -->
+  @if (product.rating && product.rating.count > 0) {
+    <div class="product-rating">
+      <div class="stars">
+        @for (star of [1, 2, 3, 4, 5]; track star) {
+          <i
+            class="bi"
+            [class.bi-star-fill]="star <= product.rating.average"
+            [class.bi-star-half]="
+              star > product.rating.average && star - 0.5 <= product.rating.average
+            "
+            [class.bi-star]="star > product.rating.average + 0.5"
+          ></i>
+        }
+      </div>
+      <span class="rating-text"
+        >{{ product.rating.average }} ({{ product.rating.count }} تقييم)</span
+      >
+    </div>
+  }
+
+  <!-- Price -->
+  <div class="product-price">
+    <span class="current-price">${{ product.price.final | number: '1.2-2' }}</span>
+    @if (discountPercent > 0) {
+      <span class="original-price">${{ product.price.original | number: '1.2-2' }}</span>
+      <span class="discount-badge">-{{ discountPercent }}%</span>
+    }
+  </div>
+
+  <!-- Short Description -->
+  <p class="product-short-desc">{{ product.description | slice: 0 : 150 }}...</p>
+
+  <!-- Divider -->
+  <hr class="divider" />
+
+  <!-- Size Selector -->
+  <div class="option-section">
+    <label class="option-label">
+      المقاس: <strong>{{ selectedSize }}</strong>
+    </label>
+    <div class="size-options">
+      @for (size of availableSizes; track size) {
+        <button class="size-btn" [class.active]="selectedSize === size" (click)="selectSize(size)">
+          {{ size }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Color Selector -->
+  <div class="option-section">
+    <label class="option-label">
+      اللون: <strong>{{ selectedColor }}</strong>
+    </label>
+    <div class="color-options">
+      @for (color of availableColors; track color.name) {
+        <button
+          class="color-btn"
+          [class.active]="selectedColor === color.name"
+          [style.background-color]="color.hexCode"
+          [title]="color.name"
+          (click)="selectColor(color.name)"
+        >
+          @if (selectedColor === color.name) {
+            <i class="bi bi-check"></i>
+          }
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Stock Status -->
+  <div class="stock-status" [ngClass]="stockStatus.class">
+    <i class="bi bi-circle-fill"></i>
+    {{ stockStatus.text }}
+  </div>
+
+  <!-- Quantity & Actions -->
+  <div class="actions-section">
+    <!-- Quantity -->
+    <div class="quantity-selector">
+      <button class="qty-btn" (click)="onQuantityDecrease()" [disabled]="quantity <= 1">
+        <i class="bi bi-dash"></i>
+      </button>
+      <span class="qty-value">{{ quantity }}</span>
+      <button
+        class="qty-btn"
+        (click)="onQuantityIncrease()"
+        [disabled]="isOutOfStock || quantity >= (selectedVariant?.stock || 0)"
+      >
+        <i class="bi bi-plus"></i>
+      </button>
+    </div>
+
+    <!-- Add to Cart -->
+    <button class="btn-add-cart" [disabled]="isOutOfStock" (click)="onAddToCart()">
+      <i class="bi bi-cart-plus"></i>
+      {{ isOutOfStock ? 'غير متوفر' : 'أضف للسلة' }}
+    </button>
+
+    <!-- Wishlist -->
+    <button class="btn-wishlist" [class.active]="isInWishlist" (click)="onToggleWishlist()">
+      <i class="bi" [class.bi-heart-fill]="isInWishlist" [class.bi-heart]="!isInWishlist"></i>
+    </button>
+  </div>
+
+  <!-- Buy Now -->
+  <button class="btn-buy-now" [disabled]="isOutOfStock" (click)="onBuyNow()">شراء الآن</button>
+
+  <!-- Extra Info -->
+  <div class="extra-info">
+    <div class="info-item">
+      <i class="bi bi-truck"></i>
+      <span>شحن مجاني للطلبات فوق $50</span>
+    </div>
+    <div class="info-item">
+      <i class="bi bi-arrow-repeat"></i>
+      <span>استبدال مجاني خلال 14 يوم</span>
+    </div>
+    <div class="info-item">
+      <i class="bi bi-shield-check"></i>
+      <span>ضمان الجودة 100%</span>
+    </div>
+  </div>
+
+  <!-- SKU -->
+  @if (selectedVariant) {
+    <div class="product-sku">
+      SKU: <strong>{{ selectedVariant.sku }}</strong>
+    </div>
+  }
+</div>

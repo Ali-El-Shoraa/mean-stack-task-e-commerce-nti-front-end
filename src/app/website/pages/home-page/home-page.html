@@ -1,15 +1,41 @@
+<!-- home-page.html -->
+
 <app-hero-section-component [heroSlides]="heroSlides"></app-hero-section-component>
 
+<!-- Men's Collection -->
 <div class="men-collection-section">
-  <app-section-slider-component
-    titleHeader="Top Sellers for Men's Collection"
-    descHeader="Discover premium quality men's fashion for every occasion"
-    [allProducts]="allProducts"
-  ></app-section-slider-component>
+  @if (isLoadingMen) {
+    <div class="loading-skeleton container">
+      <div class="skeleton-header"></div>
+      <div class="skeleton-products">
+        @for (i of [1, 2, 3, 4]; track i) {
+          <div class="skeleton-card"></div>
+        }
+      </div>
+    </div>
+  } @else {
+    <app-section-slider-component
+      titleHeader="Top Sellers for Men's Collection"
+      descHeader="Discover premium quality men's fashion for every occasion"
+      [allProducts]="menProducts"
+    ></app-section-slider-component>
+  }
 </div>
 
-<app-section-slider-component
-  titleHeader="Top Sellers for Women's Collection"
-  descHeader="Discover premium quality women's fashion for every occasion"
-  [allProducts]="allProductsForWomen"
-></app-section-slider-component>
+<!-- Women's Collection -->
+@if (isLoadingWomen) {
+  <div class="loading-skeleton container">
+    <div class="skeleton-header"></div>
+    <div class="skeleton-products">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="skeleton-card"></div>
+      }
+    </div>
+  </div>
+} @else {
+  <app-section-slider-component
+    titleHeader="Top Sellers for Women's Collection"
+    descHeader="Discover premium quality women's fashion for every occasion"
+    [allProducts]="womenProducts"
+  ></app-section-slider-component>
+}

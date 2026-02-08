@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ProductsService } from '../../../../../core/services/products.service';
 import {
   CATEGORY_CONFIG,
-  Product,
+  DashboardProduct, // ✅ استخدم DashboardProduct
   ProductCategory,
   ProductStatus,
   ProductTwo,
@@ -23,9 +23,11 @@ export class ProductsTableComponent {
   private productsService = inject(ProductsService);
 
   products = this.productsService.paginatedProducts;
-  viewProduct = output<Product>();
-  editProduct = output<Product>();
-  manageStock = output<Product>();
+
+  // ✅ استخدم DashboardProduct
+  viewProduct = output<DashboardProduct>();
+  editProduct = output<DashboardProduct>();
+  manageStock = output<DashboardProduct>();
 
   // تعريف الأعمدة
   columns: TableColumn[] = [
@@ -56,28 +58,33 @@ export class ProductsTableComponent {
     { key: 'status', header: 'الحالة', type: 'custom', customTemplate: 'statusBadge' },
   ];
 
-  // تعريف الإجراءات
+  // ✅ استخدم DashboardProduct في الـ actions
   actions: TableAction[] = [
-    { label: 'عرض', icon: 'bi-eye', class: 'action-btn preview', callback: (p) => this.onView(p) },
+    {
+      label: 'عرض',
+      icon: 'bi-eye',
+      class: 'action-btn preview',
+      callback: (p: DashboardProduct) => this.onView(p),
+    },
     {
       label: 'تعديل',
       icon: 'bi-pencil',
       class: 'action-btn edit',
-      callback: (p) => this.onEdit(p),
+      callback: (p: DashboardProduct) => this.onEdit(p),
     },
     {
       label: 'مخزون',
       icon: 'bi-box-arrow-in-down',
       class: 'action-btn inventory',
-      callback: (p) => this.onManageStock(p),
-      visible: (p) => p.status !== 'inactive',
+      callback: (p: DashboardProduct) => this.onManageStock(p),
+      visible: (p: DashboardProduct) => p.status !== 'inactive',
     },
     {
       label: 'حذف',
       icon: 'bi-trash',
       class: 'action-btn delete',
-      callback: (p) => this.onDelete(p),
-      visible: (p) => p.status === 'inactive',
+      callback: (p: DashboardProduct) => this.onDelete(p),
+      visible: (p: DashboardProduct) => p.status === 'inactive',
     },
   ];
 
@@ -86,7 +93,6 @@ export class ProductsTableComponent {
     showActions: true,
     emptyMessage: 'لا توجد منتجات',
     emptyIcon: 'bi-inbox',
-    // pageSize: 10,
     showPagination: true,
   };
 
@@ -112,20 +118,22 @@ export class ProductsTableComponent {
     return `${stock} قطعة`;
   }
 
-  onView(product: Product): void {
+  // ✅ استخدم DashboardProduct
+  onView(product: DashboardProduct): void {
     this.viewProduct.emit(product);
   }
 
-  onEdit(product: Product): void {
+  onEdit(product: DashboardProduct): void {
     this.editProduct.emit(product);
   }
 
-  onManageStock(product: Product): void {
+  onManageStock(product: DashboardProduct): void {
     this.manageStock.emit(product);
   }
 
-  onDelete(product: Product): void {
+  onDelete(product: DashboardProduct): void {
     if (confirm(`هل أنت متأكد من حذف "${product.name}"؟`)) {
+      // ✅ الآن _id مضمون أنه number
       this.productsService.deleteProduct(product._id);
     }
   }

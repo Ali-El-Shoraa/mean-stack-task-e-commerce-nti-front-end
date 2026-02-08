@@ -1,19 +1,76 @@
+<!-- product-card.component.html -->
+
 <div class="product-card">
-  <div class="product-badge" [ngClass]="product()?.badgeClass">{{ product()?.badge }}</div>
-  <div class="product-img-container">
-    <img [src]="product()?.image" [alt]="product()?.title" class="product-img" />
-    <div class="product-actions">
-      <button class="product-action-btn"><i class="bi bi-heart"></i></button>
-      <button class="product-action-btn"><i class="bi bi-eye"></i></button>
+  <!-- Badge -->
+  @if (badge) {
+    <span class="product-badge" [ngClass]="badgeClass">{{ badge }}</span>
+  } @else if (discountPercent > 0) {
+    <span class="product-badge badge-sale">-{{ discountPercent }}%</span>
+  }
+
+  <!-- Wishlist Button -->
+  <button
+    class="wishlist-btn"
+    [class.active]="isInWishlist"
+    (click)="toggleWishlist($event)"
+    [attr.aria-label]="isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'"
+  >
+    <i class="bi" [class.bi-heart-fill]="isInWishlist" [class.bi-heart]="!isInWishlist"></i>
+  </button>
+
+  <!-- Product Image -->
+  <!-- ✅ استخدم productSlug بدلاً من product.slug -->
+  <a [routerLink]="['/product', productSlug]" class="product-image-wrapper">
+    <img [src]="mainImage" [alt]="productName" class="product-image" loading="lazy" />
+
+    <!-- Quick Actions Overlay -->
+    <div class="product-overlay">
+      <button class="quick-action-btn" title="Quick View">
+        <i class="bi bi-eye"></i>
+      </button>
+      <button class="quick-action-btn" title="Add to Cart">
+        <i class="bi bi-cart-plus"></i>
+      </button>
     </div>
-  </div>
-  <div class="product-body">
-    <span class="product-category">{{ product()?.category }}</span>
-    <h3 class="product-title">{{ product()?.title }}</h3>
+  </a>
+
+  <!-- Product Info -->
+  <div class="product-info">
+    @if (categoryName) {
+      <span class="product-category">{{ categoryName }}</span>
+    }
+
+    <h3 class="product-title">
+      <!-- ✅ استخدم productSlug و productName -->
+      <a [routerLink]="['/product', productSlug]">{{ productName }}</a>
+    </h3>
+
+    <!-- Rating -->
+    @if (product.rating && product.rating.count > 0) {
+      <div class="product-rating">
+        <div class="stars">
+          @for (star of [1, 2, 3, 4, 5]; track star) {
+            <i
+              class="bi"
+              [class.bi-star-fill]="star <= product.rating!.average"
+              [class.bi-star-half]="
+                star > product.rating!.average && star - 0.5 <= product.rating!.average
+              "
+              [class.bi-star]="star > product.rating!.average + 0.5"
+            ></i>
+          }
+        </div>
+        <span class="rating-count">({{ product.rating.count }})</span>
+      </div>
+    }
+
+    <!-- Price -->
+    <!-- ✅ استخدم finalPrice و originalPrice -->
     <div class="product-price">
-      <span class="price-discount">${{ product()?.price }}</span>
-      <span class="price-old">${{ product()?.oldPrice }}</span>
+      <span class="current-price">${{ finalPrice | number: '1.2-2' }}</span>
+      @if (originalPrice) {
+        <span class="old-price">${{ originalPrice | number: '1.2-2' }}</span>
+      }
     </div>
-    <button class="btn-add-cart"><i class="bi bi-cart-plus"></i> Add to Cart</button>
   </div>
 </div>

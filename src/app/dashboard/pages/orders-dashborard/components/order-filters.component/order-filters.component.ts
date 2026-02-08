@@ -3,7 +3,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { OrdersService } from '../../../../../core/services/orders.service';
 import {
   OrderFilters,
   OrderStatus,
@@ -11,6 +10,7 @@ import {
   PaymentMethod,
   STATUS_CONFIG,
 } from '../../../../../core/models/order.model';
+import { OrderService } from '../../../../../core/services/orders.service';
 
 @Component({
   selector: 'app-order-filters',
@@ -20,7 +20,7 @@ import {
   styleUrls: ['./order-filters.component.scss'],
 })
 export class OrderFiltersComponent {
-  private ordersService = inject(OrdersService);
+  private ordersService = inject(OrderService);
 
   filters: OrderFilters = {
     status: '',

@@ -1,0 +1,43 @@
+<!-- notification.compoent.html -->
+<div class="tab-pane">
+  <div class="content-header">
+    <h2 class="content-title">الإشعارات</h2>
+    <button class="edit-btn" (click)="markAllRead()">
+      <i class="bi bi-check-all me-2"></i> تحديد الكل كمقروء
+    </button>
+  </div>
+
+  <div class="list-group">
+    @for (n of notifications; track n.id) {
+      <div class="list-group-item list-group-item-action" [class.list-group-item-light]="n.read">
+        <div class="d-flex w-100 justify-content-between">
+          <h6 class="mb-1">{{ n.title }}</h6>
+          <small class="text-muted">{{ n.time }}</small>
+        </div>
+        <p class="mb-1">{{ n.message }}</p>
+        <small class="text-muted">{{ n.detail }}</small>
+      </div>
+    }
+  </div>
+
+  <!-- Notification Settings -->
+  <div class="settings-group mt-4">
+    <h3 class="settings-title">إعدادات الإشعارات</h3>
+    <div class="form-check form-switch mb-3">
+      <input class="form-check-input" type="checkbox" checked id="emailNotif" />
+      <label class="form-check-label" for="emailNotif">الإشعارات عبر البريد الإلكتروني</label>
+    </div>
+    <div class="form-check form-switch mb-3">
+      <input class="form-check-input" type="checkbox" checked id="smsNotif" />
+      <label class="form-check-label" for="smsNotif">الإشعارات عبر الرسائل النصية</label>
+    </div>
+    <div class="form-check form-switch mb-3">
+      <input class="form-check-input" type="checkbox" checked id="promoNotif" />
+      <label class="form-check-label" for="promoNotif">إشعارات العروض والتخفيضات</label>
+    </div>
+    <div class="form-check form-switch mb-3">
+      <input class="form-check-input" type="checkbox" checked id="orderNotif" />
+      <label class="form-check-label" for="orderNotif">إشعارات حالة الطلبات</label>
+    </div>
+  </div>
+</div>

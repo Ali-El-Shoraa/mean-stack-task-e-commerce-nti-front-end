@@ -1,0 +1,85 @@
+<!-- personal-info.component.html -->
+<div class="tab-pane">
+  <div class="content-header">
+    <h2 class="content-title">المعلومات الشخصية</h2>
+    <button class="edit-btn" [class.btn-success]="isEditing" (click)="toggleEdit()">
+      <i class="bi" [ngClass]="isEditing ? 'bi-check' : 'bi-pencil'" class="me-2"></i>
+      {{ isEditing ? 'حفظ' : 'تعديل' }}
+    </button>
+  </div>
+
+  <div class="row" *ngIf="user">
+    <div class="col-md-6">
+      <div class="info-group">
+        <label class="info-label">الاسم الأول</label>
+        <input
+          type="text"
+          class="info-value editable"
+          [(ngModel)]="editData.firstName"
+          [disabled]="!isEditing"
+          [value]="isEditing ? editData.firstName : user.firstName"
+        />
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="info-group">
+        <label class="info-label">اسم العائلة</label>
+        <input
+          type="text"
+          class="info-value editable"
+          [(ngModel)]="editData.lastName"
+          [disabled]="!isEditing"
+          [value]="isEditing ? editData.lastName : user.lastName"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="user">
+    <div class="col-md-6">
+      <div class="info-group">
+        <label class="info-label">البريد الإلكتروني</label>
+        <input type="email" class="info-value editable" [value]="user.email" disabled />
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="info-group">
+        <label class="info-label">رقم الهاتف</label>
+        <input
+          type="tel"
+          class="info-value editable"
+          [(ngModel)]="editData.phone"
+          [disabled]="!isEditing"
+          [value]="isEditing ? editData.phone : user.phone"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Achievement Badges -->
+  <div class="settings-group">
+    <h3 class="settings-title">شارات الإنجاز</h3>
+    <div class="badges-container">
+      <div class="badge-item">
+        <div class="badge-icon"><i class="bi bi-star"></i></div>
+        <div class="badge-name">المشتري الأول</div>
+        <div class="badge-desc">أول عملية شراء</div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-icon"><i class="bi bi-trophy"></i></div>
+        <div class="badge-name">محب الموضة</div>
+        <div class="badge-desc">5 طلبات مكتملة</div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-icon"><i class="bi bi-chat"></i></div>
+        <div class="badge-name">المقيم</div>
+        <div class="badge-desc">3 تقييمات مضافة</div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-icon"><i class="bi bi-share"></i></div>
+        <div class="badge-name">المشارك</div>
+        <div class="badge-desc">شارك مع 3 أصدقاء</div>
+      </div>
+    </div>
+  </div>
+</div>

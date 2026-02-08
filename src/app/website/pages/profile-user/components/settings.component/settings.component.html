@@ -1,0 +1,100 @@
+<!-- settings.components -->
+<div class="tab-pane">
+  <div class="content-header">
+    <h2 class="content-title">الإعدادات</h2>
+  </div>
+
+  <!-- Privacy -->
+  <div class="settings-group">
+    <h3 class="settings-title">إعدادات الخصوصية</h3>
+    <div class="form-check form-switch mb-3">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="profileVisibility"
+        [(ngModel)]="settings.profileVisible"
+        (change)="onToggle('ملفي الشخصي مرئي للعامة')"
+      />
+      <label class="form-check-label" for="profileVisibility">ملفي الشخصي مرئي للعامة</label>
+    </div>
+    <div class="form-check form-switch mb-3">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="showEmail"
+        [(ngModel)]="settings.showEmail"
+        (change)="onToggle('عرض بريدي الإلكتروني')"
+      />
+      <label class="form-check-label" for="showEmail">عرض بريدي الإلكتروني</label>
+    </div>
+  </div>
+
+  <!-- Change Password -->
+  <div class="settings-group">
+    <h3 class="settings-title">تغيير كلمة المرور</h3>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">كلمة المرور الحالية</label>
+        <input type="password" class="form-control" [(ngModel)]="password.current" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">كلمة المرور الجديدة</label>
+        <input type="password" class="form-control" [(ngModel)]="password.newPass" />
+      </div>
+    </div>
+    <button class="btn btn-primary">تغيير كلمة المرور</button>
+  </div>
+
+  <!-- Account Actions -->
+  <div class="settings-group">
+    <h3 class="settings-title">إجراءات الحساب</h3>
+    <div class="d-flex gap-3">
+      <button class="btn btn-outline-danger" (click)="showDeleteModal = true">
+        <i class="bi bi-trash me-2"></i> حذف الحساب
+      </button>
+      <button class="btn btn-outline-warning">
+        <i class="bi bi-power me-2"></i> تعطيل الحساب مؤقتاً
+      </button>
+    </div>
+  </div>
+
+  <!-- Delete Account Modal -->
+  <div
+    class="modal"
+    [class.show]="showDeleteModal"
+    [style.display]="showDeleteModal ? 'block' : 'none'"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-danger">حذف الحساب</h5>
+          <button type="button" class="btn-close" (click)="showDeleteModal = false"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <strong>تحذير:</strong> هذا الإجراء لا يمكن التراجع عنه
+          </div>
+          <div class="mb-3">
+            <label class="form-label">اكتب "DELETE" للتأكيد</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="deleteConfirm"
+              placeholder="DELETE"
+            />
+          </div>
+          <div class="d-grid gap-2">
+            <button class="btn btn-danger" [disabled]="deleteConfirm !== 'DELETE'">
+              حذف الحساب نهائياً
+            </button>
+            <button class="btn btn-outline-secondary" (click)="showDeleteModal = false">
+              إلغاء
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" *ngIf="showDeleteModal"></div>
+</div>

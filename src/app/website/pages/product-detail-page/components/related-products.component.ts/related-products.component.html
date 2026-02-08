@@ -1,0 +1,21 @@
+<!-- related-products.component.html -->
+
+<div class="related-products">
+  <h2 class="section-title">منتجات ذات صلة</h2>
+
+  @if (isLoading()) {
+    <div class="loading-grid">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="skeleton-card"></div>
+      }
+    </div>
+  } @else if (relatedProducts().length > 0) {
+    <div class="products-grid">
+      @for (product of relatedProducts(); track product._id) {
+        <app-product-card-component [product]="product"></app-product-card-component>
+      }
+    </div>
+  } @else {
+    <p class="no-products">لا توجد منتجات مشابهة</p>
+  }
+</div>

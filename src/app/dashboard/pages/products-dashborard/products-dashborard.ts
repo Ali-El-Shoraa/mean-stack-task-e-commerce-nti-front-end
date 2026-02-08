@@ -14,12 +14,12 @@
 
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProductsService } from '../../../core/services/product.service';
 import { Product } from '../../../core/models/product.model';
 import { ProductsTableComponent } from './components/products-table.component/products-table.component';
 import { ProductsGridComponent } from './components/products-grid.component/products-grid.component';
 import { ProductStatsComponent } from './components/product-stats.component/product-stats.component';
 import { ProductFiltersComponent } from './components/product-filters.component/product-filters.component';
+import { ProductsService } from '../../../core/services/products.service';
 
 @Component({
   selector: 'app-products',

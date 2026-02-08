@@ -1,0 +1,303 @@
+/* ============================================
+   orders.component.css
+   ============================================ */
+
+/* === ترويسة المحتوى === */
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--gray-light);
+}
+
+.content-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--dark-color);
+  position: relative;
+}
+
+.content-title::after {
+  content: '';
+  position: absolute;
+  bottom: -17px;
+  right: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+/* === حركة ظهور التبويب === */
+.tab-pane {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === حاوية الجدول === */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+/* === جدول الطلبات === */
+.orders-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* === رأس الجدول === */
+.orders-table th {
+  background: var(--dark-color);
+  color: white;
+  padding: 16px 20px;
+  text-align: right;
+  font-weight: 600;
+  font-size: 0.92rem;
+  white-space: nowrap;
+  border: none;
+}
+
+.orders-table th:first-child {
+  border-radius: 0 12px 0 0;
+}
+
+.orders-table th:last-child {
+  border-radius: 12px 0 0 0;
+}
+
+/* === صفوف الجدول === */
+.orders-table tbody tr {
+  transition: all 0.3s ease;
+}
+
+.orders-table tbody tr:hover {
+  background: rgba(230, 57, 70, 0.03);
+}
+
+.orders-table tbody tr:nth-child(even) {
+  background: rgba(248, 249, 250, 0.5);
+}
+
+.orders-table tbody tr:nth-child(even):hover {
+  background: rgba(230, 57, 70, 0.03);
+}
+
+.orders-table tbody tr:last-child td:first-child {
+  border-radius: 0 0 12px 0;
+}
+
+.orders-table tbody tr:last-child td:last-child {
+  border-radius: 0 0 0 12px;
+}
+
+/* === خلايا الجدول === */
+.orders-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--gray-light);
+  font-size: 0.93rem;
+  color: var(--dark-color);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.orders-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* === رقم الطلب (العمود الأول) === */
+.orders-table td:first-child {
+  font-weight: 700;
+  color: var(--primary-color);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.5px;
+}
+
+/* === المجموع (العمود الثالث) === */
+.orders-table td:nth-child(3) {
+  font-weight: 700;
+  color: var(--dark-color);
+}
+
+/* === شارة حالة الطلب === */
+.order-status {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.order-status::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* === تم التوصيل === */
+.status-delivered {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-delivered::before {
+  background: #155724;
+  box-shadow: 0 0 0 3px rgba(21, 87, 36, 0.2);
+}
+
+/* === قيد الانتظار === */
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-pending::before {
+  background: #856404;
+  box-shadow: 0 0 0 3px rgba(133, 100, 4, 0.2);
+  animation: pulse 2s infinite;
+}
+
+/* === قيد المعالجة === */
+.status-processing {
+  background: #cce5ff;
+  color: #004085;
+}
+
+.status-processing::before {
+  background: #004085;
+  box-shadow: 0 0 0 3px rgba(0, 64, 133, 0.2);
+  animation: pulse 2s infinite;
+}
+
+/* === ملغي === */
+.status-cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-cancelled::before {
+  background: #721c24;
+  box-shadow: 0 0 0 3px rgba(114, 28, 36, 0.2);
+}
+
+/* === حركة النبض === */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 currentColor;
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 0 5px currentColor;
+    opacity: 0.3;
+  }
+  100% {
+    box-shadow: 0 0 0 0 currentColor;
+    opacity: 0;
+  }
+}
+
+/* === زر التفاصيل === */
+.btn-outline-primary {
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.25);
+}
+
+.btn-outline-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(230, 57, 70, 0.15);
+}
+
+/* === الاستجابة (Responsive) === */
+@media (max-width: 992px) {
+  .orders-table th,
+  .orders-table td {
+    padding: 14px 16px;
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .content-title {
+    font-size: 1.4rem;
+  }
+
+  .table-responsive {
+    margin: 0 -10px;
+    padding: 0 10px;
+  }
+
+  .orders-table {
+    min-width: 650px;
+  }
+
+  .orders-table th,
+  .orders-table td {
+    padding: 12px 14px;
+    font-size: 0.85rem;
+  }
+
+  .order-status {
+    padding: 5px 12px;
+    font-size: 0.8rem;
+  }
+
+  .btn-outline-primary {
+    padding: 5px 12px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .orders-table {
+    min-width: 550px;
+  }
+
+  .orders-table th,
+  .orders-table td {
+    padding: 10px 12px;
+    font-size: 0.82rem;
+  }
+}

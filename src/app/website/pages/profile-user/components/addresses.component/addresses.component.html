@@ -1,0 +1,97 @@
+<!-- addresses.component.html -->
+<div class="tab-pane">
+  <div class="content-header">
+    <h2 class="content-title">العناوين</h2>
+    <button class="edit-btn" (click)="openAddModal()">
+      <i class="bi bi-plus me-2"></i> إضافة عنوان
+    </button>
+  </div>
+
+  <div class="address-cards">
+    @for (address of addresses; track address._id) {
+      <div class="address-card" [class.default]="address.isDefault">
+        <div class="address-default-badge" *ngIf="address.isDefault">الافتراضي</div>
+        <h5>{{ address.label }}</h5>
+        <p>{{ address.fullName }}</p>
+        <p>{{ address.street }}</p>
+        <p>{{ address.city }} {{ address.postalCode }}</p>
+        <p>{{ address.country }}</p>
+        <p>{{ address.phone }}</p>
+        <div class="address-actions">
+          <button
+            class="btn btn-sm btn-outline-primary"
+            *ngIf="!address.isDefault"
+            (click)="setDefault(address._id)"
+          >
+            تعيين كافتراضي
+          </button>
+          <button class="btn btn-sm btn-outline-danger" (click)="deleteAddress(address._id)">
+            حذف
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Add Address Modal -->
+  <div
+    class="modal"
+    [class.show]="showModal"
+    [style.display]="showModal ? 'block' : 'none'"
+    tabindex="-1"
+    (click)="showModal = false"
+  >
+    <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">إضافة عنوان جديد</h5>
+          <button type="button" class="btn-close" (click)="showModal = false"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">اسم العنوان</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="newAddress.label"
+              placeholder="مثال: المنزل، العمل"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">الاسم الكامل</label>
+            <input type="text" class="form-control" [(ngModel)]="newAddress.fullName" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">رقم الهاتف</label>
+            <input type="tel" class="form-control" [(ngModel)]="newAddress.phone" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">العنوان</label>
+            <textarea class="form-control" rows="3" [(ngModel)]="newAddress.street"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">المدينة</label>
+            <input type="text" class="form-control" [(ngModel)]="newAddress.city" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">الرمز البريدي</label>
+            <input type="text" class="form-control" [(ngModel)]="newAddress.postalCode" />
+          </div>
+          <div class="form-check mb-3">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [(ngModel)]="newAddress.isDefault"
+              id="setDefault"
+            />
+            <label class="form-check-label" for="setDefault">تعيين كعنوان افتراضي</label>
+          </div>
+          <div class="d-grid">
+            <button class="btn btn-primary" (click)="addAddress()">إضافة العنوان</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" *ngIf="showModal" (click)="showModal = false"></div>
+</div>

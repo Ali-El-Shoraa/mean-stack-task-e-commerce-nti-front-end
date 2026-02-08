@@ -1,0 +1,106 @@
+// product-images.component.scss
+
+.product-images {
+  position: sticky;
+  top: 100px;
+}
+
+.main-image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f8f9fa;
+  cursor: zoom-in;
+
+  .main-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .zoom-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 200%;
+    background-repeat: no-repeat;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  &:hover .zoom-overlay {
+    opacity: 1;
+  }
+
+  &:hover .main-image {
+    opacity: 0;
+  }
+}
+
+.image-badges {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+
+  .badge-zoom {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      font-size: 1.2rem;
+      color: #333;
+    }
+  }
+}
+
+.thumbnails-container {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+
+  .thumbnail-btn {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 0;
+    cursor: pointer;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &:hover {
+      border-color: #ccc;
+    }
+
+    &.active {
+      border-color: #e63946;
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .product-images {
+    position: relative;
+    top: 0;
+  }
+}

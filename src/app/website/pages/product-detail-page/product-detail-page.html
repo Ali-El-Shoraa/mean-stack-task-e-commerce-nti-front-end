@@ -1,0 +1,115 @@
+<!-- src/app/website/pages/product-detail-page/product-detail-page.html -->
+
+<div class="product-detail-page">
+  <!-- Loading State -->
+  @if (productService.isLoading()) {
+    <div class="loading-container">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="skeleton skeleton-image"></div>
+          </div>
+          <div class="col-lg-6">
+            <div class="skeleton skeleton-title"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text short"></div>
+            <div class="skeleton skeleton-price"></div>
+            <div class="skeleton skeleton-buttons"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Error State -->
+  @else if (productService.error()) {
+    <div class="error-container">
+      <div class="container text-center py-5">
+        <i class="bi bi-exclamation-triangle fs-1 text-danger"></i>
+        <h2 class="mt-3">عذراً!</h2>
+        <p class="text-muted">{{ productService.error() }}</p>
+        <a routerLink="/shop" class="btn btn-primary mt-3">
+          <i class="bi bi-arrow-right me-2"></i>
+          العودة للمتجر
+        </a>
+      </div>
+    </div>
+  }
+
+  <!-- Product Content -->
+  @else if (productService.product(); as product) {
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb-nav">
+      <div class="container">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a routerLink="/">الرئيسية</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a routerLink="/shop">المتجر</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/shop']" [queryParams]="{ category: product.category._id }">
+              {{ product.category.name }}
+            </a>
+          </li>
+          <li class="breadcrumb-item active">{{ product.name }}</li>
+        </ol>
+      </div>
+    </nav>
+
+    <!-- Main Product Section -->
+    <section class="product-main-section">
+      <div class="container">
+        <div class="row g-4 g-lg-5">
+          <!-- Product Images -->
+          <div class="col-lg-6">
+            <app-product-images
+              [images]="productService.selectedVariant()?.images ?? null"
+              [productName]="product.name"
+            ></app-product-images>
+          </div>
+
+          <!-- Product Info -->
+          <div class="col-lg-6">
+            <app-product-info
+              [product]="product"
+              [selectedVariant]="productService.selectedVariant()"
+              [selectedSize]="productService.selectedSize()"
+              [selectedColor]="productService.selectedColor()"
+              [quantity]="productService.quantity()"
+              [availableSizes]="productService.getAvailableSizes()"
+              [availableColors]="productService.getAvailableColors()"
+              [isInWishlist]="isInWishlist"
+              (sizeChange)="productService.selectSize($event)"
+              (colorChange)="productService.selectColor($event)"
+              (quantityIncrease)="productService.incrementQuantity()"
+              (quantityDecrease)="productService.decrementQuantity()"
+              (addToCart)="addToCart()"
+              (buyNow)="buyNow()"
+              (toggleWishlist)="toggleWishlist()"
+            ></app-product-info>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Tabs (Description, Reviews, etc.) -->
+    <section class="product-tabs-section">
+      <div class="container">
+        <app-product-tabs [product]="product"></app-product-tabs>
+      </div>
+    </section>
+
+    <!-- Related Products -->
+    <section class="related-products-section">
+      <div class="container">
+        <app-related-products
+          [categoryId]="product.category._id"
+          [currentProductId]="product._id"
+          [gender]="product.gender"
+        ></app-related-products>
+      </div>
+    </section>
+  }
+</div>

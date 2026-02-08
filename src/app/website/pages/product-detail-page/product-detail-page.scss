@@ -1,0 +1,149 @@
+// src/app/website/pages/product-detail-page/product-detail-page.scss
+
+.product-detail-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+// ============================================
+// Breadcrumb
+// ============================================
+.breadcrumb-nav {
+  background: white;
+  padding: 1rem 0;
+  border-bottom: 1px solid #eee;
+
+  .breadcrumb {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    font-size: 0.9rem;
+
+    .breadcrumb-item {
+      a {
+        color: #666;
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: #e63946;
+        }
+      }
+
+      &.active {
+        color: #333;
+        font-weight: 500;
+      }
+
+      + .breadcrumb-item::before {
+        content: '/';
+        color: #ccc;
+      }
+    }
+  }
+}
+
+// ============================================
+// Main Section
+// ============================================
+.product-main-section {
+  padding: 2rem 0 3rem;
+  background: white;
+}
+
+// ============================================
+// Tabs Section
+// ============================================
+.product-tabs-section {
+  padding: 3rem 0;
+}
+
+// ============================================
+// Related Products
+// ============================================
+.related-products-section {
+  padding: 3rem 0;
+  background: white;
+}
+
+// ============================================
+// Loading Skeleton
+// ============================================
+.loading-container {
+  padding: 3rem 0;
+  background: white;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+
+  &.skeleton-image {
+    width: 100%;
+    aspect-ratio: 1;
+  }
+
+  &.skeleton-title {
+    height: 32px;
+    width: 70%;
+    margin-bottom: 1rem;
+  }
+
+  &.skeleton-text {
+    height: 16px;
+    width: 100%;
+    margin-bottom: 0.75rem;
+
+    &.short {
+      width: 50%;
+    }
+  }
+
+  &.skeleton-price {
+    height: 40px;
+    width: 40%;
+    margin: 1.5rem 0;
+  }
+
+  &.skeleton-buttons {
+    height: 50px;
+    width: 100%;
+    margin-top: 2rem;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// ============================================
+// Error State
+// ============================================
+.error-container {
+  padding: 5rem 0;
+  background: white;
+}
+
+// ============================================
+// Responsive
+// ============================================
+@media (max-width: 991px) {
+  .product-main-section {
+    padding: 1.5rem 0 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .breadcrumb-nav {
+    .breadcrumb {
+      font-size: 0.8rem;
+    }
+  }
+}

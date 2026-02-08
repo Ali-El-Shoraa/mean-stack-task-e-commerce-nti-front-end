@@ -1,10 +1,13 @@
+// section-slider.component.ts
+
 import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  effect,
   ElementRef,
   input,
   ViewChild,
+  ChangeDetectorRef,
+  inject,
 } from '@angular/core';
 import { SectionHeaderComponent } from '../../../../shared/section-header.component/section-header.component';
 import { CollectionTabsComponent } from '../../../../shared/collection-tabs.component/collection-tabs.component';
@@ -14,45 +17,51 @@ import { ProductCardComponent } from '../../../../shared/product-card.component/
 @Component({
   selector: 'app-section-slider-component',
   imports: [CommonModule, SectionHeaderComponent, ProductCardComponent, CollectionTabsComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA], // مهم جداً
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './section-slider.component.html',
   styleUrl: './section-slider.component.scss',
 })
 export class SectionSliderComponent {
+  private cdr = inject(ChangeDetectorRef);
+
   titleHeader = input<string | null>(null);
   descHeader = input<string | null>(null);
   allProducts = input<any[]>([]);
-  // التصنيف الحالي المختار
+
+  // ✅ عادي string وليس signal
   activeTab: string = 'all';
 
-  // المصفوفة التي سيتم عرضها
-  filteredProducts: any[] = [];
-
-  // constructor() {
-  //   // نستخدم effect لمراقبة وصول البيانات لأول مرة
-  //   effect(() => {
-  //     this.filteredProducts = [...this.allProducts()];
-  //   });
-  // }
-  ngOnInit() {
-    this.filteredProducts = [...this.allProducts()];
-  }
-
-  // وظيفة التبديل بين الـ Tabs
-  filterProducts(category: string) {
-    this.activeTab = category;
-    if (category === 'all') {
-      this.filteredProducts = [...this.allProducts()];
-    } else {
-      this.filteredProducts = this.allProducts().filter((p) => p.category === category);
+  // ✅ getter بدلاً من متغير عادي
+  get filteredProducts(): any[] {
+    const products = this.allProducts();
+    if (this.activeTab === 'all') {
+      return products;
     }
+    return products.filter((p) => p.category === this.activeTab);
   }
 
   @ViewChild('swiperRef') swiperRef!: ElementRef;
 
-  ngAfterViewInit() {
-    const swiperEl = this.swiperRef.nativeElement;
-    console.log('this.allProducts', this.allProducts());
+  // ✅ وظيفة التبديل بين الـ Tabs
+  filterProducts(category: string): void {
+    this.activeTab = category;
+    // تحديث Swiper بعد تغيير البيانات
+    setTimeout(() => {
+      this.updateSwiper();
+    }, 10);
+  }
+
+  ngAfterViewInit(): void {
+    // تأخير التهيئة لضمان وجود البيانات
+    setTimeout(() => {
+      this.initSwiper();
+    }, 100);
+  }
+
+  private initSwiper(): void {
+    const swiperEl = this.swiperRef?.nativeElement;
+    if (!swiperEl) return;
+
     const swiperParams = {
       slidesPerView: 1,
       spaceBetween: 20,
@@ -76,8 +85,20 @@ export class SectionSliderComponent {
       },
     };
 
-    // نربط الإعدادات ونقوم بالتشغيل
     Object.assign(swiperEl, swiperParams);
     swiperEl.initialize();
+  }
+
+  private updateSwiper(): void {
+    const swiperEl = this.swiperRef?.nativeElement;
+    if (swiperEl?.swiper) {
+      swiperEl.swiper.update();
+      swiperEl.swiper.slideTo(0);
+    }
+  }
+
+  // ✅ Track function للـ @for
+  trackByProductId(index: number, product: any): string | number {
+    return product._id ?? product.id ?? index;
   }
 }

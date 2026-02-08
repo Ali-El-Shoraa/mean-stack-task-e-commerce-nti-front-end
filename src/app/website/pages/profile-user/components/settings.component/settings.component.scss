@@ -1,0 +1,519 @@
+/* ============================================
+   settings.component.css
+   ============================================ */
+
+/* === ترويسة المحتوى === */
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--gray-light);
+}
+
+.content-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--dark-color);
+  position: relative;
+}
+
+.content-title::after {
+  content: '';
+  position: absolute;
+  bottom: -17px;
+  right: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+.tab-pane {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   مجموعات الإعدادات
+   ======================================== */
+.settings-group {
+  margin-bottom: 35px;
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  border: 1px solid var(--gray-light);
+  transition: all 0.3s ease;
+}
+
+.settings-group:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.settings-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--dark-color);
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--gray-light);
+  position: relative;
+}
+
+.settings-title::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  right: 0;
+  width: 50px;
+  height: 2px;
+  background: var(--primary-color);
+  border-radius: 2px;
+}
+
+/* ========================================
+   مفاتيح التبديل (الخصوصية)
+   ======================================== */
+.form-check.form-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  padding: 16px 20px;
+  margin-bottom: 0 !important;
+  background: var(--light-color);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.form-check.form-switch + .form-check.form-switch {
+  margin-top: 10px;
+}
+
+.form-check.form-switch:hover {
+  background: white;
+  border-color: var(--secondary-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.form-check-label {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--dark-color);
+  cursor: pointer;
+  user-select: none;
+  flex: 1;
+  padding-left: 15px;
+}
+
+.form-check-input {
+  width: 48px;
+  height: 26px;
+  border: 2px solid var(--gray-light);
+  border-radius: 20px;
+  background-color: var(--gray-light);
+  background-image: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.form-check-input::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.form-check-input:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.form-check-input:checked::before {
+  right: calc(100% - 22px);
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.12);
+  outline: none;
+}
+
+.form-check-input:hover {
+  border-color: var(--secondary-color);
+}
+
+.form-check-input:checked:hover {
+  background-color: #c1121f;
+  border-color: #c1121f;
+}
+
+/* ========================================
+   تغيير كلمة المرور
+   ======================================== */
+.form-label {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--dark-color);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--gray-light);
+  border-radius: 10px;
+  font-size: 0.93rem;
+  font-family: inherit;
+  color: var(--dark-color);
+  background: white;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.1);
+}
+
+.form-control[type='password'] {
+  letter-spacing: 3px;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 28px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.25);
+}
+
+.btn-primary:hover {
+  background: #c1121f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(230, 57, 70, 0.35);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* ========================================
+   إجراءات الحساب
+   ======================================== */
+.d-flex {
+  display: flex;
+}
+.gap-3 {
+  gap: 12px;
+}
+
+.btn-outline-danger {
+  color: #dc3545;
+  border: 2px solid #dc3545;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 0.93rem;
+  font-weight: 600;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-outline-danger:hover {
+  background: #dc3545;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+}
+
+.btn-outline-danger:hover i {
+  transform: scale(1.15);
+}
+
+.btn-outline-warning {
+  color: #e67e22;
+  border: 2px solid #e67e22;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 0.93rem;
+  font-weight: 600;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-outline-warning:hover {
+  background: #e67e22;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+}
+
+.btn-outline-warning:hover i {
+  transform: scale(1.15);
+}
+
+/* ========================================
+   مودال حذف الحساب
+   ======================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.modal.show {
+  animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-dialog {
+  max-width: 480px;
+  margin: 40px auto;
+}
+
+.modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100vh - 80px);
+}
+
+.modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+  border: none;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--gray-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.modal-title.text-danger {
+  color: #dc3545;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.btn-close:hover {
+  opacity: 1;
+  background: var(--light-color);
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+/* === صندوق التحذير === */
+.alert-danger {
+  background: linear-gradient(135deg, #fff5f5, #ffe0e0);
+  border: 2px solid #f5c6cb;
+  border-radius: 12px;
+  padding: 16px 20px;
+  color: #721c24;
+  font-size: 0.93rem;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.6;
+}
+
+.alert-danger i {
+  font-size: 1.3rem;
+  color: #dc3545;
+  flex-shrink: 0;
+}
+
+/* === حقل تأكيد الحذف === */
+.modal-body .form-control {
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 4px;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+}
+
+.modal-body .form-control:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
+}
+
+.d-grid {
+  display: grid;
+}
+.gap-2 {
+  gap: 10px;
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.25);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(220, 53, 69, 0.35);
+}
+
+.btn-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-outline-secondary {
+  color: var(--gray-dark);
+  border: 2px solid var(--gray-light);
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+  background: var(--light-color);
+  border-color: var(--gray-dark);
+  color: var(--dark-color);
+}
+
+/* === الاستجابة === */
+@media (max-width: 768px) {
+  .content-title {
+    font-size: 1.4rem;
+  }
+  .settings-group {
+    padding: 20px;
+  }
+  .col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .d-flex.gap-3 {
+    flex-direction: column;
+  }
+
+  .btn-outline-danger,
+  .btn-outline-warning {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .modal-dialog {
+    margin: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .settings-group {
+    padding: 16px;
+  }
+
+  .form-check.form-switch {
+    padding: 14px 16px;
+  }
+  .form-check-label {
+    font-size: 0.88rem;
+  }
+  .form-check-input {
+    width: 42px;
+    height: 22px;
+  }
+  .form-check-input::before {
+    width: 14px;
+    height: 14px;
+  }
+  .form-check-input:checked::before {
+    right: calc(100% - 18px);
+  }
+
+  .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,38 @@
+<!-- wishlist.component.html -->
+<div class="tab-pane">
+  <div class="content-header">
+    <h2 class="content-title">قائمة الرغبات</h2>
+    <button class="edit-btn" (click)="clearAll()" *ngIf="items.length">
+      <i class="bi bi-trash me-2"></i> مسح الكل
+    </button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="items.length === 0" class="text-center py-5">
+    <i class="bi bi-heart fs-1 text-muted mb-3 d-block"></i>
+    <h5 class="text-muted">قائمة الرغبات فارغة</h5>
+  </div>
+
+  <!-- Wishlist Grid -->
+  <div class="wishlist-grid" *ngIf="items.length > 0">
+    @for (item of items; track item.product._id + item.variantSku) {
+      <div class="wishlist-item">
+        <div class="wishlist-remove" (click)="removeItem(item)">
+          <i class="bi bi-x"></i>
+        </div>
+        <img
+          [src]="item.product.images?.main || 'assets/placeholder.jpg'"
+          class="wishlist-img"
+          [alt]="item.product.name"
+        />
+        <div class="wishlist-content">
+          <h5 class="wishlist-title">{{ item.product.name }}</h5>
+          <div class="wishlist-price">${{ item.product.price }}</div>
+          <button class="btn btn-primary btn-sm w-100" (click)="addToCart(item)">
+            أضف إلى السلة
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

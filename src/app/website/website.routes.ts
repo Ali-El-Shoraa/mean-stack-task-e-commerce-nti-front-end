@@ -6,6 +6,8 @@ import { RegisterPage } from './pages/auth/register-page/register-page';
 import { AboutUsPage } from './pages/about-us-page/about-us-page';
 import { authGuard, guestGuard } from '../core/gurds/auth-guard';
 import { SearchPage } from './pages/search-page/search-page';
+import { ProductDetailPage } from './pages/product-detail-page/product-detail-page';
+import { ProfileUser } from './pages/profile-user/profile-user';
 
 export const routesWebsite: Routes = [
   {
@@ -28,6 +30,14 @@ export const routesWebsite: Routes = [
       {
         path: 'search',
         component: SearchPage,
+      },
+      {
+        path: 'product/:slug',
+        component: ProductDetailPage,
+      },
+      {
+        path: 'profile',
+        component: ProfileUser,
       },
     ],
   },

@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { RootLayout } from './layouts/root-layout/root-layout';
-import { DashboardPage } from './pages/dashboard-page/dashboard-page';
 import { OrdersDashborard } from './pages/orders-dashborard/orders-dashborard';
 import { ProductsDashborard } from './pages/products-dashborard/products-dashborard';
 import { ClientsDashborard } from './pages/clients-dashborard/clients-dashborard';
@@ -8,6 +7,7 @@ import { RepoertsDashborard } from './pages/repoerts-dashborard/repoerts-dashbor
 import { OffersDashborard } from './pages/offers-dashborard/offers-dashborard';
 import { ReviewsDashborard } from './pages/reviews-dashborard/reviews-dashborard';
 import { SettingsDashborard } from './pages/settings-dashborard/settings-dashborard';
+import { DashboardComponent } from './pages/dashboard-page/dashboard-page';
 
 export const routesDashboard: Routes = [
   {
@@ -21,7 +21,7 @@ export const routesDashboard: Routes = [
     children: [
       {
         path: 'home',
-        component: DashboardPage,
+        component: DashboardComponent,
       },
       {
         path: 'orders',

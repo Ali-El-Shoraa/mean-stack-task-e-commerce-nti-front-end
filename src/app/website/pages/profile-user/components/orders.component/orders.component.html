@@ -1,0 +1,36 @@
+<!-- order-component -->
+<div class="tab-pane">
+  <div class="content-header">
+    <h2 class="content-title">طلباتي</h2>
+  </div>
+  <div class="table-responsive">
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>رقم الطلب</th>
+          <th>التاريخ</th>
+          <th>المجموع</th>
+          <th>الحالة</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (order of orders; track order.id) {
+          <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.date }}</td>
+            <td>{{ order.total }}</td>
+            <td>
+              <span class="order-status" [ngClass]="'status-' + order.statusClass">
+                {{ order.statusText }}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary">تفاصيل</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

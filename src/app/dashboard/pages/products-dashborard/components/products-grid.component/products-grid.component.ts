@@ -9,7 +9,7 @@ import {
   ProductStatus,
   STATUS_CONFIG,
 } from '../../../../../core/models/product.model';
-import { ProductsService } from '../../../../../core/services/product.service';
+import { ProductsService } from '../../../../../core/services/products.service';
 
 @Component({
   selector: 'app-products-grid',

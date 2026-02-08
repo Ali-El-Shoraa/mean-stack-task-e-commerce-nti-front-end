@@ -1,0 +1,97 @@
+<!-- product-tabs.component.html -->
+
+<div class="product-tabs">
+  <!-- Tab Headers -->
+  <div class="tabs-header">
+    <button
+      class="tab-btn"
+      [class.active]="activeTab() === 'description'"
+      (click)="setTab('description')"
+    >
+      الوصف
+    </button>
+    <button class="tab-btn" [class.active]="activeTab() === 'specs'" (click)="setTab('specs')">
+      المواصفات
+    </button>
+    <button class="tab-btn" [class.active]="activeTab() === 'reviews'" (click)="setTab('reviews')">
+      التقييمات ({{ product.rating?.count || 0 }})
+    </button>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="tabs-content">
+    @switch (activeTab()) {
+      @case ('description') {
+        <div class="tab-pane description-pane">
+          <p>{{ product.description }}</p>
+        </div>
+      }
+      @case ('specs') {
+        <div class="tab-pane specs-pane">
+          <table class="specs-table">
+            <tbody>
+              <tr>
+                <th>الفئة</th>
+                <td>{{ product.category.name }}</td>
+              </tr>
+              <tr>
+                <th>الجنس</th>
+                <td>{{ product.gender === 'men' ? 'رجالي' : 'نسائي' }}</td>
+              </tr>
+              <tr>
+                <th>المقاسات المتوفرة</th>
+                <td>
+                  @for (v of product.variants; track v.sku; let last = $last) {
+                    {{ v.size }}{{ !last ? '، ' : '' }}
+                  }
+                </td>
+              </tr>
+              <tr>
+                <th>الألوان المتوفرة</th>
+                <td>
+                  <div class="color-dots">
+                    @for (v of product.variants; track v.sku) {
+                      <span
+                        class="color-dot"
+                        [style.background-color]="v.color.hexCode"
+                        [title]="v.color.name"
+                      ></span>
+                    }
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      }
+      @case ('reviews') {
+        <div class="tab-pane reviews-pane">
+          @if (product.rating && product.rating.count > 0) {
+            <div class="reviews-summary">
+              <div class="rating-big">
+                <span class="rating-number">{{ product.rating.average }}</span>
+                <div class="stars">
+                  @for (star of [1, 2, 3, 4, 5]; track star) {
+                    <i
+                      class="bi"
+                      [class.bi-star-fill]="star <= product.rating.average"
+                      [class.bi-star]="star > product.rating.average"
+                    ></i>
+                  }
+                </div>
+                <span class="reviews-count">بناءً على {{ product.rating.count }} تقييم</span>
+              </div>
+            </div>
+            <!-- يمكن إضافة قائمة التقييمات هنا -->
+          } @else {
+            <div class="no-reviews">
+              <i class="bi bi-chat-square-text"></i>
+              <p>لا توجد تقييمات بعد</p>
+              <button class="btn btn-outline-primary">كن أول من يقيم هذا المنتج</button>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+</div>

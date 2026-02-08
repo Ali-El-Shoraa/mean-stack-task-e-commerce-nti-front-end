@@ -1,185 +1,311 @@
-// src/app/core/services/products.service.ts
+// core/services/product.service.ts
 
-import { Injectable, signal, computed } from '@angular/core';
-import { Product, ProductFilters, ProductStats, StockLevel } from '../models/product.model';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject, signal, computed } from '@angular/core';
+import { Observable, catchError, map, of, tap } from 'rxjs';
+import { environment } from '../../../environments/environment.development';
 
-@Injectable({ providedIn: 'root' })
-export class ProductsService {
-  // بيانات المنتجات
-  private productsData: Product[] = [
-    {
-      _id: 1,
-      name: 'تيشيرت قطني مميز',
-      code: 'TSH-001',
-      category: 'men',
-      price: 29.99,
-      stock: 45,
-      status: 'active',
-      description: 'تيشيرت قطني عالي الجودة',
-    },
-    {
-      _id: 2,
-      name: 'جينز ضيق أزرق',
-      code: 'JNS-002',
-      category: 'women',
-      price: 49.99,
-      stock: 3,
-      status: 'active',
-      description: 'جينز ضيق أزرق من الدنيم',
-    },
-    {
-      _id: 3,
-      name: 'هودي رجالي شتوي',
-      code: 'HOD-003',
-      category: 'men',
-      price: 44.99,
-      stock: 12,
-      status: 'active',
-      description: 'هودي شتوي دافئ',
-    },
-    {
-      _id: 4,
-      name: 'فستان صيفي مزهر',
-      code: 'DRS-004',
-      category: 'women',
-      price: 59.99,
-      stock: 0,
-      status: 'out-of-stock',
-      description: 'فستان صيفي خفيف',
-    },
-    {
-      _id: 5,
-      name: 'تيشيرت أطفال قطني',
-      code: 'KTS-005',
-      category: 'kids',
-      price: 19.99,
-      stock: 67,
-      status: 'active',
-      description: 'تيشيرت قطني مريح للأطفال',
-    },
-    {
-      _id: 6,
-      name: 'ساعة يدوية أنيقة',
-      code: 'WCH-006',
-      category: 'accessories',
-      price: 89.99,
-      stock: 8,
-      status: 'inactive',
-      description: 'ساعة يدوية أنيقة',
-    },
-    {
-      _id: 7,
-      name: 'حقيبة كتف جلدية',
-      code: 'BAG-007',
-      category: 'accessories',
-      price: 75.5,
-      stock: 5,
-      status: 'active',
-      description: 'حقيبة كتف جلدية',
-    },
-    {
-      _id: 8,
-      name: 'نظارات شمسية كلاسيكية',
-      code: 'SNG-008',
-      category: 'accessories',
-      price: 39.99,
-      stock: 32,
-      status: 'active',
-      description: 'نظارات شمسية كلاسيكية',
-    },
-  ];
+// ✅ Interfaces
+export interface ProductVariant {
+  sku: string;
+  size: string;
+  color: {
+    name: string;
+    hexCode: string;
+  };
+  stock: number;
+  images: {
+    main: string;
+    gallery?: string[];
+  };
+}
 
-  // Signals
-  products = signal<Product[]>(this.productsData);
-  filters = signal<ProductFilters>({
-    category: '',
-    status: '',
-    stockLevel: '',
-    priceFrom: null,
-    priceTo: null,
-    searchTerm: '',
-  });
+export interface Product {
+  _id: string;
+  name: string;
+  slug: string;
+  description: string;
+  category: { _id: string; name: string };
+  gender: 'men' | 'women';
+  price: {
+    original: number;
+    discount: number;
+    final: number;
+  };
+  variants: ProductVariant[];
+  rating: {
+    average: number;
+    count: number;
+  };
+  isActive: boolean;
+}
 
-  currentPage = signal(1);
-  pageSize = signal(8);
+export interface TopSellerProduct {
+  _id: string;
+  product: Product;
+  totalSold: number;
+  totalRevenue: number;
+  ordersCount: number;
+}
 
-  // Computed
-  filteredProducts = computed(() => {
-    const f = this.filters();
-    return this.products().filter((product) => {
-      if (f.category && product.category !== f.category) return false;
-      if (f.status && product.status !== f.status) return false;
-      if (f.stockLevel && this.getStockLevel(product.stock) !== f.stockLevel) return false;
-      if (f.priceFrom && product.price < f.priceFrom) return false;
-      if (f.priceTo && product.price > f.priceTo) return false;
-      if (f.searchTerm) {
-        const term = f.searchTerm.toLowerCase();
-        return (
-          product.name.toLowerCase().includes(term) || product.code.toLowerCase().includes(term)
-        );
-      }
-      return true;
-    });
-  });
+export interface TopSellersResponse {
+  success: boolean;
+  data: TopSellerProduct[];
+  filters: { gender: string; limit: number };
+}
 
-  paginatedProducts = computed(() => {
-    const start = (this.currentPage() - 1) * this.pageSize();
-    return this.filteredProducts().slice(start, start + this.pageSize());
-  });
+@Injectable({
+  providedIn: 'root',
+})
+export class ProductService {
+  private http = inject(HttpClient);
+  private apiUrl = environment.apiUrl;
 
-  totalPages = computed(() => Math.ceil(this.filteredProducts().length / this.pageSize()));
+  // ✅ Signals للـ State
+  topSellersMen = signal<Product[]>([]);
+  topSellersWomen = signal<Product[]>([]);
+  isLoadingMen = signal<boolean>(false);
+  isLoadingWomen = signal<boolean>(false);
+  error = signal<string>('');
 
-  stats = computed<ProductStats>(() => {
-    const all = this.products();
+  // ============================================
+  // ✅ جلب Top Sellers حسب الجنس
+  // ============================================
+  getTopSellers(gender: 'men' | 'women'): Observable<Product[]> {
+    const loadingSignal = gender === 'men' ? this.isLoadingMen : this.isLoadingWomen;
+    const dataSignal = gender === 'men' ? this.topSellersMen : this.topSellersWomen;
+
+    loadingSignal.set(true);
+
+    return this.http
+      .get<TopSellersResponse>(`${this.apiUrl}/top-sellers`, {
+        params: { gender, limit: '8' },
+      })
+      .pipe(
+        map((res) => {
+          if (res.success && res.data.length > 0) {
+            // تحويل البيانات لصيغة المنتج المطلوبة
+            return res.data.map((item) => this.transformTopSellerToProduct(item));
+          }
+          return [];
+        }),
+        tap((products) => {
+          if (products.length > 0) {
+            dataSignal.set(products);
+          } else {
+            // استخدام البيانات الافتراضية إذا لم توجد بيانات
+            dataSignal.set(this.getDefaultProducts(gender));
+          }
+          loadingSignal.set(false);
+        }),
+        catchError((err) => {
+          console.error(`Error fetching top sellers for ${gender}:`, err);
+          // في حالة الخطأ، نستخدم البيانات الافتراضية
+          dataSignal.set(this.getDefaultProducts(gender));
+          loadingSignal.set(false);
+          return of(this.getDefaultProducts(gender));
+        }),
+      );
+  }
+
+  // ============================================
+  // ✅ تحويل بيانات Top Seller لصيغة Product
+  // ============================================
+  private transformTopSellerToProduct(item: TopSellerProduct): Product {
     return {
-      total: all.length,
-      active: all.filter((p) => p.status === 'active').length,
-      outOfStock: all.filter((p) => p.status === 'out-of-stock').length,
-      lowStock: all.filter((p) => p.stock > 0 && p.stock <= 10).length,
-    };
-  });
-
-  // Methods
-  getStockLevel(stock: number): StockLevel {
-    if (stock === 0) return 'out';
-    if (stock <= 5) return 'low';
-    if (stock <= 20) return 'medium';
-    return 'high';
+      ...item.product,
+      // يمكن إضافة badge بناءً على المبيعات
+      badge: item.totalSold > 100 ? 'Best Seller' : item.totalSold > 50 ? 'Hot' : 'Popular',
+    } as Product;
   }
 
-  updateFilters(newFilters: Partial<ProductFilters>): void {
-    this.filters.update((f) => ({ ...f, ...newFilters }));
-    this.currentPage.set(1);
-  }
+  // ============================================
+  // ✅ البيانات الافتراضية (Fallback)
+  // ============================================
+  private getDefaultProducts(gender: 'men' | 'women'): Product[] {
+    if (gender === 'men') {
+      return [
+        {
+          _id: 'default-1',
+          name: 'Premium Cotton T-Shirt',
+          slug: 'premium-cotton-tshirt',
+          description: 'High quality cotton t-shirt',
+          category: { _id: 'cat-1', name: 'Shirts' },
+          gender: 'men',
+          price: { original: 39.99, discount: 25, final: 29.99 },
+          variants: [
+            {
+              sku: 'TSH-001-M-BLK',
+              size: 'M',
+              color: { name: 'Black', hexCode: '#000000' },
+              stock: 50,
+              images: {
+                main: 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=500',
+              },
+            },
+          ],
+          rating: { average: 4.5, count: 120 },
+          isActive: true,
+        },
+        {
+          _id: 'default-2',
+          name: 'Slim Fit Dark Blue Jeans',
+          slug: 'slim-fit-jeans',
+          description: 'Modern slim fit jeans',
+          category: { _id: 'cat-2', name: 'Pants' },
+          gender: 'men',
+          price: { original: 59.99, discount: 17, final: 49.99 },
+          variants: [
+            {
+              sku: 'JNS-001-32-BLU',
+              size: '32',
+              color: { name: 'Blue', hexCode: '#1d3557' },
+              stock: 30,
+              images: {
+                main: 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=500',
+              },
+            },
+          ],
+          rating: { average: 4.3, count: 85 },
+          isActive: true,
+        },
+        {
+          _id: 'default-3',
+          name: 'Classic Leather Sneakers',
+          slug: 'leather-sneakers',
+          description: 'Comfortable leather sneakers',
+          category: { _id: 'cat-3', name: 'Shoes' },
+          gender: 'men',
+          price: { original: 120.0, discount: 25, final: 89.99 },
+          variants: [
+            {
+              sku: 'SHO-001-42-WHT',
+              size: '42',
+              color: { name: 'White', hexCode: '#ffffff' },
+              stock: 25,
+              images: {
+                main: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500',
+              },
+            },
+          ],
+          rating: { average: 4.7, count: 200 },
+          isActive: true,
+        },
+        {
+          _id: 'default-4',
+          name: 'Luxury Chronograph Watch',
+          slug: 'chronograph-watch',
+          description: 'Elegant chronograph watch',
+          category: { _id: 'cat-4', name: 'Accessories' },
+          gender: 'men',
+          price: { original: 250.0, discount: 20, final: 199.99 },
+          variants: [
+            {
+              sku: 'WCH-001-SLV',
+              size: 'One Size',
+              color: { name: 'Silver', hexCode: '#C0C0C0' },
+              stock: 15,
+              images: {
+                main: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500',
+              },
+            },
+          ],
+          rating: { average: 4.8, count: 150 },
+          isActive: true,
+        },
+      ];
+    }
 
-  resetFilters(): void {
-    this.filters.set({
-      category: '',
-      status: '',
-      stockLevel: '',
-      priceFrom: null,
-      priceTo: null,
-      searchTerm: '',
-    });
-    this.currentPage.set(1);
-  }
-
-  setPage(page: number): void {
-    this.currentPage.set(page);
-  }
-
-  addProduct(product: Omit<Product, 'id'>): void {
-    const newId = Math.max(...this.products().map((p) => p._id)) + 1;
-    this.products.update((products) => [...products, { ...product, id: newId }]);
-  }
-
-  updateProduct(id: number, updates: Partial<Product>): void {
-    this.products.update((products) =>
-      products.map((p) => (p._id === id ? { ...p, ...updates } : p)),
-    );
-  }
-
-  deleteProduct(id: number): void {
-    this.products.update((products) => products.filter((p) => p._id !== id));
+    // Women's default products
+    return [
+      {
+        _id: 'default-w1',
+        name: 'Floral Summer Dress',
+        slug: 'floral-summer-dress',
+        description: 'Beautiful floral pattern dress',
+        category: { _id: 'cat-5', name: 'Dresses' },
+        gender: 'women',
+        price: { original: 59.99, discount: 23, final: 45.99 },
+        variants: [
+          {
+            sku: 'DRS-001-M-FLR',
+            size: 'M',
+            color: { name: 'Floral', hexCode: '#ff6b6b' },
+            stock: 40,
+            images: {
+              main: 'https://images.unsplash.com/photo-1572804013307-a99f13c63198?w=500',
+            },
+          },
+        ],
+        rating: { average: 4.6, count: 95 },
+        isActive: true,
+      },
+      {
+        _id: 'default-w2',
+        name: 'High-Waist Skinny Jeans',
+        slug: 'high-waist-jeans',
+        description: 'Trendy high-waist jeans',
+        category: { _id: 'cat-2', name: 'Pants' },
+        gender: 'women',
+        price: { original: 49.99, discount: 20, final: 39.99 },
+        variants: [
+          {
+            sku: 'JNS-W01-28-BLU',
+            size: '28',
+            color: { name: 'Blue', hexCode: '#457b9d' },
+            stock: 35,
+            images: {
+              main: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=500',
+            },
+          },
+        ],
+        rating: { average: 4.4, count: 78 },
+        isActive: true,
+      },
+      {
+        _id: 'default-w3',
+        name: 'Designer Leather Handbag',
+        slug: 'leather-handbag',
+        description: 'Premium leather handbag',
+        category: { _id: 'cat-4', name: 'Accessories' },
+        gender: 'women',
+        price: { original: 180.0, discount: 28, final: 129.99 },
+        variants: [
+          {
+            sku: 'BAG-001-BRN',
+            size: 'One Size',
+            color: { name: 'Brown', hexCode: '#8B4513' },
+            stock: 20,
+            images: {
+              main: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500',
+            },
+          },
+        ],
+        rating: { average: 4.9, count: 180 },
+        isActive: true,
+      },
+      {
+        _id: 'default-w4',
+        name: 'Classic White Sneakers',
+        slug: 'white-sneakers-women',
+        description: 'Comfortable white sneakers',
+        category: { _id: 'cat-3', name: 'Shoes' },
+        gender: 'women',
+        price: { original: 85.0, discount: 24, final: 65.0 },
+        variants: [
+          {
+            sku: 'SHO-W01-38-WHT',
+            size: '38',
+            color: { name: 'White', hexCode: '#ffffff' },
+            stock: 45,
+            images: {
+              main: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=500',
+            },
+          },
+        ],
+        rating: { average: 4.5, count: 110 },
+        isActive: true,
+      },
+    ];
   }
 }

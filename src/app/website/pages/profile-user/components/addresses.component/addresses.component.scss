@@ -1,0 +1,484 @@
+/* ============================================
+   addresses.component.css
+   ============================================ */
+
+/* === ترويسة المحتوى === */
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--gray-light);
+}
+
+.content-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--dark-color);
+  position: relative;
+}
+
+.content-title::after {
+  content: '';
+  position: absolute;
+  bottom: -17px;
+  right: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+/* === زر إضافة عنوان === */
+.edit-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.25);
+}
+
+.edit-btn:hover {
+  background: #c1121f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(230, 57, 70, 0.35);
+}
+
+.edit-btn:active {
+  transform: translateY(0);
+}
+
+.edit-btn i {
+  font-size: 1.1rem;
+  transition: transform 0.3s ease;
+}
+
+.edit-btn:hover i {
+  transform: scale(1.2) rotate(90deg);
+}
+
+/* === حركة الظهور === */
+.tab-pane {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   بطاقات العناوين
+   ======================================== */
+.address-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.address-card {
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  border: 2px solid var(--gray-light);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.address-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-color: var(--secondary-color);
+}
+
+/* === البطاقة الافتراضية === */
+.address-card.default {
+  border-color: var(--primary-color);
+  background: linear-gradient(to bottom, rgba(230, 57, 70, 0.02), white);
+}
+
+.address-card.default:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 10px 30px rgba(230, 57, 70, 0.12);
+}
+
+/* === شارة "الافتراضي" === */
+.address-default-badge {
+  position: absolute;
+  top: -12px;
+  right: 16px;
+  background: var(--primary-color);
+  color: white;
+  padding: 4px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  box-shadow: 0 3px 8px rgba(230, 57, 70, 0.3);
+}
+
+/* === عنوان البطاقة === */
+.address-card h5 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--dark-color);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--gray-light);
+}
+
+/* === تفاصيل العنوان === */
+.address-card p {
+  margin: 0 0 6px 0;
+  font-size: 0.92rem;
+  color: var(--gray-dark);
+  line-height: 1.6;
+}
+
+.address-card p:first-of-type {
+  font-weight: 600;
+  color: var(--dark-color);
+  font-size: 0.95rem;
+}
+
+/* === أزرار الإجراءات === */
+.address-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--gray-light);
+}
+
+.btn-outline-primary {
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  text-align: center;
+}
+
+.btn-outline-primary:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.25);
+}
+
+.btn-outline-danger {
+  color: #dc3545;
+  border: 2px solid #dc3545;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-danger:hover {
+  background: #dc3545;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.25);
+}
+
+/* ========================================
+   المودال — إضافة عنوان جديد
+   ======================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+  backdrop-filter: blur(4px);
+}
+
+.modal-backdrop.show {
+  animation: backdropIn 0.3s ease;
+}
+
+@keyframes backdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.modal.show {
+  animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-dialog {
+  max-width: 520px;
+  margin: 40px auto;
+}
+
+.modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100vh - 80px);
+}
+
+.modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+  border: none;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* === ترويسة المودال === */
+.modal-header {
+  background: var(--dark-color);
+  color: white;
+  padding: 20px 24px;
+  border-bottom: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+  filter: invert(1);
+}
+
+.btn-close:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+/* === جسم المودال === */
+.modal-body {
+  padding: 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* === حقول النموذج === */
+.form-label {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--dark-color);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--gray-light);
+  border-radius: 10px;
+  font-size: 0.93rem;
+  font-family: inherit;
+  color: var(--dark-color);
+  background: white;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.1);
+}
+
+.form-control::placeholder {
+  color: var(--gray-dark);
+  opacity: 0.6;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.mb-3 {
+  margin-bottom: 18px;
+}
+
+/* === خانة "عنوان افتراضي" === */
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--light-color);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.form-check:hover {
+  background: var(--secondary-color);
+}
+
+.form-check .form-check-input {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--gray-light);
+  border-radius: 6px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.form-check .form-check-input:checked {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.form-check .form-check-input:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.form-check .form-check-label {
+  font-weight: 500;
+  font-size: 0.93rem;
+  color: var(--dark-color);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* === زر "إضافة العنوان" === */
+.d-grid {
+  display: grid;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.25);
+}
+
+.btn-primary:hover {
+  background: #c1121f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(230, 57, 70, 0.35);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* === الاستجابة === */
+@media (max-width: 768px) {
+  .content-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .content-title {
+    font-size: 1.4rem;
+  }
+  .edit-btn {
+    align-self: flex-end;
+  }
+
+  .address-cards {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+
+  .modal-dialog {
+    margin: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .address-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .address-actions {
+    flex-direction: column;
+  }
+
+  .address-actions .btn-outline-primary,
+  .address-actions .btn-outline-danger {
+    width: 100%;
+    text-align: center;
+  }
+
+  .modal-body {
+    padding: 18px;
+  }
+  .form-control {
+    padding: 10px 14px;
+  }
+}

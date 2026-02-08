@@ -2,7 +2,7 @@
 
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OrdersService } from '../../../../../core/services/orders.service';
+import { OrderService } from '../../../../../core/services/orders.service';
 
 interface StatCard {
   key: string;
@@ -21,7 +21,7 @@ interface StatCard {
   styleUrls: ['./order-stats.component.scss'],
 })
 export class OrderStatsComponent {
-  private ordersService = inject(OrdersService);
+  private ordersService = inject(OrderService);
 
   stats = this.ordersService.stats;
 

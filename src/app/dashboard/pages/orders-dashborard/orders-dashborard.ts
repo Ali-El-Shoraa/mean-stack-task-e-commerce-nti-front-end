@@ -2,11 +2,11 @@
 import { CommonModule } from '@angular/common';
 import { Order } from '../../../core/models/order.model';
 import { OrderStatsComponent } from './components/order-stats.component/order-stats.component';
-import { OrderFiltersComponent } from './components/order-filters.component/order-filters.component';
 import { OrderDetailsModalComponent } from './components/order-details-modal.component/order-details-modal.component';
-import { OrdersService } from '../../../core/services/orders.service';
 import { Component, inject, signal } from '@angular/core';
 import { OrdersDashboardTableComponent } from './components/orders-dashboard-table.component/orders-dashboard-table.component';
+import { OrderService } from '../../../core/services/orders.service';
+import { OrderFiltersComponent } from './components/order-filters.component/order-filters.component';
 
 @Component({
   selector: 'app-orders-dashborard',
@@ -21,7 +21,7 @@ import { OrdersDashboardTableComponent } from './components/orders-dashboard-tab
   styleUrl: './orders-dashborard.scss',
 })
 export class OrdersDashborard {
-  private ordersService = inject(OrdersService);
+  private ordersService = inject(OrderService);
 
   selectedOrder = signal<Order | null>(null);
   showModal = signal<boolean>(false);

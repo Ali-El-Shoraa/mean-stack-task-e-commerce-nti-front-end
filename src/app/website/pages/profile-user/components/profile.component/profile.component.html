@@ -1,0 +1,36 @@
+<!-- src/app/pages/profile/profile.component.html -->
+<div class="profile-container">
+  <div class="row g-4">
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <app-profile-sidebar [user]="user" [activeTab]="activeTab" (tabChanged)="onTabChange($event)">
+      </app-profile-sidebar>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-lg-8">
+      <div class="profile-content">
+        @switch (activeTab) {
+          @case ('personal') {
+            <app-personal-info [user]="user"></app-personal-info>
+          }
+          @case ('orders') {
+            <app-orders></app-orders>
+          }
+          @case ('wishlist') {
+            <app-wishlist></app-wishlist>
+          }
+          @case ('addresses') {
+            <app-addresses></app-addresses>
+          }
+          @case ('settings') {
+            <app-settings></app-settings>
+          }
+          @case ('notifications') {
+            <app-notifications></app-notifications>
+          }
+        }
+      </div>
+    </div>
+  </div>
+</div>

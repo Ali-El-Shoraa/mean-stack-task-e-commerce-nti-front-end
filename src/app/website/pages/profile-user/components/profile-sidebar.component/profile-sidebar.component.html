@@ -1,0 +1,71 @@
+<!-- profile-sidebar.component.html -->
+<div class="profile-sidebar">
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="profile-avatar">
+      <img
+        [src]="user?.avatar || 'https://randomuser.me/api/portraits/men/32.jpg'"
+        class="avatar-img"
+        [alt]="fullName"
+      />
+      <div class="avatar-edit">
+        <i class="bi bi-camera"></i>
+      </div>
+    </div>
+    <h2 class="profile-name">{{ fullName }}</h2>
+    <p class="profile-email">{{ user?.email }}</p>
+    <div class="member-since" *ngIf="user?.createdAt">
+      <i class="bi bi-calendar3 me-2"></i>
+      عضو منذ: {{ user!.createdAt | date: 'MMMM yyyy' }}
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="profile-stats">
+    <div class="stat-card">
+      <div class="stat-number">8</div>
+      <div class="stat-label">الطلبات</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ (wishlistService.wishlistCount$ | async) || 0 }}</div>
+      <div class="stat-label">المفضلة</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">5</div>
+      <div class="stat-label">التقييمات</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">1,250</div>
+      <div class="stat-label">النقاط</div>
+    </div>
+  </div>
+
+  <!-- Menu -->
+  <ul class="profile-menu">
+    @for (item of menuItems; track item.id) {
+      <li class="profile-menu-item">
+        <a
+          href="#"
+          class="profile-menu-link"
+          [class.active]="activeTab === item.id"
+          (click)="onMenuClick(item.id, $event)"
+        >
+          <i class="bi" [ngClass]="item.icon"></i>
+          {{ item.label }}
+        </a>
+      </li>
+    }
+  </ul>
+
+  <!-- Progress Bar -->
+  <div class="progress-container">
+    <div class="progress-label">
+      <span>مستوى العضوية</span>
+      <span>75%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" style="width: 75%"></div>
+    </div>
+    <small class="text-muted">نقاط إضافية 250 لترقية العضوية</small>
+  </div>
+</div>

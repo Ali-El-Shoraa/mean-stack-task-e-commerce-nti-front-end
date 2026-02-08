@@ -1,3 +1,5 @@
+<!-- section-slider.component.html -->
+
 <section class="men-collection-section">
   <div class="container">
     <div class="section-header">
@@ -6,14 +8,17 @@
         [desc]="descHeader()"
       ></app-section-header-component>
 
+      <!-- ✅ activeTab بدون () لأنه string عادي -->
       <app-collection-tabs-component [activeTab]="activeTab" (tabChanged)="filterProducts($event)">
       </app-collection-tabs-component>
     </div>
 
     <div class="products-swiper shadow-sm p-4 bg-white rounded">
+      <!-- ✅ filteredProducts بدون () لأنه getter -->
       @if (filteredProducts.length > 0) {
         <swiper-container #swiperRef init="false">
-          @for (product of filteredProducts; track product.id) {
+          <!-- ✅ استخدم trackByProductId أو track بـ $index -->
+          @for (product of filteredProducts; track product._id ?? $index) {
             <swiper-slide>
               <app-product-card-component [product]="product"></app-product-card-component>
             </swiper-slide>

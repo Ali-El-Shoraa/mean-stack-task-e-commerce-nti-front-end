@@ -391,12 +391,18 @@
   font-weight: 600;
 }
 
-.form-step {
-  display: none;
-}
+// .form-step {
+//   display: none;
+// }
 
-.form-step.active {
+// .form-step.active {
+//   display: block;
+// }
+
+// ✅ استبدله بهذا
+.form-step {
   display: block;
+  animation: fadeInUp 0.5s ease forwards;
 }
 
 .form-navigation {

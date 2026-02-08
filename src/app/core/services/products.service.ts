@@ -2,7 +2,7 @@
 
 import { Injectable, signal, computed } from '@angular/core';
 import {
-  Product,
+  DashboardProduct,
   ProductStats,
   ProductFilters,
   ProductStatus,
@@ -10,13 +10,14 @@ import {
   StockLevel,
   STATUS_CONFIG,
   CATEGORY_CONFIG,
-} from '../models/product.model';
+} from '../../core/models/product.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductsService {
-  private productsSignal = signal<Product[]>(this.getMockProducts());
+  // ✅ Private Signals
+  private productsSignal = signal<DashboardProduct[]>(this.getMockProducts());
   private filtersSignal = signal<ProductFilters>({
     category: '',
     status: '',
@@ -30,44 +31,67 @@ export class ProductsService {
   private pageSizeSignal = signal<number>(8);
   private viewModeSignal = signal<'table' | 'grid'>('table');
 
-  // Public signals
+  // ✅ Public Readonly Signals
   products = this.productsSignal.asReadonly();
   filters = this.filtersSignal.asReadonly();
   loading = this.loadingSignal.asReadonly();
   currentPage = this.currentPageSignal.asReadonly();
   pageSize = this.pageSizeSignal.asReadonly();
   viewMode = this.viewModeSignal.asReadonly();
+  isLoading = this.loadingSignal.asReadonly();
+
+  // ✅ Computed: إجمالي المنتجات
   totalProducts = computed(() => {
     return this.filteredProducts().length;
   });
 
-  isLoading = this.loadingSignal.asReadonly();
-
-  // Computed values
+  // ✅ Computed: المنتجات المفلترة
   filteredProducts = computed(() => {
     const products = this.productsSignal();
     const filters = this.filtersSignal();
 
     return products.filter((product) => {
-      if (filters.category && product.category !== filters.category) return false;
-      if (filters.status && product.status !== filters.status) return false;
-      if (filters.stockLevel && this.getStockLevel(product.stock) !== filters.stockLevel)
+      // فلتر الفئة
+      if (filters.category && product.category !== filters.category) {
         return false;
-      if (filters.priceFrom !== null && product.price < filters.priceFrom) return false;
-      if (filters.priceTo !== null && product.price > filters.priceTo) return false;
+      }
 
+      // فلتر الحالة
+      if (filters.status && product.status !== filters.status) {
+        return false;
+      }
+
+      // فلتر مستوى المخزون
+      if (filters.stockLevel && this.getStockLevel(product.stock) !== filters.stockLevel) {
+        return false;
+      }
+
+      // فلتر السعر (من)
+      if (filters.priceFrom !== null && product.price < filters.priceFrom) {
+        return false;
+      }
+
+      // فلتر السعر (إلى)
+      if (filters.priceTo !== null && product.price > filters.priceTo) {
+        return false;
+      }
+
+      // فلتر البحث
       if (filters.searchTerm) {
         const searchLower = filters.searchTerm.toLowerCase();
-        return (
-          product.name.toLowerCase().includes(searchLower) ||
-          product.code.toLowerCase().includes(searchLower)
-        );
+        const matchesName = product.name.toLowerCase().includes(searchLower);
+        const matchesCode = product.code.toLowerCase().includes(searchLower);
+        const matchesDescription =
+          product.description?.toLowerCase().includes(searchLower) || false;
+
+        return matchesName || matchesCode || matchesDescription;
       }
 
       return true;
     });
   });
 
+  // ✅ Computed: المنتجات مع الـ Pagination
   paginatedProducts = computed(() => {
     const filtered = this.filteredProducts();
     const page = this.currentPageSignal();
@@ -76,10 +100,12 @@ export class ProductsService {
     return filtered.slice(start, start + size);
   });
 
+  // ✅ Computed: إجمالي الصفحات
   totalPages = computed(() => {
     return Math.ceil(this.filteredProducts().length / this.pageSizeSignal());
   });
 
+  // ✅ Computed: إحصائيات المنتجات
   stats = computed<ProductStats>(() => {
     const products = this.productsSignal();
     return {
@@ -90,10 +116,13 @@ export class ProductsService {
     };
   });
 
-  // Methods
+  // ============================================
+  // ✅ Filter Methods
+  // ============================================
+
   updateFilters(filters: Partial<ProductFilters>): void {
     this.filtersSignal.update((current) => ({ ...current, ...filters }));
-    this.currentPageSignal.set(1);
+    this.currentPageSignal.set(1); // Reset to first page
   }
 
   resetFilters(): void {
@@ -108,20 +137,60 @@ export class ProductsService {
     this.currentPageSignal.set(1);
   }
 
+  // ============================================
+  // ✅ Pagination Methods
+  // ============================================
+
   setPage(page: number): void {
-    this.currentPageSignal.set(page);
+    if (page >= 1 && page <= this.totalPages()) {
+      this.currentPageSignal.set(page);
+    }
   }
+
+  nextPage(): void {
+    if (this.currentPageSignal() < this.totalPages()) {
+      this.currentPageSignal.update((p) => p + 1);
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPageSignal() > 1) {
+      this.currentPageSignal.update((p) => p - 1);
+    }
+  }
+
+  setPageSize(size: number): void {
+    this.pageSizeSignal.set(size);
+    this.currentPageSignal.set(1); // Reset to first page
+  }
+
+  // ============================================
+  // ✅ View Mode Methods
+  // ============================================
 
   setViewMode(mode: 'table' | 'grid'): void {
     this.viewModeSignal.set(mode);
   }
 
-  addProduct(product: Omit<Product, 'id'>): void {
-    const newId = Math.max(...this.productsSignal().map((p) => p._id)) + 1;
-    this.productsSignal.update((products) => [...products, { ...product, id: newId }]);
+  toggleViewMode(): void {
+    this.viewModeSignal.update((mode) => (mode === 'table' ? 'grid' : 'table'));
   }
 
-  updateProduct(id: number, updates: Partial<Product>): void {
+  // ============================================
+  // ✅ CRUD Methods
+  // ============================================
+
+  addProduct(product: Omit<DashboardProduct, '_id'>): void {
+    const products = this.productsSignal();
+    const newId = products.length > 0 ? Math.max(...products.map((p) => p._id)) + 1 : 1;
+
+    this.productsSignal.update((products) => [
+      ...products,
+      { ...product, _id: newId } as DashboardProduct,
+    ]);
+  }
+
+  updateProduct(id: number, updates: Partial<DashboardProduct>): void {
     this.productsSignal.update((products) =>
       products.map((p) => (p._id === id ? { ...p, ...updates } : p)),
     );
@@ -131,12 +200,21 @@ export class ProductsService {
     this.productsSignal.update((products) => products.filter((p) => p._id !== id));
   }
 
+  // ============================================
+  // ✅ Stock Methods
+  // ============================================
+
   updateStock(id: number, newStock: number): void {
     this.productsSignal.update((products) =>
       products.map((p) => {
         if (p._id === id) {
-          const status: ProductStatus =
-            newStock === 0 ? 'out-of-stock' : p.status === 'out-of-stock' ? 'active' : p.status;
+          // تحديث الحالة تلقائياً بناءً على المخزون
+          let status: ProductStatus = p.status;
+          if (newStock === 0) {
+            status = 'out-of-stock';
+          } else if (p.status === 'out-of-stock') {
+            status = 'active';
+          }
           return { ...p, stock: newStock, status };
         }
         return p;
@@ -144,9 +222,63 @@ export class ProductsService {
     );
   }
 
-  getProductById(id: number): Product | undefined {
+  incrementStock(id: number, amount: number = 1): void {
+    const product = this.getProductById(id);
+    if (product) {
+      this.updateStock(id, product.stock + amount);
+    }
+  }
+
+  decrementStock(id: number, amount: number = 1): void {
+    const product = this.getProductById(id);
+    if (product && product.stock >= amount) {
+      this.updateStock(id, product.stock - amount);
+    }
+  }
+
+  // ============================================
+  // ✅ Status Methods
+  // ============================================
+
+  updateStatus(id: number, status: ProductStatus): void {
+    this.updateProduct(id, { status });
+  }
+
+  activateProduct(id: number): void {
+    this.updateStatus(id, 'active');
+  }
+
+  deactivateProduct(id: number): void {
+    this.updateStatus(id, 'inactive');
+  }
+
+  // ============================================
+  // ✅ Get Methods
+  // ============================================
+
+  getProductById(id: number): DashboardProduct | undefined {
     return this.productsSignal().find((p) => p._id === id);
   }
+
+  getProductsByCategory(category: ProductCategory): DashboardProduct[] {
+    return this.productsSignal().filter((p) => p.category === category);
+  }
+
+  getProductsByStatus(status: ProductStatus): DashboardProduct[] {
+    return this.productsSignal().filter((p) => p.status === status);
+  }
+
+  getLowStockProducts(threshold: number = 10): DashboardProduct[] {
+    return this.productsSignal().filter((p) => p.stock > 0 && p.stock <= threshold);
+  }
+
+  getOutOfStockProducts(): DashboardProduct[] {
+    return this.productsSignal().filter((p) => p.stock === 0 || p.status === 'out-of-stock');
+  }
+
+  // ============================================
+  // ✅ Helper Methods
+  // ============================================
 
   getStockLevel(stock: number): StockLevel {
     if (stock === 0) return 'out';
@@ -163,8 +295,19 @@ export class ProductsService {
     return CATEGORY_CONFIG[category];
   }
 
-  // Mock data
-  private getMockProducts(): Product[] {
+  // ============================================
+  // ✅ Loading State
+  // ============================================
+
+  setLoading(loading: boolean): void {
+    this.loadingSignal.set(loading);
+  }
+
+  // ============================================
+  // ✅ Mock Data
+  // ============================================
+
+  private getMockProducts(): DashboardProduct[] {
     return [
       {
         _id: 1,
@@ -407,5 +550,31 @@ export class ProductsService {
         description: 'بنطلون واسع عصري',
       },
     ];
+  }
+
+  // ============================================
+  // ✅ Bulk Operations
+  // ============================================
+
+  deleteMultiple(ids: number[]): void {
+    this.productsSignal.update((products) => products.filter((p) => !ids.includes(p._id)));
+  }
+
+  updateMultipleStatus(ids: number[], status: ProductStatus): void {
+    this.productsSignal.update((products) =>
+      products.map((p) => (ids.includes(p._id) ? { ...p, status } : p)),
+    );
+  }
+
+  // ============================================
+  // ✅ Search
+  // ============================================
+
+  search(term: string): void {
+    this.updateFilters({ searchTerm: term });
+  }
+
+  clearSearch(): void {
+    this.updateFilters({ searchTerm: '' });
   }
 }
